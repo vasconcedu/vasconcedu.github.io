@@ -4,4 +4,4 @@ title: Resume
 permalink: /resume/
 ---
 
-# \# TODO ;) 
+# TODO
