@@ -8,16 +8,22 @@ permalink: /resume/
     <!-- Profile picture -->
     <img src="/images/me.png" width="200" /> <br /><br />
     <!-- Headlines -->
-    <p style="font-size:2em;">Eduardo Vasconcelos</p>
-    <p style="font-size:1em;color:gray;">Computer Engineer, Senior Mobile Security Engineer, Master's Student, eCPPTv2 + 6, Catholic, husband, electronics hobbyist, amateur woodworker, Swiss Army Knife enthusiast</p>
-    <!-- Socials -->
-    <!-- TryHackMe --><a href="https://tryhackme.com/p/vasconcedu" target="_blank">{% include _tryhackme_badge.html %}</a><br />
-    <!-- GitHub --><p><a href="https://github.com/vasconcedu" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/github/github-original.svg" width="32" /></a> <!-- LinkedIn --><a href="https://www.linkedin.com/in/vasconcedu/" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linkedin/linkedin-original.svg" width="32" /></a></p>
-</center> <br />
+    <p style="font-size:2em;"><b>Eduardo Vasconcelos</b> <!-- Socials --><!-- GitHub --><a href="https://github.com/vasconcedu" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/github/github-original.svg" width="24" /></a> <!-- LinkedIn --><a href="https://www.linkedin.com/in/vasconcedu/" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linkedin/linkedin-original.svg" width="24" /></a></p>
+    <p style="font-size:1em;color:#c6c6cd;"><b>Computer Engineer | Senior Mobile Security Engineer | Master's Student | eCPPTv2 + 6</b></p>
+    <p><!-- TryHackMe --><a href="https://tryhackme.com/p/vasconcedu" target="_blank">{% include _tryhackme_badge.html %}</a><br /></p>
+</center>
 
-# About 
+<hr style="border:1px solid #c6c6cd;"><br />
 
-I'm a computer engineer currently working for a tech company as a senior mobile security engineer. My duties comprise mainly designing and coding Android application security mechanisms. Before that, I used to work at a research institute that provided penetration testing services for a major Android device manufacturer. My job was to find and exploit vulnerabilities in global Android applications. I'm currently pursuing a Master's degree in Computer Science and Computational Mathematics. My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures. I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out electronics and woodworking projects, reading and camping.
+# About Me 
+
+I'm a computer engineer currently working for a tech company as a senior mobile security engineer. My duties comprise mainly designing and coding Android application security mechanisms. 
+
+Before that, I used to work at a research institute that provided penetration testing services for a major Android device manufacturer. My job was to find and exploit vulnerabilities in global Android applications. 
+
+I'm currently pursuing a Master's degree in Computer Science and Computational Mathematics. My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures. 
+
+I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out electronics and woodworking projects, reading and camping.
 
 # Contact Me 
 
@@ -25,16 +31,16 @@ I'm a computer engineer currently working for a tech company as a senior mobile 
 
 # Skills 
 
-- Technical Writing & Reporting &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;
-- Scripting & Tool Development &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;
-- Android Application Security Testing &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Software Engineering &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Secure Programming &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Interpersonal Skills &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Network Security Testing &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Android Application Development &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
-- Reverse Engineering &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
-- Web Application Security Testing &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
+- Technical Writing & Reporting <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;</font>
+- Scripting & Tool Development <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;</font>
+- Android Application Security Testing <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font>
+- Software Engineering <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font>
+- Secure Programming <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font>
+- Interpersonal Skills <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font>
+- Network Security Testing <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font>
+- Android Application Development <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
+- Reverse Engineering <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
+- Web Application Security Testing <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
 
 # Certifications
 
@@ -72,167 +78,129 @@ I'm a computer engineer currently working for a tech company as a senior mobile 
 
 <p style="font-size:1.2em;"><b>iFood</b></p>
 
-_Araraquara, Brazil (remote)_
+<b>Senior Mobile Security Engineer \|</b> _February 2022 -- Present_
 
-- Senior Mobile Security Engineer
-
-    _Since February 2022_
-
-    - Designing and coding Android application security and fraud prevention mechanisms
-    - Building Runtime Application Self-Protection (RASP) solutions into mobile apps
+- Designing and coding Android application security and fraud prevention mechanisms
+- Building Runtime Application Self-Protection (RASP) solutions into mobile apps
 
 <p style="font-size:1.2em;"><b>SiDi</b></p>
 
-_Campinas, Brazil_
+<b>Senior Software Security Analyst \|</b> _February 2021 -- February 2022_<br />
+<b>Software Security Analyst \|</b> _April 2019 -- February 2021_
 
-- Senior Software Security Analyst
-
-    _February 2021 - February 2022_
-
-    - Engaged in Android, Web and Network infrastructure security assessments, as well as security code reviews
-    - Carried out two R&D projects, namely: Android Permissions System circumvention & Android UI deception abusing a11y services and application overlays
-
-- Software Security Analyst 
-
-    _April 2019 - February 2021_ 
+- Engaged in Android, Web and Network infrastructure security assessments, as well as security code reviews
+- Carried out two R&D projects, namely: Android Permissions System circumvention & Android UI deception abusing a11y services and application overlays
 
 <p style="font-size:1.2em;"><b>Hacker Rangers <i>(formerly Perallis Security)</i></b></p>
 
-_Campinas, Brazil_
+<b>Information Security Analyst \|</b> _September 2017 -- April 2019_<br />
+<b>Information Security Trainee \|</b> _June 2017 -- September 2017_ 
 
-- Information Security Analyst
-
-    _September 2017 - April 2019_
-
-    - Worked as a consultant providing several Offensive Security services such as Web Application and Network security assessments and Phishing campaigns
-    - Engaged in application Cloud Identity development and integration
-    - IBM Security Guardium sysadmin and certified instructor
-
-- Information Security Trainee
-
-    _June 2017 - September 2017_ 
+- Worked as a consultant providing several Offensive Security services such as Web Application and Network security assessments and Phishing campaigns
+- Engaged in application Cloud Identity development and integration
+- IBM Security Guardium sysadmin and certified instructor
 
 <p style="font-size:1.2em;"><b>Embraer</b></p>
 
-_São José dos Campos, Brazil_
+<b>IT Intern \|</b> _September 2016 -- June 2017_
 
-- IT Intern
-
-    _September 2016 - June 2017_
-
-    - Helped develop an IT Change Management plan
-    - Performed corporate Web traffic analysis
+- Helped develop an IT Change Management plan
+- Performed corporate Web traffic analysis
 
 <p style="font-size:1.2em;"><b>Sigmedia <i>(Trinity College Dublin research lab)</i></b></p>
 
-_Dublin, Ireland_
+<b>Engineering Intern \|</b> _May 2014 - Jul 2014_
 
-- Engineering Intern
-
-    _May 2014 - Jul 2014_
-
-    - Developed a Machine Learning model aimed at detecting laughter in human speech
-    - Processed digital voice signals to feed said model
+- Developed a Machine Learning model aimed at detecting laughter in human speech
+- Processed digital voice signals to feed said model
 
 # Education
 
 <p style="font-size:1.2em;"><b>University of São Paulo (USP)</b></p>
 
-_São Carlos, Brazil_
+<b>MSc, Computer Science and Computational Mathematics \|</b> _2022 -- Present_
 
-- MSc, Computer Science and Computational Mathematics, 2022 - ongoing _(expected December 2024)_
-
-    - Master's degree, Software Engineering
-    - My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures
+- Master's degree, Software Engineering
+- My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures
 
 <p style="font-size:1.2em;"><b>University of Campinas (Unicamp)</b></p>
 
-_Campinas, Brazil_
+<b>Specialization, Software Engineering \|</b>  _2019 -- 2019_
 
-- Specialization, Software Engineering, 2019
-
-    - One-year Specialization Program in Software Engineering
-    - My aim with taking this course was to gain familiarity with SDLC practices so as to become more skilled at AppSec analysis and catch a glimpse at the big picture of software development
-    - Graduated with GPA 9.4/10.0
+- One-year Specialization Program in Software Engineering
+- My aim with taking this course was to gain familiarity with SDLC practices so as to become more skilled at AppSec analysis and catch a glimpse at the big picture of software development
+- Graduated with GPA 9.4/10.0
 
 <p style="font-size:1.2em;"><b>University of São Paulo (USP)</b></p>
 
-_São Carlos, Brazil_
+<b>BEng, Computer Engineering \|</b> _2012 -- 2017_
 
-- BEng, Computer Engineering, 2012 - 2017
-
-    - São Paulo Research Foundation (FAPESP) undergraduate research scholarship
-    - Served as undergraduate research intern at ICMC-USP's Distributed Systems and Concurrent Programming Laboratory (LaSDPC), where I worked at a research project focused on forecasting floods in cities
-    - Graduated 13<sup>th</sup>/59 with GPA 7.5/10.0
-    - Was granted ICMC-USP's Best Computer Engineering Undergraduate Thesis Award 2016 for my project on emotion recognition in human speech using Machine Learning 
-    - Served as Python Programming and Object-oriented Programming teaching assistant 
-    - Served as junior enterprise PHP developer
+- São Paulo Research Foundation (FAPESP) undergraduate research scholarship
+- Served as undergraduate research intern at ICMC-USP's Distributed Systems and Concurrent Programming Laboratory (LaSDPC), where I worked at a research project focused on forecasting floods in cities
+- Graduated 13<sup>th</sup>/59 with GPA 7.5/10.0
+- Was granted ICMC-USP's Best Computer Engineering Undergraduate Thesis Award 2016 for my project on emotion recognition in human speech using Machine Learning 
+- Served as Python Programming and Object-oriented Programming teaching assistant 
+- Served as junior enterprise PHP developer
 
 <p style="font-size:1.2em;"><b>Trinity College Dublin (TCD)</b></p>
 
-_Dublin, Ireland_ 
+<b>Exchange student @ BEng, Electronic Engineering \|</b> _2013 -- 2014_
 
-- Exchange student @ BEng, Electronic Engineering, 2013 - 2014
-
-    - Brazilian Federal Government "Science without Borders" (SwB) scholarship
-    - Full-term visiting student (60 ECTS with Honors)
-    - 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition 2014
+- Brazilian Federal Government "Science without Borders" (SwB) scholarship
+- Full-term visiting student (60 ECTS with Honors)
+- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition 2014
 
 <p style="font-size:1.2em;"><b>Microlins</b></p>
 
-_Aracaju, Brazil_ 
+<b>Professional Training, Computer Hardware and Network Maintenance \|</b> _2007 -- 2007_
 
-- Professional Training, Computer Hardware and Network Maintenance, 2007 
-
-    - This was my first serious contact with computers as a young man
-    - Learned the basics of computer hardware, operating systems and computer networks
+- This was my first serious contact with computers as a young man
+- Learned the basics of computer hardware, operating systems and computer networks
 
 # Relevant Courses & Learning Activities
 
-- [ ] The Complete Android 12 & Kotlin Development Masterclass by Denis Panjuta @ Udemy _(ongoing)_
-- [ ] Full Cycle 3.0 @ Full Cycle _(ongoing)_
-- [X] Android Architecture Masterclass @ iFood iLearn, 2022
-- [X] GitLab CI: Pipelines, Continuous Delivery & Deployment @ iFood iLearn, 2022
-- [X] Advent of Cyber 3 @ TryHackMe, 2021
-- [X] Introduction to Antenna Basics @ HackadayU, 2021
-- [X] Windows Privilege Escalation for Beginners by The Cyber Mentor @ Udemy, 2021
-- [X] Throwback Network Labs @ TryHackMe, 2021
-- [X] Threat Modeling Security Fundamentals @ Microsoft Docs Learn, 2021
-- [X] Penetration Testing Professional (PTP) v5 @ eLearnSecurity, 2020
-- [X] Practical Ethical Hacking: The Complete Course by The Cyber Mentor @ Udemy, 2020
-- [X] Certified Ethical Hacker (CEH) v10 @ EC-Council, 2020
-- [X] CompTIA PenTest+ (Ethical Hacking) Course & Practice Exam by Jason Dion @ Udemy, 2019
-- [X] Brazilian General Data Protection Act ("LGPD") @ Escola Virtual.Gov, 2019
-- [X] AWS Cloud Practitioner Essentials @ AWS, 2019
-- [X] Tenable BootCamp Training @ Tenable Network Security, 2018
-- [X] Secure Programming @ Clavis Security, 2018
-- [X] Introduction to Cryptography @ Unicamp, 2018
-- [X] The Complete Wireshark Course @ Udemy, 2017
-- [X] Nmap: Network Scanning Basics and Advanced Techniques @ Udemy, 2017
-- [X] Metasploit @ Cybrary, 2017
-- [X] Cybersecurity Best Practices @ Perallis Security, 2017
-- [X] Computer Security @ Unicamp, 2017
-- [X] Information Protection @ Embraer, 2016
+- [ ] The Complete Android 12 & Kotlin Development Masterclass by Denis Panjuta _@ Udemy (ongoing)_
+- [ ] Full Cycle 3.0 _@ Full Cycle (ongoing)_
+- [X] Android Architecture Masterclass _@ iFood iLearn, 2022_
+- [X] GitLab CI: Pipelines, Continuous Delivery & Deployment _@ iFood iLearn, 2022_
+- [X] Advent of Cyber 3 _@ TryHackMe, 2021_
+- [X] Introduction to Antenna Basics _@ HackadayU, 2021_
+- [X] Windows Privilege Escalation for Beginners by The Cyber Mentor _@ Udemy, 2021_
+- [X] Throwback Network Labs _@ TryHackMe, 2021_
+- [X] Threat Modeling Security Fundamentals _@ Microsoft Docs Learn, 2021_
+- [X] Penetration Testing Professional (PTP) v5 _@ eLearnSecurity, 2020_
+- [X] Practical Ethical Hacking: The Complete Course by The Cyber Mentor _@ Udemy, 2020_
+- [X] Certified Ethical Hacker (CEH) v10 _@ EC-Council, 2020_
+- [X] CompTIA PenTest+ (Ethical Hacking) Course & Practice Exam by Jason Dion _@ Udemy, 2019_
+- [X] Brazilian General Data Protection Act ("LGPD") _@ Escola Virtual.Gov, 2019_
+- [X] AWS Cloud Practitioner Essentials _@ AWS, 2019_
+- [X] Tenable BootCamp Training _@ Tenable Network Security, 2018_
+- [X] Secure Programming _@ Clavis Security, 2018_
+- [X] Introduction to Cryptography _@ Unicamp, 2018_
+- [X] The Complete Wireshark Course _@ Udemy, 2017_
+- [X] Nmap: Network Scanning Basics and Advanced Techniques _@ Udemy, 2017_
+- [X] Metasploit _@ Cybrary, 2017_
+- [X] Cybersecurity Best Practices _@ Perallis Security, 2017_
+- [X] Computer Security _@ Unicamp, 2017_
+- [X] Information Protection _@ Embraer, 2016_
 
 # Languages 
 
-- Portuguese &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc; _(native)_
-- English &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb; _(High school exchange student in Ontario, 2008 - 2009; Engineering school exchange student in Ireland, 2013 - 2014)_
-- French &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
-- Italian &#x25fc;&#x25fc;&#x25fb;&#x25fb;&#x25fb;
+- Portuguese <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;</font> _(native)_
+- English <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font> _(High school exchange student in Ontario, 2008 -- 2009; Engineering school exchange student in Ireland, 2013 -- 2014)_
+- French <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
+- Italian <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fb;&#x25fb;&#x25fb;</font>
 
 # Prizes  
 
-- Best Computer Engineering Undergraduate Thesis Award, granted by ICMC-USP, 2016
-- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition, granted by the TCD School of Engineering, 2014
-- Gold Medal @ X Brazilian Astronomy Olympiad, granted by the Brazilian Astronomical Society & the Brazilian Space Agency, 2007
-- Bronze Medal @ III São Paulo State Countryside Kendo Championship, granted by the São Paulo State Kendo Federation, 2015
-- Competitive swimmer _(medalist on several federated and student swimming championships including individual freestyle, butterfly and medley events, as well as freestyle and medley relay events),_ from Elementary to High school, 2001 - 2009
-- Competitive basketball player _(Power Forward, medalist on several student basketball championships),_ from Middle to High school, 2005 - 2009
+- Best Computer Engineering Undergraduate Thesis Award -- _ICMC-USP, 2016_
+- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition -- _TCD School of Engineering, 2014_
+- Gold Medal @ X Brazilian Astronomy Olympiad -- _Brazilian Astronomical Society & Brazilian Space Agency, 2007_
+- Bronze Medal @ III São Paulo State Countryside Kendo Championship -- _São Paulo State Kendo Federation, 2015_
 
 # Extras 
 
-- Brazilian Kendo Confederation Kendo Ikkyu (1<sup>st</sup> kyu), 2016
+- Brazilian Kendo Confederation Kendo Ikkyu _(Kendo "brown belt")_
 - Electronics hobbyist 
 - Amateur woodworker
 - DIY car detailer
@@ -243,4 +211,4 @@ _Aracaju, Brazil_
 - Catholic, member of the Society of Saint Vincent de Paul and extraordinaty minister of Holy Communion in my parish 
 - Guitar player
 
-_"Be thou strong therefore, and shew thyself a man." -- 1 Kings 2, 2b_
+> _"Be thou strong therefore, and shew thyself a man." -- 1 Kings 2, 2b_
