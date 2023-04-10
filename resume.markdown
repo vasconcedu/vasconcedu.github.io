@@ -136,6 +136,59 @@ _Dublin, Ireland_
     - Developed a Machine Learning model aimed at detecting laughter in human speech
     - Processed digital voice signals to feed said model
 
+# Education
+
+<p style="font-size:1.2em;"><b>University of São Paulo (USP)</b></p>
+
+_São Carlos, Brazil_
+
+- MSc, Computer Science and Computational Mathematics _(ongoing, expected December 2024)_
+
+    - Master's degree, Software Engineering
+    - My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures
+
+<p style="font-size:1.2em;"><b>University of Campinas (Unicamp)</b></p>
+
+_Campinas, Brazil_
+
+- Specialization, Software Engineering, 2019
+
+    - One-year Specialization Program in Software Engineering
+    - My aim with taking this course was to gain familiarity with SDLC practices so as to become more skilled at AppSec analysis and catch a glimpse at the big picture of software development
+    - Graduated with GPA 9.4/10.0
+
+<p style="font-size:1.2em;"><b>University of São Paulo (USP)</b></p>
+
+_São Carlos, Brazil_
+
+- BEng, Computer Engineering, 2017
+
+    - São Paulo Research Foundation (FAPESP) undergraduate research scholarship
+    - Served as undergraduate research intern at ICMC-USP's Distributed Systems and Concurrent Programming Laboratory (LaSDPC), where I worked at a research project focused on forecasting floods in cities
+    - Graduated 13<sup>th</sup>/59 with GPA 7.5/10.0
+    - Was granted ICMC-USP's Best Computer Engineering Undergraduate Thesis Award 2016 for my project on emotion recognition in human speech using Machine Learning 
+    - Served as Python Programming and Object-oriented Programming teaching assistant 
+    - Served as junior enterprise PHP developer
+
+<p style="font-size:1.2em;"><b>Trinity College Dublin (TCD)</b></p>
+
+_Dublin, Ireland_ 
+
+- Visiting student @ BEng, Electronic Engineering, 2014
+
+    - Brazilian Federal Government "Science without Borders" (SwB) scholarship
+    - Full-term visiting student (60 ECTS with Honors)
+    - 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition 2014
+
+<p style="font-size:1.2em;"><b>Microlins</b></p>
+
+_Aracaju, Brazil_ 
+
+- Professional Training, Computer Hardware and Network Maintenance, 2007 
+
+    - This was my first serious contact with computers as a young man
+    - Learned the basics of computer hardware, operating systems and computer networks
+
 # Languages 
 
 - Portuguese &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc; _(native)_
@@ -145,6 +198,8 @@ _Dublin, Ireland_
 
 # Prizes  
 
+- Best Computer Engineering Undergraduate Thesis Award, granted by ICMC-USP, 2016
+- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition, granted by the TCD School of Engineering, 2014
 - Gold Medal @ X Brazilian Astronomy Olympiad, granted by the Brazilian Astronomical Society & the Brazilian Space Agency, 2007
 - Bronze Medal @ III São Paulo State Countryside Kendo Championship, granted by the São Paulo State Kendo Federation, 2015
 - Competitive swimmer _(medalist on several federated and student swimming championships including individual freestyle, butterfly and medley events, as well as freestyle and medley relay events),_ from Elementary to High school, 2001 - 2009
