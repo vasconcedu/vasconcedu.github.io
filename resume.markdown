@@ -11,7 +11,7 @@ permalink: /resume/
     <p style="font-size:2em;">Eduardo Vasconcelos</p>
     <p style="font-size:1em;color:gray;">Computer Engineer, Senior Mobile Security Engineer, Master's Student, eCPPTv2 + 6, Catholic, husband, electronics hobbyist, amateur woodworker, Swiss Army Knife enthusiast</p>
     <!-- Socials -->
-    <!-- TryHackMe -->{% include _tryhackme_badge.html %} <br />
+    <!-- TryHackMe --><a href="https://tryhackme.com/p/vasconcedu" target="_blank">{% include _tryhackme_badge.html %}</a><br />
     <!-- GitHub --><p><a href="https://github.com/vasconcedu" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/github/github-original.svg" width="32" /></a> <!-- LinkedIn --><a href="https://www.linkedin.com/in/vasconcedu/" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linkedin/linkedin-original.svg" width="32" /></a></p>
 </center> <br />
 
@@ -161,7 +161,7 @@ _Campinas, Brazil_
 
 _São Carlos, Brazil_
 
-- BEng, Computer Engineering, 2017
+- BEng, Computer Engineering, 2012 - 2017
 
     - São Paulo Research Foundation (FAPESP) undergraduate research scholarship
     - Served as undergraduate research intern at ICMC-USP's Distributed Systems and Concurrent Programming Laboratory (LaSDPC), where I worked at a research project focused on forecasting floods in cities
@@ -174,7 +174,7 @@ _São Carlos, Brazil_
 
 _Dublin, Ireland_ 
 
-- Visiting student @ BEng, Electronic Engineering, 2014
+- Exchange student @ BEng, Electronic Engineering, 2013 - 2014
 
     - Brazilian Federal Government "Science without Borders" (SwB) scholarship
     - Full-term visiting student (60 ECTS with Honors)
