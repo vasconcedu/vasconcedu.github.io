@@ -56,32 +56,17 @@ I'm a computer engineer currently working for a tech company as a senior mobile 
 - [X] EXIN Secure Programming Foundation
 - [X] IBM Certified Administrator (Security Guardium V10.0)
 
-# Relevant Courses & Learning Activities
+# What I Do _(For The Most Part)_
 
-- [ ] The Complete Android 12 & Kotlin Development Masterclass by Denis Panjuta @ Udemy _(ongoing)_
-- [ ] Full Cycle 3.0 @ Full Cycle _(ongoing)_
-- [X] Android Architecture Masterclass @ iFood iLearn, 2022
-- [X] GitLab CI: Pipelines, Continuous Delivery & Deployment @ iFood iLearn, 2022
-- [X] Advent of Cyber 3 @ TryHackMe, 2021
-- [X] Introduction to Antenna Basics @ HackadayU, 2021
-- [X] Windows Privilege Escalation for Beginners by The Cyber Mentor @ Udemy, 2021
-- [X] Throwback Network Labs @ TryHackMe, 2021
-- [X] Threat Modeling Security Fundamentals @ Microsoft Docs Learn, 2021
-- [X] Penetration Testing Professional (PTP) v5 @ eLearnSecurity, 2020
-- [X] Practical Ethical Hacking: The Complete Course by The Cyber Mentor @ Udemy, 2020
-- [X] Certified Ethical Hacker (CEH) v10 @ EC-Council, 2020
-- [X] CompTIA PenTest+ (Ethical Hacking) Course & Practice Exam by Jason Dion @ Udemy, 2019
-- [X] Brazilian General Data Protection Act ("LGPD") @ Escola Virtual.Gov, 2019
-- [X] AWS Cloud Practitioner Essentials @ AWS, 2019
-- [X] Tenable BootCamp Training @ Tenable Network Security, 2018
-- [X] Secure Programming @ Clavis Security, 2018
-- [X] Introduction to Cryptography @ Unicamp, 2018
-- [X] The Complete Wireshark Course @ Udemy, 2017
-- [X] Nmap: Network Scanning Basics and Advanced Techniques @ Udemy, 2017
-- [X] Metasploit @ Cybrary, 2017
-- [X] Cybersecurity Best Practices @ Perallis Security, 2017
-- [X] Computer Security @ Unicamp, 2017
-- [X] Information Protection @ Embraer, 2016
+<p float="left">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg" height="64" />
+</p>
 
 # Experience
 
@@ -201,6 +186,33 @@ _Aracaju, Brazil_
 
     - This was my first serious contact with computers as a young man
     - Learned the basics of computer hardware, operating systems and computer networks
+
+# Relevant Courses & Learning Activities
+
+- [ ] The Complete Android 12 & Kotlin Development Masterclass by Denis Panjuta @ Udemy _(ongoing)_
+- [ ] Full Cycle 3.0 @ Full Cycle _(ongoing)_
+- [X] Android Architecture Masterclass @ iFood iLearn, 2022
+- [X] GitLab CI: Pipelines, Continuous Delivery & Deployment @ iFood iLearn, 2022
+- [X] Advent of Cyber 3 @ TryHackMe, 2021
+- [X] Introduction to Antenna Basics @ HackadayU, 2021
+- [X] Windows Privilege Escalation for Beginners by The Cyber Mentor @ Udemy, 2021
+- [X] Throwback Network Labs @ TryHackMe, 2021
+- [X] Threat Modeling Security Fundamentals @ Microsoft Docs Learn, 2021
+- [X] Penetration Testing Professional (PTP) v5 @ eLearnSecurity, 2020
+- [X] Practical Ethical Hacking: The Complete Course by The Cyber Mentor @ Udemy, 2020
+- [X] Certified Ethical Hacker (CEH) v10 @ EC-Council, 2020
+- [X] CompTIA PenTest+ (Ethical Hacking) Course & Practice Exam by Jason Dion @ Udemy, 2019
+- [X] Brazilian General Data Protection Act ("LGPD") @ Escola Virtual.Gov, 2019
+- [X] AWS Cloud Practitioner Essentials @ AWS, 2019
+- [X] Tenable BootCamp Training @ Tenable Network Security, 2018
+- [X] Secure Programming @ Clavis Security, 2018
+- [X] Introduction to Cryptography @ Unicamp, 2018
+- [X] The Complete Wireshark Course @ Udemy, 2017
+- [X] Nmap: Network Scanning Basics and Advanced Techniques @ Udemy, 2017
+- [X] Metasploit @ Cybrary, 2017
+- [X] Cybersecurity Best Practices @ Perallis Security, 2017
+- [X] Computer Security @ Unicamp, 2017
+- [X] Information Protection @ Embraer, 2016
 
 # Languages 
 
