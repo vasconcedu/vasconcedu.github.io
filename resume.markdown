@@ -142,7 +142,7 @@ _Dublin, Ireland_
 
 _São Carlos, Brazil_
 
-- MSc, Computer Science and Computational Mathematics _(ongoing, expected December 2024)_
+- MSc, Computer Science and Computational Mathematics, 2022 - ongoing _(expected December 2024)_
 
     - Master's degree, Software Engineering
     - My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures
