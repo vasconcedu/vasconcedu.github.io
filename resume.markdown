@@ -32,7 +32,7 @@ I'm a computer engineer currently working for a tech company as a senior mobile 
 - Secure Programming &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
 - Interpersonal Skills &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
 - Network Security Testing &#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;
-- Android Application Development &#x25fc;&#x25fc;&#x25fb;&#x25fb;&#x25fb;
+- Android Application Development &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
 - Reverse Engineering &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
 - Web Application Security Testing &#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;
 
