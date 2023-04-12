@@ -2,7 +2,7 @@
 layout: post
 title:  "OWASP MAS UnCrackable L1"
 date:   2023-04-12 00:00:00 -0300
-categories: android 
+categories: android  
 --- 
 
 Salutes from Araraquara! 
@@ -198,7 +198,7 @@ public static byte[] m0b(String str) {
 
 As for the call to `Base64#decode`, it's merely decoding the specified Base64 string using flag [`Base64.DEFAULT`, whose value is 0.](https://developer.android.com/reference/android/util/Base64#DEFAULT)
 
-The method then compares the value of `bArr` with its argument, returning `true` if they're equal, and `false` otherwise.
+Then, the method compares the value of `bArr` with its argument, returning `true` if they're equal, and `false` otherwise.
 
 Let's now examine `C0000a#m7a`:
 
@@ -218,7 +218,7 @@ The method receives two byte arrays, namely `bArr` and `bArr2`, then gets an ins
 
 Now  we know how the app works internally. We could solve this challenge by instrumenting the app and intercepting the return value of `#m7a`, but we'll do something much simpler. 
 
-Since the source code is not obfuscated and we have a very precise idea of what it does, not to mention access to all of the important methods, we'll merely craft an external Java program that will perform the very same operations the app would perform while it runs, and make the program print the secret we want. Such program can be crafted by merely copying code excerpts from the app and tinkering with them a little bit in order to account for the differences between the Android API and whatever version of Java our lab machine is running. I had `openjdk 17.0.6 2023-01-17`. Here's what my program looked like after I was done (for the record, it's actually an unnamed package, you can do that...): 
+Since the source code is not obfuscated and we have a very precise idea of what it does, not to mention access to all of the important methods, we'll merely craft an external Java program that will perform the very same operations the app would perform while it runs, and make the program print the secret we want. Such program can be crafted by merely copying code excerpts from the app and tinkering with them a little bit in order to account for the differences between the Android API and whatever version of Java our lab machine is running. I had `openjdk 17.0.6 2023-01-17`. Here's what my program looked like after I was done (for the record, it's actually an unnamed package, you can do that...):  
 
 ```java
 import java.security.InvalidKeyException;

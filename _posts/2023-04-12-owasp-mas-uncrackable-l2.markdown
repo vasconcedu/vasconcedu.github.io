@@ -2,7 +2,7 @@
 layout: post
 title:  "OWASP MAS UnCrackable L2"
 date:   2023-04-12 00:00:00 -0300
-categories: android
+categories: android 
 --- 
 
 Salutes from Araraquara! 
@@ -11,13 +11,13 @@ This post contains my solution to one of the [OWASP MAS Android Crackmes,](https
 
 ## Getting the APK 
 
-First of all, we need to download the APK. 
+First of all, we need to download the APK.  
 
 UnCrackable L2 is available [here.](https://github.com/OWASP/owasp-mastg/raw/master/Crackmes/Android/Level_02/UnCrackable-Level2.apk)
 
 ## App Behavior 
 
-After downloading and installing the APK, we give it a run in order to see how it behaves. After we start the app, an activity containing a single input and a button gets displayed. It looks like we're supposed to submit a so called secret string: 
+After downloading and installing the APK, we give run it in order to see how it behaves. After we start the app, an activity containing a single input and a button gets displayed. It looks like we're supposed to submit a so called secret string: 
 
 <img src="/images/ss-fieC4mieshahChiemohyaaTh9roPaiK3.png" width="300" />
 
