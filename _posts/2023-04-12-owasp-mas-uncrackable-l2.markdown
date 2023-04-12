@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "OWASP MAS UnCrackable L2"
-date:   2023-04-12 22:43:33 -0300
+date:   2023-04-12 00:00:00 -0300
 categories: android
 --- 
 
