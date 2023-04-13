@@ -17,7 +17,7 @@ UnCrackable L2 is available [here.](https://github.com/OWASP/owasp-mastg/raw/mas
 
 ## App Behavior 
 
-After downloading and installing the APK, we give run it in order to see how it behaves. After we start the app, an activity containing a single input and a button gets displayed. It looks like we're supposed to submit a so called secret string: 
+After downloading and installing the APK, we run it in order to see how it behaves. After we start the app, an activity containing a single input and a button gets displayed. It looks like we're supposed to submit a so called secret string: 
 
 <img src="/images/ss-fieC4mieshahChiemohyaaTh9roPaiK3.png" width="300" />
 
