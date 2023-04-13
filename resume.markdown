@@ -200,8 +200,8 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 # Extras 
 
-- Brazilian Kendo Confederation Kendo Ikkyu _(Kendo "brown belt")_
-- Electronics hobbyist 
+- Brazilian Kendo Confederation Kendo Ikkyu _(kendo "brown belt")_
+- Electronics hobbyist
 - Amateur woodworker
 - DIY car detailer
 - DIY car mechanic
