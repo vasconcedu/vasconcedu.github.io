@@ -122,6 +122,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 - Master's degree, Software Engineering
 - My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures
+- Serving as Software Engineering teaching assistant
 
 <p style="font-size:1.2em;"><b>University of Campinas (Unicamp)</b></p>
 
