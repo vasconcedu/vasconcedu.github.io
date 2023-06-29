@@ -47,7 +47,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 <p float="left">
   <img src="/images/eCPPTv2_logo.png" height="64" />
   <img src="/images/CompTIA_PenTest+_logo.png" height="64" />
-  <img src="/images/CEHv10_logo.png" height="64" /> 
+  <img src="/images/CEHv10_logo.png" height="64" />
   <img src="/images/TryHackMe_Throwback_logo.png" height="64" />
   <img src="/images/EXIN_EthicalHackingFoundation_logo.png" height="64" />
   <img src="/images/EXIN_SecureProgrammingFoundation_logo.png" height="64" />
@@ -80,7 +80,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 <b>Senior Mobile Security Engineer \|</b> _February 2022 -- Present_
 
-- Designing and coding Android application security and fraud prevention mechanisms
+- Designing and coding Android and iOS application security and fraud prevention mechanisms
 - Building Runtime Application Self-Protection (RASP) solutions into mobile apps
 
 <p style="font-size:1.2em;"><b>SiDi</b></p>
@@ -94,7 +94,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 <p style="font-size:1.2em;"><b>Hacker Rangers <i>(formerly Perallis Security)</i></b></p>
 
 <b>Information Security Analyst \|</b> _September 2017 -- April 2019_<br />
-<b>Information Security Trainee \|</b> _June 2017 -- September 2017_ 
+<b>Information Security Trainee \|</b> _June 2017 -- September 2017_
 
 - Worked as a consultant providing several Offensive Security services such as Web Application and Network security assessments and Phishing campaigns
 - Engaged in application Cloud Identity development and integration
