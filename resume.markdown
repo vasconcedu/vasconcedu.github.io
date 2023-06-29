@@ -41,6 +41,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 - Android Application Development <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
 - Reverse Engineering <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
 - Web Application Security Testing <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
+- iOS Application Development <font color="#c6c6cd">&#x25fc;&#x25fb;&#x25fb;&#x25fb;&#x25fb;</font>
 
 # Certifications
 
