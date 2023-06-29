@@ -69,6 +69,8 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/apple/apple-original.svg" heigth="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/xcode/xcode-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" height="64" />
