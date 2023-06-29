@@ -17,7 +17,7 @@ permalink: /resume/
 
 # About Me 
 
-I'm a computer engineer currently working for a tech company as a senior mobile security engineer. My duties comprise mainly designing and coding Android application security mechanisms. 
+I'm a computer engineer currently working for a tech company as a senior mobile security engineer. My duties comprise mainly designing and coding Android and iOS application security mechanisms. 
 
 Before that, I used to work at a research institute that provided penetration testing services for a major Android device manufacturer. My job was to find and exploit vulnerabilities in global Android applications. 
 
