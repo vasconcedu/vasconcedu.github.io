@@ -44,7 +44,7 @@ Reclaimed wood shoe rack. Pine, varnish finish.
 
 ## Desk
 
-I got tired of those flimsy medium-density fiberboard desks available on the market, so I built my own desk with actual wood and iron. _Curupixá_ wood top, iron legs, mirrored varnish finish. 
+I got tired of those flimsy medium-density fiberboard desks available on the market, so I built my own desk with actual wood and iron. _Curupixá_ wooden door top, iron legs, mirrored varnish finish. 
 
 <img src="/images/desk-1.jpeg" width="250" />
 <img src="/images/desk-3.jpeg" width="250" />
