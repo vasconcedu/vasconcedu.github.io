@@ -27,7 +27,7 @@ A small wine rack for our living room. Pine, oil finish.
 
 ## Key Rack 
 
-DIY key rack. Notice the Mr. MacGyver/Mrs. MacGyver keychains. Pine, oil finish. 
+DIY key rack. Notice the Mr. & Mrs. MacGyver keychains. Pine, oil finish. 
 
 <img src="/images/key-rack-1.jpeg" width="250" />
 <img src="/images/key-rack-2.jpeg" width="250" />
