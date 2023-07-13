@@ -32,7 +32,7 @@ DIY key rack. Notice the Mr. & Mrs. MacGyver keychains. Pine, oil finish.
 <img src="/images/key-rack-1.jpeg" width="250" />
 <img src="/images/key-rack-2.jpeg" width="250" />
 
-## Shoe rack
+## Shoe Rack
 
 Reclaimed wood shoe rack. Pine, varnish finish. 
 
