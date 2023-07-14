@@ -206,10 +206,10 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 - Brazilian Kendo Confederation Kendo Ikkyu _(kendo "brown belt")_
 - Electronics hobbyist
-- Amateur woodworker
+- Woodworking hobbyist
 - DIY car detailer
-- DIY car mechanic
 - Handyman
+- Sportsman
 - Full-time husband, happily married to the most beautiful and loving woman on this planet
 - Swiss Army Knife enthusiast
 - Catholic, member of the Society of Saint Vincent de Paul and extraordinaty minister of Holy Communion in my parish 
