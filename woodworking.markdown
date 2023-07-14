@@ -10,8 +10,6 @@ A jewelry box I made for my then _fiancée,_ now wife. Pine and eucalyptus, stai
 
 <img src="/images/box-1.jpeg" width="250" />
 <img src="/images/box-3.jpeg" width="250" />
-<br />
-<br />
 <img src="/images/box-4.jpeg" width="250" />
 <img src="/images/box-5.jpeg" width="250" />
 
@@ -21,8 +19,6 @@ A small wine rack for our living room. Pine, oil finish.
 
 <img src="/images/wine-rack-3.jpeg" width="250" />
 <img src="/images/wine-rack-2.jpeg" width="250" />
-<br />
-<br />
 <img src="/images/wine-rack-1.jpeg" width="250" />
 
 ## Key Rack 
@@ -38,8 +34,6 @@ Reclaimed wood shoe rack. Pine, varnish finish.
 
 <img src="/images/shoe-rack-1.jpeg" width="250" />
 <img src="/images/shoe-rack-2.jpeg" width="250" />
-<br />
-<br />
 <img src="/images/shoe-rack-3.jpeg" width="250" />
 
 ## Desk
@@ -48,6 +42,4 @@ I got tired of those flimsy medium-density fiberboard desks available on the mar
 
 <img src="/images/desk-1.jpeg" width="250" />
 <img src="/images/desk-3.jpeg" width="250" />
-<br />
-<br />
 <img src="/images/desk-2.jpeg" width="250" />
