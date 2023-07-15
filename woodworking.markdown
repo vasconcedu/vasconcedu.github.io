@@ -21,6 +21,15 @@ A small wine rack for our living room. Pine, oil finish.
 <img src="/images/wine-rack-2.jpeg" width="250" />
 <img src="/images/wine-rack-1.jpeg" width="250" />
 
+## Mini Folding Table
+
+Better half and I enjoy spending our friday nights at home. We usually pick up a pizza and watch a TV show. I made this mini folding table out of an old bed base that we were going to dump, inpired by a Swedish folding table design, so that we have enough space for our pizza and our wine glasses on TV nights! 
+
+<img src="/images/mini-folding-table-1.jpeg" width="250" />
+<img src="/images/mini-folding-table-2.jpeg" width="250" />
+<img src="/images/mini-folding-table-3.jpeg" width="250" />
+<img src="/images/mini-folding-table-4.jpeg" width="250" />
+
 ## Key Rack 
 
 DIY key rack. Notice the Mr. & Mrs. MacGyver keychains. Pine, oil finish. 
