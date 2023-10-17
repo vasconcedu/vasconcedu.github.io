@@ -13,9 +13,9 @@ permalink: /archive/
 
 - [RC Circuit (Series) Analysis and Simulation](/electronics/2023/04/08/rc-circuit-series-analysis-and-simulation.html)
 
-## Talk
+## Talk Slides
 
-- [Profissão: Ethical Hacker - Desmistificando Cyber Security](/talk/2023/10/16/icmc-usp-talk-october-2023.html)
+- [Talk Slides: \"Profissão: Ethical Hacker - Desmistificando Cyber Security\"](/talk/2023/10/16/icmc-usp-talk-october-2023.html)
 
 ## Update
 
