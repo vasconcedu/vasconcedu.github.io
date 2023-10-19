@@ -15,7 +15,7 @@ permalink: /archive/
 
 ## Talk Slides
 
-- [Talk Slides: \"Profissão: Ethical Hacker - Desmistificando Cyber Security\"](/talk/2023/10/16/icmc-usp-talk-october-2023.html)
+- [Talk Slides: \"Profissão: Ethical Hacker - Desmistificando Cyber Security\"](/talk/2023/10/16/talk-slides-profissao-ethical-hacker.html)
 
 ## Update
 
