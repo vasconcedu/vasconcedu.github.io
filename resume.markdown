@@ -84,7 +84,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 <b>Senior Mobile Security Engineer \|</b> _February 2022 -- Present_
 
 - Designing and coding Android and iOS application security and fraud prevention mechanisms
-- Building Runtime Application Self-Protection (RASP) solutions into mobile apps
+- Integrating Runtime Application Self-Protection (RASP) solutions into mobile app pipelines
 
 <p style="font-size:1.2em;"><b>SiDi</b></p>
 
@@ -163,8 +163,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 # Relevant Courses & Learning Activities
 
-- [ ] The Complete Android 12 & Kotlin Development Masterclass by Denis Panjuta _@ Udemy (ongoing)_
-- [ ] Full Cycle 3.0 _@ Full Cycle (ongoing)_
+- [ ] Hacking Mobile Application - Android _@ Sec4US (ongoing)_
 - [X] Android Architecture Masterclass _@ iFood iLearn, 2022_
 - [X] GitLab CI: Pipelines, Continuous Delivery & Deployment _@ iFood iLearn, 2022_
 - [X] Advent of Cyber 3 _@ TryHackMe, 2021_
