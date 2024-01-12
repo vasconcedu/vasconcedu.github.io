@@ -152,7 +152,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 - Brazilian Federal Government "Science without Borders" (SwB) scholarship
 - Full-term visiting student (60 ECTS with Honors)
-- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition 2014
+- Was granted a Special Prize for the Best Product Branding Video at the Trinity Engineering Student Entrepreneurs of The Year Competition 2014, promoted by the TCD School of Engineering
 
 <p style="font-size:1.2em;"><b>Microlins</b></p>
 
@@ -197,7 +197,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 # Prizes  
 
 - Best Computer Engineering Undergraduate Thesis Award -- _ICMC-USP, 2016_
-- 3<sup>rd</sup> place @ Trinity Engineering Student Entrepreneurs of The Year Competition -- _TCD School of Engineering, 2014_
+- Special Prize (Best Product Branding Video) @ Trinity Engineering Student Entrepreneurs of The Year Competition -- _TCD School of Engineering, 2014_
 - Gold Medal @ X Brazilian Astronomy Olympiad -- _Brazilian Astronomical Society & Brazilian Space Agency, 2007_
 - Bronze Medal @ III São Paulo State Countryside Kendo Championship -- _São Paulo State Kendo Federation, 2015_
 
