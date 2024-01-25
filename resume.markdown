@@ -142,7 +142,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 - São Paulo Research Foundation (FAPESP) undergraduate research scholarship
 - Served as undergraduate research intern at ICMC-USP's Distributed Systems and Concurrent Programming Laboratory (LaSDPC), where I worked at a research project focused on forecasting floods in cities
 - Graduated 13<sup>th</sup>/59 with GPA 7.5/10.0
-- Was granted ICMC-USP's Best Computer Engineering Undergraduate Thesis Award 2016 for my project on emotion recognition in human speech using Machine Learning 
+- I was granted ICMC-USP's Best Computer Engineering Undergraduate Thesis Award 2016 for my project on emotion recognition in human speech using Machine Learning 
 - Served as Python Programming and Object-oriented Programming teaching assistant 
 - Served as junior enterprise PHP developer
 
@@ -152,7 +152,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 - Brazilian Federal Government "Science without Borders" (SwB) scholarship
 - Full-term visiting student (60 ECTS with Honors)
-- Was granted a Special Prize for the Best Product Branding Video at the Trinity Engineering Student Entrepreneurs of The Year Competition 2014, promoted by the TCD School of Engineering
+- I was granted a Special Prize for the Best Product Branding Video at the Trinity Engineering Student Entrepreneurs of The Year Competition 2014, promoted by the TCD School of Engineering
 
 <p style="font-size:1.2em;"><b>Microlins</b></p>
 
