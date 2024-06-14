@@ -9,7 +9,7 @@ permalink: /resume/
     <img src="/images/me.png" width="200" /> <br /><br />
     <!-- Headlines -->
     <p style="font-size:2em;"><b>Eduardo Vasconcelos</b> <!-- Socials --><!-- GitHub --><a href="https://github.com/vasconcedu" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/github/github-original.svg" width="24" /></a> <!-- LinkedIn --><a href="https://www.linkedin.com/in/vasconcedu/" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linkedin/linkedin-original.svg" width="24" /></a></p>
-    <p style="font-size:1em;color:#c6c6cd;"><b>Computer Engineer | Senior Mobile Security Engineer @ iFood | Master's Student | eCPPTv2 + 6</b></p>
+    <p style="font-size:1em;color:#c6c6cd;"><b>Computer Engineer | Senior Mobile Security Engineer @ iFood | Master's Student | eCPPTv2 + 4</b></p>
     <p><!-- TryHackMe --><a href="https://tryhackme.com/p/vasconcedu" target="_blank">{% include _tryhackme_badge.html %}</a><br /></p>
 </center>
 
@@ -23,7 +23,7 @@ Before that, I used to work at a research institute that provided penetration te
 
 I'm currently pursuing a Master's degree in Computer Science and Computational Mathematics. My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures. 
 
-I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out electronics and woodworking projects, reading and camping.
+I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out electronics and woodworking projects, reading, swimming and camping.
 
 # Contact Me 
 
@@ -47,8 +47,6 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 <p float="left">
   <img src="/images/eCPPTv2_logo.png" height="64" />
-  <img src="/images/CompTIA_PenTest+_logo.png" height="64" />
-  <img src="/images/CEHv10_logo.png" height="64" />
   <img src="/images/TryHackMe_Throwback_logo.png" height="64" />
   <img src="/images/EXIN_EthicalHackingFoundation_logo.png" height="64" />
   <img src="/images/EXIN_SecureProgrammingFoundation_logo.png" height="64" />
@@ -56,12 +54,12 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 </p>
 
 - [X] eLearnSecurity Certified Professional Penetration Tester (eCPPTv2)
-- [X] CompTIA PenTest+
-- [X] EC-Council Certified Ethical Hacker (CEHv10)
 - [X] TryHackMe Throwback (Attacking Windows Active Directory)
 - [X] EXIN Ethical Hacking Foundation
 - [X] EXIN Secure Programming Foundation
 - [X] IBM Certified Administrator (Security Guardium V10.0)
+- [ ] _Expired: CompTIA PenTest+_
+- [ ] _Expired: EC-Council Certified Ethical Hacker (CEHv10)_
 
 # What I Do _(For The Most Part)_
 
@@ -69,12 +67,12 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" height="64" />
-    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/apple/apple-original.svg" height="64" />
-    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/swift/swift-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" height="64" />
     <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/apple/apple-original.svg" height="64" />
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/swift/swift-original.svg" height="64" />
 </p>
 
 # Experience
@@ -83,8 +81,9 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 <b>Senior Mobile Security Engineer \|</b> _February 2022 -- Present_
 
-- Designing and coding Android and iOS application security and fraud prevention mechanisms
-- Integrating Runtime Application Self-Protection (RASP) solutions into mobile app pipelines
+- Designing and coding Android and iOS application security and fraud prevention mechanisms for mission critical apps with over 40 million active users per month
+- Integrating Runtime Application Self-Protection (RASP) solutions into mobile app CI/CD pipelines
+- Aiding development teams in unveiling, analyzing and preventing mobile app exploitation
 
 <p style="font-size:1.2em;"><b>SiDi</b></p>
 
@@ -163,7 +162,8 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 # Relevant Courses & Learning Activities
 
-- [ ] Hacking Mobile Application - Android _@ Sec4US (ongoing)_
+- [ ] Software Architecture & Design of Modern Large Scale Systems _@ Udemy (ongoing)_
+- [X] Hacking Mobile Application - Android _@ Sec4US, 2024_
 - [X] Android Architecture Masterclass _@ iFood iLearn, 2022_
 - [X] GitLab CI: Pipelines, Continuous Delivery & Deployment _@ iFood iLearn, 2022_
 - [X] Advent of Cyber 3 _@ TryHackMe, 2021_
@@ -190,9 +190,9 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 # Languages 
 
 - Portuguese <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;</font> _(native)_
-- English <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font> _(High school exchange student in Ontario, 2008 -- 2009; Engineering school exchange student in Ireland, 2013 -- 2014)_
+- English <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font> _(IELTS band score: 8.0, 2024; Engineering school exchange student in Ireland, 2013 -- 2014; High school exchange student in Canada, 2008 -- 2009)_
 - French <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
-- Italian <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fb;&#x25fb;&#x25fb;</font>
+- Italian <font color="#c6c6cd">&#x25fc;&#x25fb;&#x25fb;&#x25fb;&#x25fb;</font>
 
 # Prizes  
 
@@ -208,9 +208,9 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 - Woodworking hobbyist
 - DIY car detailer
 - Handyman
-- Sportsman
+- Sportsman (swimmer)
 - Full-time husband, happily married to the most beautiful and loving woman on this planet
-- Swiss Army Knife enthusiast
+- Swiss Army Knife/pocket knife enthusiast
 - Catholic, member of the Society of Saint Vincent de Paul and extraordinaty minister of Holy Communion in my parish 
 - Guitar player
 
