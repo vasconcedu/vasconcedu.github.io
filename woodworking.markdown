@@ -52,3 +52,9 @@ I got tired of those flimsy medium-density fiberboard desks available on the mar
 <img src="/images/desk-1.jpeg" width="250" />
 <img src="/images/desk-3.jpeg" width="250" />
 <img src="/images/desk-2.jpeg" width="250" />
+
+## Table 
+
+Pine, varnish finish. 
+
+<img src="/images/table.jpeg" width="250" />
