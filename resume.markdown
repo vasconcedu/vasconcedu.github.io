@@ -77,8 +77,6 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 <p style="font-size:1.2em;"><b>SiDi</b></p>
 
 <b>Master Application Security Architect \|</b> _August 2024 -- Present_<br />
-<b>Software Security Analyst \|</b> _April 2019 -- February 2021_
-
 
 <p style="font-size:1.2em;"><b>iFood</b></p>
 
