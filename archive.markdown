@@ -15,12 +15,12 @@ permalink: /archive/
 
 ## Paper
 
-- [Mutation Testing to Support the Security Testing of Android Applications](/paper/2024/09/06/cbsoft-2024-paper.html)
+- [Mutation Testing to Support the Security Testing of Android Applications](/paper/2024/09/05/cbsoft-2024-paper.html)
 
 ## Talk Slides
 
 - [Talk Slides: \"Profissão: Ethical Hacker - Desmistificando Cyber Security\"](/talk/2023/10/16/talk-slides-profissao-ethical-hacker.html)
-- [My Talk at SEnC 2024: \"Introdução à Segurança de Aplicações Android\"](/talk/2024/09/06/senc-2024-talk.html)
+- [My Talk at SEnC 2024: \"Introdução à Segurança de Aplicações Android\"](/talk/2024/09/05/senc-2024-talk.html)
 
 ## Update
 
