@@ -21,7 +21,7 @@ I'm a computer engineer currently working for a research institute as a master a
 
 I'm currently pursuing a Master's degree in Computer Science and Computational Mathematics. My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures. 
 
-I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out woodworking projects, reading, sharpening knives, swimming and camping.
+I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out woodworking projects, reading, sharpening knives, lifting, swimming and camping.
 
 # Contact Me 
 
