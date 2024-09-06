@@ -9,7 +9,7 @@ permalink: /resume/
     <img src="/images/me.png" width="200" /> <br /><br />
     <!-- Headlines -->
     <p style="font-size:2em;"><b>Eduardo Vasconcelos</b> <!-- Socials --><!-- GitHub --><a href="https://github.com/vasconcedu" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/github/github-original.svg" width="24" /></a> <!-- LinkedIn --><a href="https://www.linkedin.com/in/vasconcedu/" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linkedin/linkedin-original.svg" width="24" /></a></p>
-    <p style="font-size:1em;color:#c6c6cd;"><b>Computer Engineer | Senior Mobile Security Engineer @ iFood | Master's Student @ USP | eCPPTv2 + 4</b></p>
+    <p style="font-size:1em;color:#c6c6cd;"><b>Computer Engineer | Senior Mobile Security Engineer @ iFood | Master's Student @ USP | eCPPTv2 + 3</b></p>
     <p><!-- TryHackMe --><a href="https://tryhackme.com/p/vasconcedu" target="_blank">{% include _tryhackme_badge.html %}</a><br /></p>
 </center>
 
