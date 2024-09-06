@@ -17,13 +17,11 @@ permalink: /resume/
 
 # About Me 
 
-I'm a computer engineer currently working for a tech company as a senior mobile security engineer. My duties comprise mainly designing and coding Android and iOS application security mechanisms. 
-
-Before that, I used to work at a research institute that provided penetration testing services for a major Android device manufacturer. My job was to find and exploit vulnerabilities in global Android applications. 
+I'm a computer engineer currently working for a research institute as a master application security architect. My duties comprise mainly threat modeling, designing and coding application security mechanisms. 
 
 I'm currently pursuing a Master's degree in Computer Science and Computational Mathematics. My research focuses on leveraging mutation testing techniques to inject vulnerabilities into Android apps as a means to evaluate mobile security testing procedures. 
 
-I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out electronics and woodworking projects, reading, swimming and camping.
+I'm a Catholic and a husband. I absolutely love building stuff, especially when I can literally get my hands dirty. Apart from building and sometimes reversing software, I also enjoy carrying out woodworking projects, reading, sharpening knives, swimming and camping.
 
 # Contact Me 
 
@@ -50,14 +48,13 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
   <img src="/images/TryHackMe_Throwback_logo.png" height="64" />
   <img src="/images/EXIN_EthicalHackingFoundation_logo.png" height="64" />
   <img src="/images/EXIN_SecureProgrammingFoundation_logo.png" height="64" />
-  <img src="/images/IBM_CertifiedAdministratorSecurityGuardiumV10_logo.png" height="64" />
 </p>
 
 - [X] eLearnSecurity Certified Professional Penetration Tester (eCPPTv2)
 - [X] TryHackMe Throwback (Attacking Windows Active Directory)
 - [X] EXIN Ethical Hacking Foundation
 - [X] EXIN Secure Programming Foundation
-- [X] IBM Certified Administrator (Security Guardium V10.0)
+- [ ] _Expired: IBM Certified Administrator (Security Guardium V10.0)_
 - [ ] _Expired: CompTIA PenTest+_
 - [ ] _Expired: EC-Council Certified Ethical Hacker (CEHv10)_
 
@@ -197,7 +194,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 - Portuguese <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fc;</font> _(native)_
 - English <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fc;&#x25fb;</font> _(IELTS band score: 8.0, 2024; Engineering school exchange student in Ireland, 2013 -- 2014; High school exchange student in Canada, 2008 -- 2009)_
-- French <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font>
+- French <font color="#c6c6cd">&#x25fc;&#x25fc;&#x25fc;&#x25fb;&#x25fb;</font> _(TCF scores: Compréhension orale - B2; Compréhension écrite - C1; Expression orale - C1; Expression écrite - B2, 2024)_
 - Italian <font color="#c6c6cd">&#x25fc;&#x25fb;&#x25fb;&#x25fb;&#x25fb;</font>
 
 # Prizes  
