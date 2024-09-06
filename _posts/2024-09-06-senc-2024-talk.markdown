@@ -13,6 +13,8 @@ This post refers to a talk titled _"Introdução à Segurança de Aplicações A
 
 There's a recording of it on YouTube: <a href="https://youtu.be/EjIpM_zFElk" target="blank">here you go.</a>
 
+And <a href="/uploads/Introducao_a_Seguranca_de_Aplicacoes_Android.pdf" target="blank">here's the talk slides</a> if you want them.
+
 Cheers,
 
 Eduardo

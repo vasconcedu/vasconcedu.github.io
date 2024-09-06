@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "Mutation Testing to Support the Security Testing of Android Applications"
+date:   2024-09-05 00:00:00 -0300
+categories: paper 
+--- 
+
+Salutes from Araraquara!
+
+My paper _"Mutation Testing to Support the Security Testing of Android Applications"_ has been published in the Brazilian Conference on Software: Practice and Theory (CBSoft), an annual event promoted by the Brazilian Computing Society (SBC). CBSoft is one of the main conferences of the Brazilian scientific community on Computing.
+
+I suppose you came here for the paper: <a href="/uploads/CBSoft_SAST_2024_-_Mutation_Testing_to_Support_the_Security_Testing_of_Android_Applications.pdf" target="blank">here you go.</a>
+
+Cheers,
+
+Eduardo
