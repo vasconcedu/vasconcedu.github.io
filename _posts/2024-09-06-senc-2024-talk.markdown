@@ -1,0 +1,18 @@
+---
+layout: post
+title:  "My Talk at SEnC 2024: \"Introdução à Segurança de Aplicações Android\""
+date:   2024-09-05 00:00:00 -0300
+categories: talk 
+--- 
+
+<img src="/images/senc-talk-2024.jpeg" width="300"/>
+
+Salutes from Araraquara!
+
+This post refers to a talk titled _"Introdução à Segurança de Aplicações Android",_ which I gave as a speaker at SEnC 2024 on September 21, 2024.
+
+There's a recording of it on YouTube: <a href="https://youtu.be/EjIpM_zFElk" target="blank">here you go.</a>
+
+Cheers,
+
+Eduardo
