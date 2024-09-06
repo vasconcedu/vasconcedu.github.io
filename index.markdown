@@ -5,6 +5,9 @@ title: Home
 
 ### _Olá,_ I'm Eduardo! 👋
 
+
+<img src="/images/camping-cover.png" width="300"/>
+
 I'm a common man who's a Catholic and a husband. I work for a research institute as a master application security architect.
 
 The professional side of this blog is about security engineering, programming, mobile application security and reverse engineering.
