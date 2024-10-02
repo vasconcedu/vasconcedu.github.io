@@ -13,7 +13,9 @@ My paper _"Mutation Testing to Support the Security Testing of Android Applicati
 
 I suppose you came here for the paper: <a href="/uploads/CBSoft_SAST_2024_-_Mutation_Testing_to_Support_the_Security_Testing_of_Android_Applications.pdf" target="blank">here you go.</a>
 
-**Update (02-10-2024): my paper has been awarded the Distinguished Paper Award! This was really unexpected and I'm so happy for it!**
+**Update [1] (10-02-2024): If you're looking for the slides, <a href="/uploads/Mutation_Testing_to_Support_the_Security_Testing_of_Android_Applications.pdf" target="blank">here you go.</a>**
+
+**Update [2] (10-02-2024): my paper has been awarded the Distinguished Paper Award! This was really unexpected and I'm so happy for it!**
 
 <img src="/images/distinguished-paper-award-2024.jpeg" width="300"/>
 
