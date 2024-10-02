@@ -197,6 +197,7 @@ I'm a Catholic and a husband. I absolutely love building stuff, especially when 
 
 # Prizes  
 
+- Distinguished Paper Award @ 15th Brazilian Conference on Software (CBSoft'24) -- _Brazilian Conference on Software, 2024_
 - Best Computer Engineering Undergraduate Thesis Award -- _ICMC-USP, 2016_
 - Special Prize (Best Product Branding Video) @ Trinity Engineering Student Entrepreneurs of The Year Competition -- _TCD School of Engineering, 2014_
 - Gold Medal @ X Brazilian Astronomy Olympiad -- _Brazilian Astronomical Society & Brazilian Space Agency, 2007_
