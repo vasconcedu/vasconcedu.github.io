@@ -7,7 +7,7 @@ categories: knives
 
 <img src="/images/rr-trapper.jpeg" width="600" />
 
-# Introduction 
+## Introduction 
 
 Salutes from Araraquara! 
 
@@ -17,7 +17,7 @@ There's nothing more frustrating than struggling with a dull knife in the kitche
 
 In this post, I'd like to share with you the proper way to sharpen a knife. I'll not only show you _how_ to achieve a reliable working edge suitable for nearly all everyday tasks but also explain _why_ each step is crucial. Let's dive in!
 
-# The Tools
+## The Tools
 
 Forget about fancy sharpening jigs. Why?
 
@@ -62,9 +62,9 @@ Be sure to get the proper lubricant for your stone (personally, I prefer water s
 
 <img src="/images/sharpening-prep.png" width="600" />
 
-# The Process
+## The Process
 
-## Thinning the Secondary Edge
+### Thinning the Secondary Edge
 
 We've been discussing the significance of the secondary edge in cutting performance, so it's no surprise that the first step in sharpening a knife is to thin it. However, this isn't always necessary. You only need to do this if you notice that your secondary edge is too obtuse and you want to enhance the blade's cutting ability by thinning it behind the edge.
 
@@ -90,7 +90,7 @@ Here's an animation to help you visualize the process. In this clip, I'm thinnin
 
 <img src="/images/sharpening-secondary-edge.gif" width="480" />
 
-## Establishing a Primary Edge (Edge Bevel) 
+### Establishing a Primary Edge (Edge Bevel) 
 
 Once you've adequately thinned the secondary edge of your knife, the next step is to establish the primary edge, also known as the edge bevel. To do this, lift the blade slightly and lay the knife on the fine side of the stone at an angle of your choice, as illustrated below:
 
@@ -108,9 +108,11 @@ In this step, what we're aiming for is a bevel that is narrow enough to initiate
 
 Another important observation is that you should exercise extra caution as you transition between steps. Specifically, be sure to double your diligence when moving from secondary edge grinding to primary edge grinding. This attention to detail will lead to a cleaner, more refined edge. I can't stress enough: take your time, grind slowly and patiently, and check your progress constantly. Finally, when grinding the primary edge, you should apply only light pressure.
 
-Begin each grind at the ricasso of the blade, progressing toward the tip. As you progress, gently lift the hand holding the knife handle while slightly twisting it outward to accommodate variations in the tip angle, as illustrated below:
+Begin each grind at the ricasso of the blade, progressing toward the tip, as illustrated below:
 
 <img src="/images/sharpening-fig-9.png" width="600" />
+
+As you progress, gently lift the hand holding the knife handle while slightly twisting it outward to accommodate variations in the tip angle:
 
 <img src="/images/sharpening-fig-10.png" width="600" />
 
@@ -118,7 +120,7 @@ Once again, here's an animation to help you visualize the process. Here, I'm sti
 
 <img src="/images/sharpening-primary-edge.gif" width="480" />
 
-## Stropping 
+### Stropping 
 
 At this point, you should have a knife with a sufficiently sharp working edge that will perform well in everyday tasks. We can enhance this edge further by stropping it. 
 
@@ -138,7 +140,7 @@ Here's a clip to illustrate the stropping process. In this clip, I'm stropping m
 
 <img src="/images/sharpening-stropping.gif" width="480" />
 
-## Testing
+### Testing
 
 To test the sharpness of your knife after finishing, use the classic paper testing method: hold the paper vertically and angle the blade toward it. If the knife is properly sharpened, it should cut effortlessly through the paper. 
 
