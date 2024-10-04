@@ -17,6 +17,10 @@ permalink: /archive/
 
 - [Mutation Testing to Support the Security Testing of Android Applications](/paper/2024/09/05/cbsoft-2024-paper.html)
 
+## Knives
+
+- [How to Properly Sharpen a Knife](/knives/2024/10/04/how-to-properly-sharpen-a-knife.html)
+
 ## Talk Slides
 
 - [Talk Slides: \"Profissão: Ethical Hacker - Desmistificando Cyber Security\"](/talk/2023/10/16/talk-slides-profissao-ethical-hacker.html)
