@@ -108,7 +108,7 @@ In this step, what we're aiming for is a bevel that is narrow enough to initiate
 
 Another important observation is that you should exercise extra caution as you transition between steps. Specifically, be sure to double your diligence when moving from secondary edge grinding to primary edge grinding. This attention to detail will lead to a cleaner, more refined edge. I can't stress enough: take your time, grind slowly and patiently, and check your progress constantly. Finally, when grinding the primary edge, you should apply only light pressure.
 
-Begin each grind at the ricasso of the blade, progressing toward the tip, as illustrated below:
+Begin each grind at the ricasso of the blade, progressing toward the tip, as illustrated below (bird's eye view):
 
 <img src="/images/sharpening-fig-9.png" width="600" />
 
