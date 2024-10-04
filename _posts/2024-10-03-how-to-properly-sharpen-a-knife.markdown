@@ -5,7 +5,7 @@ date:   2024-10-04 00:00:00 -0300
 categories: knives 
 --- 
 
-<img src="../images/rr-trapper.jpeg" width="600" />
+<img src="/images/rr-trapper.jpeg" width="600" />
 
 # Introduction 
 
@@ -27,7 +27,7 @@ At its core, a knife blade is a tool that's designed to separate materials, be i
 
 Thus, the cutting performance of a knife is largely influenced by its ability to navigate this cutting line, a quality we refer to as _cutting ability._ The cutting ability is directly linked to the knife's blade geometry: the thinner the blade, the easier it slices through materials. Conversely, a thicker blade, despite being more robust, makes this task more challenging. The diagram below illustrates this concept. Geometry (a) is thicker, which reduces its cutting ability with respect to geometry (b):  
 
-<img src="../images/sharpening-fig-1.png" width="600" />
+<img src="/images/sharpening-fig-1.png" width="600" />
 
 Now, let's delve into the concepts of primary and secondary edges. Knife geometries are crafted with these two bevels in mind:
 
@@ -36,13 +36,13 @@ Now, let's delve into the concepts of primary and secondary edges. Knife geometr
 
 Here's a close-up of the main blade of my beloved Victorinox SwissChamp, my favorite camping knife, showcasing both bevels clearly:
 
-<img src="../images/swisschamp.jpeg" width="600" />
+<img src="/images/swisschamp.jpeg" width="600" />
 
 Typically, when maintaining a blade, we focus on sharpening the primary edge. However, over time, as you remove steel from the edge when you sharpen the blade, it can gradually become wider near the edge, which diminishes its cutting ability. The diagram below illustrates this process. It depicts a cross section of the same knife blade, gradually tapering down to the edge, at different points in time.
 
 At time t<sub>0</sub>, the blade's initial state shows a width of W<sub>0</sub> where the secondary edge transitions to the primary edge. As the blade is sharpened, this width increases (with W<sub>0</sub> < W<sub>1</sub> < W<sub>2</sub> and so on), leading to a decline in its cutting ability over time: 
 
-<img src="../images/sharpening-fig-2.png" width="600" />
+<img src="/images/sharpening-fig-2.png" width="600" />
 
 While sharpening jigs are great for maintaining the primary edge, you'll eventually need to rework the secondary edge to properly care for your knife, and a sharpening jig can't accomplish this.
 
@@ -60,7 +60,7 @@ That said, all you really need to sharpen a knife is a quality whetstone. A basi
 
 Be sure to get the proper lubricant for your stone (personally, I prefer water stones). Lubricate it (for water stones, simply submerge the stone in water until it stops bubbling), then place it on a damp towel or napkin on a flat surface, and you're good to go. If you're using water stones, it's a good idea to have water nearby. You want to keep it consistently wet and clean throughout the sharpening process:
 
-<img src="../images/sharpening-prep.png" width="600" />
+<img src="/images/sharpening-prep.png" width="600" />
 
 # The Process
 
@@ -72,51 +72,51 @@ We've been discussing the significance of the secondary edge in cutting performa
 
 Thinning should be done by laying the knife on the coarse side of the stone at a slight angle of only a few degrees (I prefer around 10°, but I encourage you to experiment and find what works best for you), and grinding with moderate pressure in order to gradually reduce the thickness of the blade just behind the edge, as illustrated below:
 
-<img src="../images/sharpening-fig-4.png" width="600" />
+<img src="/images/sharpening-fig-4.png" width="600" />
 
 Maintaining a steady angle will result in a more visually appealing edge, but functionally, it's not crucial at this stage.
 
 Let's look at another diagram. If you'll remember, We're trying to reduce W, namely the width of cross section where the secondary edge transitions to the primary edge. Our goal is to obtain W' such that W' < W: 
 
-<img src="../images/sharpening-fig-3.png" width="600" />
+<img src="/images/sharpening-fig-3.png" width="600" />
 
 This will enable us to reestablish a narrower primary edge later on. It's essential to grind slowly and patiently while continuously checking your progress. It's quite easy to damage a knife by overdoing this step, especially if it's your first time. Take your time: the quality of your edge is directly proportional to the patience, care and diligence you put into your work.
 
 Use the same number of strokes on each side of the blade, and try to work in sections during this step. This approach ensures even sharpening and helps maintain consistency in the edge. Personally, I like to divide the blade into three imaginary sections. Here's a depiction of those sections on my trusty Case Sod Buster Jr. with yellow Delrin handles. This is the knife I typically carry when I'm helping with construction work at church. _By the way, I had to rework its tip because it came blunt out of the box. Shame on you, W.R. Case & Sons Cutlery Co.!_
 
-<img src="../images/sod-buster-jr.png" width="600" />
+<img src="/images/sod-buster-jr.png" width="600" />
 
 Here's an animation to help you visualize the process. In this clip, I'm thinning my cherished Schrade Imperial IMP22, a Sod Buster Jr.-style pocket knife, using a cheapo water stone from the hardware store:
 
-<img src="../images/sharpening-secondary-edge.gif" width="480" />
+<img src="/images/sharpening-secondary-edge.gif" width="480" />
 
 ## Establishing a Primary Edge (Edge Bevel) 
 
 Once you've adequately thinned the secondary edge of your knife, the next step is to establish the primary edge, also known as the edge bevel. To do this, lift the blade slightly and lay the knife on the fine side of the stone at an angle of your choice, as illustrated below:
 
-<img src="../images/sharpening-fig-5.png" width="600" />
+<img src="/images/sharpening-fig-5.png" width="600" />
 
 I typically use around 20°, but there's no right or wrong answer here. The angle you choose should depend on your intended use and personal preference. Again, I encourage you to experiment to find what works best for you. And remember, each knife may behave differently, so it's worth exploring the ideal angle for each one. 
 
 >**_A word of caution: maintaining a steady angle is crucial at this stage. Otherwise, you risk rounding the edge, which can significantly deteriorate cutting performance! There are several tricks to help maintain the angle, and my favorite is to keep my thumb on the spine of the blade once I've found the desired angle. This way, whenever my thumb and the edge of the blade touch the stone, I can be sure that the blade edge is positioned at the same angle each time:_**
 > 
-> <img src="../images/sharpening-hold-angle.png" width="600" />
+> <img src="/images/sharpening-hold-angle.png" width="600" />
 
 In this step, what we're aiming for is a bevel that is narrow enough to initiate a cut effortlessly. Let's revisit the diagram we looked at earlier to better understand this goal: 
 
-<img src="../images/sharpening-fig-6.png" width="600" />
+<img src="/images/sharpening-fig-6.png" width="600" />
 
 Another important observation is that you should exercise extra caution as you transition between steps. Specifically, be sure to double your diligence when moving from secondary edge grinding to primary edge grinding. This attention to detail will lead to a cleaner, more refined edge. I can't stress enough: take your time, grind slowly and patiently, and check your progress constantly. Finally, when grinding the primary edge, you should apply only light pressure.
 
 Begin each grind at the ricasso of the blade, progressing toward the tip. As you progress, gently lift the hand holding the knife handle while slightly twisting it outward to accommodate variations in the tip angle, as illustrated below:
 
-<img src="../images/sharpening-fig-9.png" width="600" />
+<img src="/images/sharpening-fig-9.png" width="600" />
 
-<img src="../images/sharpening-fig-10.png" width="600" />
+<img src="/images/sharpening-fig-10.png" width="600" />
 
 Once again, here's an animation to help you visualize the process. Here, I'm still sharpening my Schrade Imperial IMP22: 
 
-<img src="../images/sharpening-primary-edge.gif" width="480" />
+<img src="/images/sharpening-primary-edge.gif" width="480" />
 
 ## Stropping 
 
@@ -124,7 +124,7 @@ At this point, you should have a knife with a sufficiently sharp working edge th
 
 You see, when we sharpen a blade, we create microscopic scratches and serrations along the edge, as depicted below in (a). These can affect the cutting performance by creating friction when cutting through materials. Stropping means smoothing the edge, which minimizes friction and enhances the blade's ability to cut through materials more efficiently, as illustrated below in (b):
 
-<img src="../images/sharpening-fig-8.png" width="600" />
+<img src="/images/sharpening-fig-8.png" width="600" />
 
 We can strop in various ways, and my favorites are using a leather strop, enhanced with a stropping compound, and the stone itself. In this post, I'll focus on stropping using the whetstone.
 
@@ -132,11 +132,11 @@ As mentioned earlier, we've now transitioned between steps, moving from grinding
 
 When stropping, it's essential to start each glide from the tip of the blade and move toward the ricasso, which is the opposite direction of how we sharpened. This approach ensures that we're scratching the blade in a direction contrary to the sharpening process, effectively removing the scratches created during sharpening, as illustrated below (bird's eye view): 
 
-<img src="../images/sharpening-fig-7.png" width="600" /> 
+<img src="/images/sharpening-fig-7.png" width="600" /> 
 
 Here's a clip to illustrate the stropping process. In this clip, I'm stropping my Schrade Imperial IMP22 using the fine side of a cheapo whetstone:
 
-<img src="../images/sharpening-stropping.gif" width="480" />
+<img src="/images/sharpening-stropping.gif" width="480" />
 
 ## Testing
 
@@ -144,7 +144,7 @@ To test the sharpness of your knife after finishing, use the classic paper testi
 
 Here's the result for my Schrade Imperial IMP22:
 
-<img src="../images/sharpening-test.gif" width="480" /> 
+<img src="/images/sharpening-test.gif" width="480" /> 
 
 ## Closing Remarks 
 
