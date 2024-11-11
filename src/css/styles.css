@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root {
+    --my-gray: #1d1b1b;
+    --my-light-gray: #5f5c5c;
+    --my-lighter-gray: #d6d5d5;
+    --my-blue-gray: #2e2e36;
+    --my-terminal-green: #00ff00;
+}
+
+body {
+    background-color: var(--my-lighter-gray);
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 { 
+    font-weight: 800;
+    color: var(--my-gray);
+}
+
+h2 {
+    font-weight: 400;
+    color: var(--my-light-gray);
+}
+
+p {
+    color: var(--my-gray);
+}
+
+hr {
+    border: 1px solid var(--my-light-gray);
+}
+
+/* Navbar  */
+
+.my-navbar-div {
+    background-color: var(--my-gray);
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Terminal  */
+
+.my-terminal p {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.my-terminal-title-bar p {
+    color: white;
+}
+
+.my-terminal-title-bar {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 800;
+    text-align: center;
+    background-color: var(--my-blue-gray);
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    text-shadow: 1px 1px 0px var(--my-gray);
+}
+
+.my-terminal-typewriter p,
+.my-terminal-typewriter span {
+    color: var(--my-terminal-green);
+}
+
+.my-terminal-typewriter {
+    font-family: 'Source Code Pro', monospace;
+    background-color: var(--my-gray);
+    text-shadow: 0 0 1px var(--my-terminal-green);
+    font-size: 0.9rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    height: 22rem;
+    overflow-y: scroll;
+}
+
+/* Blog */
+
+.my-card-btn {
+    background-color: var(--my-gray);
+    border: none;
+}
+
+.my-card-btn:focus,
+.my-card-btn:active,
+.my-card-btn:hover {
+    background-color: var(--my-light-gray) !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* 404 */
+
+.my-404-img {
+    border-radius: 0.5rem;
+}

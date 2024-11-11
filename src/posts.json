@@ -1,0 +1,20 @@
+{
+  "posts": [
+    {
+      "cap": "mutation-testing-cap.png",
+      "alt": "An abstract image representing mutation testing in software engineering",
+      "title": "CBSOFT'24 Distinguished Paper Award",
+      "headline": "I received the Distinguished Paper Award at CBSOFT'24!",
+      "updated": "October 2, 2024",
+      "slug": "cbsoft-2024"
+    },
+    {
+      "cap": "talk-cap.png",
+      "alt": "An abstract image representing a cybersecurity talk at a conference",
+      "title": "My Talk at SEnc 2024: Slides and Recording",
+      "headline": "Missed my talk at SEnC 2024? Access it here!",
+      "updated": "September 5, 2023",
+      "slug": "senc-2024"
+    }
+  ]
+}
