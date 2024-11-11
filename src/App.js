@@ -14,7 +14,7 @@ function App() {
 
     <div>
       <MyNavbar />
-      <Container className="mt-5">
+      <Container className="mt-5"> 
 
         <Routes>
           <Route path="/" element={<Main />} />
