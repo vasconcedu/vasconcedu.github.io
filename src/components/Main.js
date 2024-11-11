@@ -110,7 +110,7 @@ const Main = () => {
         <Col sm={12} xl={6}>
 
           <p class="mt-5 fs-5">I'm an Application Security Engineer with a solid background in designing, developing, and testing software security across a range of industries and technologies.</p>
-          <p class="fs-5">Throughout my career, I've helped develop notable applications such as <a href="https://hackerrangers.com/" target="_blank">Hacker Rangers</a>, <a href="https://play.google.com/store/apps/details?id=br.com.brainweb.ifood" target="_blank">iFood</a>, and <a href="https://play.google.com/store/apps/details?id=com.samsung.android.spay" target="_blank">Samsung Wallet</a>. My job is to craft software that's secure, stunning, and built to last. You can view my resume <a href="" target="_blank">here</a>.</p> {/* TODO add link to resume */}
+          <p class="fs-5">Throughout my career, I've helped develop notable applications such as <a href="https://hackerrangers.com/" target="_blank">Hacker Rangers</a>, <a href="https://play.google.com/store/apps/details?id=br.com.brainweb.ifood" target="_blank">iFood</a>, and <a href="https://play.google.com/store/apps/details?id=com.samsung.android.spay" target="_blank">Samsung Wallet</a>. My job is to craft software that's secure, stunning, and built to last. You can view my resume <a href="https://github.com/vasconcedu/my-resume/blob/master/resume.pdf" target="_blank">here</a>.</p>
           <p class="fs-5">When I'm not in the code mines, you can find me jamming to old school country tunes, sharpening my trusty pocket knives, and channeling my inner carpenter with some woodworking projects. My wife says I'm an old man in training, but I prefer to think of myself as a "country gentleman" in the making!</p>
         
         </Col>
