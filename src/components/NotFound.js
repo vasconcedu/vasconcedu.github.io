@@ -7,7 +7,7 @@ const NotFound = () => {
     <div class="mt-5">
         <Row>
             <Col sm={12} xl={6}>
-                <img src={notFound} alt="404" class="img-fluid shadow my-404-img" />
+                <img src={notFound} alt="404" class="img-fluid shadow mb-5 my-404-img" />
             </Col>
             <Col sm={12} xl={6}>
                 <h1>404</h1>

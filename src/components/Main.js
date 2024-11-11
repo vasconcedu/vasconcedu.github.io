@@ -193,8 +193,7 @@ const Main = () => {
 
       <Row className="mb-5">
 
-          {/* TODO add link to repo  */}
-          <Project title="This Website" text="Crafted in VS Code by yours truly, using React and Bootstrap." btn={projectBtn} href="https://github.com/vasconcedu/my-personal-website" cursor={linus} />
+        <Project title="This Website" text="Crafted in VS Code by yours truly, using React and Bootstrap." btn={projectBtn} href="https://github.com/vasconcedu/my-personal-website" cursor={linus} />
 
       </Row>
 
