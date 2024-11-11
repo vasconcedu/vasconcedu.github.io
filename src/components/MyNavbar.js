@@ -26,7 +26,7 @@ const MyNavbar = () => {
                 <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu/my-resume/blob/master/resume.pdf" target="_blank">Resume</Nav.Link>
                 <Nav.Link className="fs-5 ms-lg-2" href="https://www.linkedin.com/in/vasconcedu/" target="_blank">LinkedIn</Nav.Link>
                 <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu" target="_blank">GitHub</Nav.Link>
-                <Nav.Link className="fs-5 ms-lg-2" href="#" target="_blank" disabled>Contact</Nav.Link>
+                <Nav.Link className="fs-5 ms-lg-2" href="mailto:eduardo@eduardovasconcelos.com" target="_blank" disabled>Contact</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
