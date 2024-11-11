@@ -172,7 +172,7 @@ const Main = () => {
             headline={post.headline}
             updated={post.updated}
             btn={postBtn}
-            href={`/blog/${post.slug}`}
+            href={`/#/blog/${post.slug}`}
           />
         ))}
       </Row>
