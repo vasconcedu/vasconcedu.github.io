@@ -193,7 +193,7 @@ const Main = () => {
 
       <Row className="mb-5">
 
-        <Project title="This Website" text="Crafted in VS Code by yours truly, using React and Bootstrap." btn={projectBtn} href="https://github.com/vasconcedu/my-personal-website" cursor={linus} />
+        <Project title="This Website" text="Crafted in VS Code by yours truly, using React and Bootstrap." btn={projectBtn} href="https://github.com/vasconcedu/vasconcedu.github.io" cursor={linus} />
 
       </Row>
 

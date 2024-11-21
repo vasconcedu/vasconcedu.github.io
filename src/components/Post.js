@@ -28,7 +28,7 @@ const Post = () => {
       <h1>{post?.title}</h1>
       <h2>{post?.headline}</h2>
       <p><small className="text-muted">Last updated {post?.updated}</small></p>
-      <p class="mt-5"><ReactMarkdown rehypePlugins={[rehypeRaw]}>{post?.text}</ReactMarkdown></p>
+      <p class="mt-5 fs-5"><ReactMarkdown rehypePlugins={[rehypeRaw]}>{post?.text}</ReactMarkdown></p>
     </div>
   )
 }
