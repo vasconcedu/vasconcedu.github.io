@@ -138,7 +138,7 @@ const Main = () => {
               </div>
             </div>
 
-            <div class="my-terminal-typewriter text-wrap mt-0 p-0 shadow" id="typewriter-div">
+            <div class="my-terminal-typewriter text-break mt-0 p-0 shadow" id="typewriter-div">
               <p id="typewriter">
                 {ps1}
               </p>
