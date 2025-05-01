@@ -9,10 +9,6 @@ const Post = () => {
   let navigate = useNavigate()
   let [post, setPost] = useState({})
 
-  useEffect(() => {
-    getPost()
-  }, [])
-
   let getPost = async () => {
     let post = posts.posts.find(post => post.slug === slug)
     if (post === undefined) {
@@ -22,6 +18,10 @@ const Post = () => {
       setPost(post)
     }
   }
+  
+  useEffect(() => {
+    getPost()
+  }, [])
 
   return (
     <div>

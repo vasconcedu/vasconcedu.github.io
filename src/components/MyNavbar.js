@@ -23,10 +23,10 @@ const MyNavbar = () => {
             <Navbar.Toggle className="ms-auto" aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ms-auto me-auto text-center">
-                <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu/my-resume/blob/master/resume.pdf" target="_blank">Resume</Nav.Link>
-                <Nav.Link className="fs-5 ms-lg-2" href="https://www.linkedin.com/in/vasconcedu/" target="_blank">LinkedIn</Nav.Link>
-                <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu" target="_blank">GitHub</Nav.Link>
-                <Nav.Link className="fs-5 ms-lg-2" href="mailto:eduardo@eduardovasconcelos.com" target="_blank">Contact</Nav.Link>
+                <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu/my-resume/blob/master/resume.pdf" target="_blank" rel="noreferrer">Resume</Nav.Link>
+                <Nav.Link className="fs-5 ms-lg-2" href="https://www.linkedin.com/in/vasconcedu/" target="_blank" rel="noreferrer">LinkedIn</Nav.Link>
+                <Nav.Link className="fs-5 ms-lg-2" href="https://github.com/vasconcedu" target="_blank" rel="noreferrer">GitHub</Nav.Link>
+                <Nav.Link className="fs-5 ms-lg-2" href="mailto:eduardo@eduardovasconcelos.com" target="_blank" rel="noreferrer">Contact</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>

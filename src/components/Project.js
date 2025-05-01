@@ -14,7 +14,7 @@ const Project = ({ title, text, btn, href, cursor}) => {
           <Card.Text>
             <p>{text}</p>
           </Card.Text>
-          <Button className="my-card-btn stretched-link" variant="primary" href={href} target="_blank" style={{ cursor: `url(${cursor}), auto` }}>{btn}</Button>
+          <Button className="my-card-btn stretched-link" variant="primary" href={href} target="_blank" rel="noreferrer" style={{ cursor: `url(${cursor}), auto` }}>{btn}</Button>
         </Card.Body>
 
       </Card>
