@@ -7,7 +7,7 @@ import posts from '../posts.json'
 
 const Main = () => {
 
-  let ps1 = 'eduardo@hackerman:~$ '
+  let ps1 = 'eduardo@thinkpad:~$ '
   let cursorHtml = '<span id="cursor">|</span>'
   let postBtn = "Learn more"
   let projectBtn = "Show me the code"
@@ -16,7 +16,7 @@ const Main = () => {
     '> {',
     '>   "software_engineer_profile": {',
     '>     "name": "eduardo vasconcelos",',
-    '>     "specialty": "application security",',
+    '>     "specialty": "security engineering",',
     '>     "coffee": "yes, please",',
     '>     "skills": {',
     '>       "advanced": [',
@@ -34,7 +34,7 @@ const Main = () => {
     '>         "cryptography"',
     '>       ],',
     '>       "familiar": [',
-    '>         "machine learning",',
+    '>         "sysadmin",',
     '>         "devsecops",',
     '>         "incident response"',
     '>       ]',
@@ -109,9 +109,9 @@ const Main = () => {
 
         <Col sm={12} xl={6}>
 
-          <p class="mt-5 fs-5">I'm an Application Security Engineer with a solid background in designing, developing, and testing software security across a range of industries and technologies.</p>
+          <p class="mt-5 fs-5">I'm an Security Engineer with a solid background in designing, developing, and testing software security across a range of industries and technologies.</p>
           <p class="fs-5">Throughout my career, I've helped develop notable applications such as <a href="https://hackerrangers.com/" target="_blank" rel="noreferrer">Hacker Rangers</a>, <a href="https://play.google.com/store/apps/details?id=br.com.brainweb.ifood" target="_blank" rel="noreferrer">iFood</a>, and <a href="https://play.google.com/store/apps/details?id=com.samsung.android.spay" target="_blank" rel="noreferrer">Samsung Wallet</a>. My job is to craft software that's secure, stunning, and built to last. You can view my resume <a href="https://github.com/vasconcedu/my-resume/blob/master/resume.pdf" target="_blank" rel="noreferrer">here</a>.</p>
-          <p class="fs-5">When I'm not in the code mines, you can find me jamming to old school country tunes, sharpening my trusty pocket knives, and channeling my inner carpenter with some woodworking projects. My wife says I'm an old man in training, but I prefer to think of myself as a "country gentleman" in the making!</p>
+          <p class="fs-5">When I'm not in the code mines, you can find me jamming to old school country tunes, sharpening my trusty pocket knives, refilling my cherished fountain pens, and channeling my inner tradesman with some home renovation projects and car repairs.</p>
         
         </Col>
 
@@ -120,7 +120,7 @@ const Main = () => {
           <div class="mt-5 my-terminal ms-lg-3">
 
             <div class="my-terminal-title-bar d-flex justify-content-between align-items-center pb-2 mb-0 text-center shadow">
-              <p class="flex-grow-1 text-center">eduardo@hackerman:&tilde;</p>
+              <p class="flex-grow-1 text-center">eduardo@thinkpad:&tilde;</p>
               <div class="d-flex align-items-center float-right">
 
                 <span class="my-terminal-title-bar-button">
