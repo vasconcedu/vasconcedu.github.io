@@ -78,7 +78,7 @@ codeberg: publish
 	git add $(CODEBERG_PAGES_SUBTREE_RELATIVE_OUTPUTDIR)
 	git commit -m $(CODEBERG_PAGES_COMMIT_MESSAGE)
 	git push 
-	#git push origin --delete $(CODEBERG_PAGES_BRANCH)
+	git push origin --delete $(CODEBERG_PAGES_BRANCH)
 	git subtree push --prefix=$(CODEBERG_PAGES_SUBTREE_RELATIVE_OUTPUTDIR) origin $(CODEBERG_PAGES_BRANCH)
 
 
