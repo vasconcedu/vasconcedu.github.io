@@ -1,5 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Eduardo Vasconcelos.com</title><link href="https://vasconcedu.codeberg.page/" rel="alternate"/><link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" rel="self"/><id>https://vasconcedu.codeberg.page/</id><updated>2026-03-22T12:00:00-03:00</updated><entry><title>C orientado a objetos?</title><link href="https://vasconcedu.codeberg.page/c-orientado-a-objetos.html" rel="alternate"/><published>2026-03-22T12:00:00-03:00</published><updated>2026-03-22T12:00:00-03:00</updated><author><name>vasconcedu</name></author><id>tag:vasconcedu.codeberg.page,2026-03-22:/c-orientado-a-objetos.html</id><summary type="html">&lt;p&gt;Recentemente, eu me deparei com &lt;a href="http://harmful.cat-v.org/software/c++/linus"&gt;um e-mail escrito por Linus Torvalds em 2004&lt;/a&gt;, em que ele tratava dos motivos pelos quais se posicionava diametralmente contra a introdução de C++ no kernel. Um trecho do e-mail, em especial, chamou a minha atenção. A certa altura, ele afirma, em estilo inconfundível:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Eduardo Vasconcelos.com</title><link href="https://vasconcedu.codeberg.page/" rel="alternate"/><link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" rel="self"/><id>https://vasconcedu.codeberg.page/</id><updated>2026-04-05T00:00:00-03:00</updated><entry><title>Compilando Linux From Scratch (LFS)</title><link href="https://vasconcedu.codeberg.page/compilando-linux-from-scratch-lfs.html" rel="alternate"/><published>2026-04-05T00:00:00-03:00</published><updated>2026-04-05T00:00:00-03:00</updated><author><name>vasconcedu</name></author><id>tag:vasconcedu.codeberg.page,2026-04-05:/compilando-linux-from-scratch-lfs.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;"Playfully doing something difficult, whether useful or not, that is hacking."&lt;/p&gt;
+&lt;p&gt;-- Richard Stallman, &lt;em&gt;On Hacking&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ao longo das últimas semanas, em detrimento dos devidos sono e asseio, trabalhei, pela primeira vez, na compilação do meu próprio sistema Linux. Usei como guia o livro &lt;em&gt;Linux From Scratch: Version 13.0-systemd&lt;/em&gt;, publicado …&lt;/p&gt;</summary><content type="html">&lt;blockquote&gt;
+&lt;p&gt;"Playfully doing something difficult, whether useful or not, that is hacking."&lt;/p&gt;
+&lt;p&gt;-- Richard Stallman, &lt;em&gt;On Hacking&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ao longo das últimas semanas, em detrimento dos devidos sono e asseio, trabalhei, pela primeira vez, na compilação do meu próprio sistema Linux. Usei como guia o livro &lt;em&gt;Linux From Scratch: Version 13.0-systemd&lt;/em&gt;, publicado pelo projeto homônimo, &lt;a href="https://linuxfromscratch.org/index.html"&gt;Linux From Scratch&lt;/a&gt;. Os processos de compilação e configuração básica já estão finalizados. Obtive um sistema LFS plenamente funcional, em dual boot com o host virtual Arch que utilizei para compilá-lo.&lt;/p&gt;
+&lt;p&gt;Eu uso--e amo--Linux há cerca de 15 anos. Comecei pelo Ubuntu 8.04 LTS "Hardy Heron", em meados de 2010. Desde então, não parei mais: já tive a minha parcela de distro hopping; converti algumas pessoas e ajudei outras tantas a instalarem ou configurarem Linux; instalei e administrei servidores Linux críticos no meu primeiro emprego formal, como sysadmin; venho usando Linux como ferramenta de trabalho há anos, como engenheiro de segurança; e a minha computação pessoal, como não poderia deixar de ser, é completamente baseada em Linux. Atualmente, o meu amado daily driver é um ThinkPad T480--usado--com Arch, &lt;em&gt;btw&lt;/em&gt;. No entanto, até hoje, havia uma peça faltante na minha trajetória: compilar o meu próprio sistema Linux. Esse já era um sonho de longa data. Há pouco, ele foi realizado.&lt;/p&gt;
+&lt;p&gt;Em um primeiro momento, esse exercício pode até parecer algo muito difícil de ser cumprido, mas a verdade é que compilar LFS é muito mais simples do que parece, dada a devida assiduidade no uso de Linux, e o grande "plot twist" é que esse processo serviu para revelar muita, mas muita coisa sobre Linux que eu simplesmente não sei. Agora, vejo que a aventura apenas começou. Compilar o meu próprio sistema pela primeira vez foi apenas o início da fase de descontrução em um processo de aprendizado¹ que, estou certo, ainda vai durar muito tempo.&lt;/p&gt;
+&lt;p&gt;Sem mais delongas, a seguir, relato humildemente como foi a minha experiência de compilar Linux From Scratch.&lt;/p&gt;
+&lt;h2&gt;Para quem é Linux From Scratch?&lt;/h2&gt;
+&lt;p&gt;Eu não diria que é impossível que uma pessoa que apenas iniciou a sua trajetória com Linux consiga compilar o seu próprio sistema Linux com base no Linux From Scratch, mas eu diria que esse processo vai ser extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e é possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.&lt;/p&gt;
+&lt;p&gt;Não se engane: apesar de o livro ser muito detalhado, ele assume certos conhecimentos a priori, de forma que compilar Linux From Scratch demanda bastante afinidade com o terminal e conhecimento prático sobre particionamento, sistemas de arquivos, permissões e builds a partir de código-fonte, dentre outros assuntos.&lt;/p&gt;
+&lt;p&gt;O livro deixa muita coisa a cargo do leitor, e eu diria que conhecimento prático de Linux--que me parece que só pode ser adquirido ao longo de um tempo razoável de daily driving--é fundamental para o sucesso de certos procedimentos de compilação e até mesmo de setup. Ter afinidade com virtualização de sistemas Linux, por exemplo, me parece algo particularmente interessante, por simplificar--muito--o setup do host de compilação. Sem falar que colocar o sistema de pé depois da compilação é praticamente por sua conta: o livro fala muito pouco sobre configurações de boot, até porque estas dependem muito do host que você tiver escolhido, do uso ou não de dual boot e/ou das características da máquina em que você for colocar o LFS de pé.&lt;/p&gt;
+&lt;h2&gt;Instalação do host&lt;/h2&gt;
+&lt;p&gt;Eu optei por utilizar uma máquina virtual Arch como host de compilação, usando o QEMU em uma máquina Arch física como virtualizador. O primeiro passo foi criar um disco virtual para o host. Usei o &lt;code&gt;qemu-img&lt;/code&gt; para isso:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-img&lt;span class="w"&gt; &lt;/span&gt;create&lt;span class="w"&gt; &lt;/span&gt;-f&lt;span class="w"&gt; &lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;arch.qcow2&lt;span class="w"&gt; &lt;/span&gt;24G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;24 GB me pareceram razoáveis diante da &lt;a href="https://www.linuxfromscratch.org/hints/downloads/files/partitioning-for-lfs.txt"&gt;documentação suplementar do LFS sobre particionamento&lt;/a&gt;. Em seguida, iniciei a VM com:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-system-x86_64&lt;span class="w"&gt; &lt;/span&gt;-cdrom&lt;span class="w"&gt; &lt;/span&gt;archlinux-2026.03.01-x86_64.iso&lt;span class="w"&gt; &lt;/span&gt;-boot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;order&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;d&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;arch.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;8G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Não cabe cobrir todo o processo de instalação do Arch aqui, mas eu particionei o disco virtual da seguinte forma:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Particionamento do host." src="../images/particionamento.png"&gt;&lt;/p&gt;
+&lt;p&gt;Quanto ao tipo de instalação do Arch, optei por &lt;code&gt;Minimal&lt;/code&gt;. Também incluí os pacotes &lt;code&gt;openssh&lt;/code&gt; e &lt;code&gt;vim&lt;/code&gt;. De uma próxima vez que for compilar LFS, também vou incluir &lt;code&gt;wget&lt;/code&gt; e, possivelmente, trocar o Vim pelo Nano, por uma questão de manter a simplicidade. Como constatei depois, as necessidades de edição para compilar LFS são bastante básicas. Além disso, criei um usuário e fiz dele sudoer. Teria sido interessante, ainda, já instalar os pacotes das dependências de compilação do LFS para o host durante a instalação do Arch. Como não fiz isso, precisei instalá-las mais adiante.&lt;/p&gt;
+&lt;p&gt;Finalizada a instalação, deliguei e reiniciei a VM com:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-system-x86_64 -boot order=d -drive file=arch.qcow2,format=qcow2 -m 8G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Seria interessante já ter utilizado &lt;code&gt;-smp 4&lt;/code&gt; aqui para iniciar o host com 4 processadores. Eu acabei não fazendo isso e precisando desligar a VM para reiniciá-la com essa configuração mais adiante, no meio do processo, o que resultou em ter de refazer parte do setup de compilação no host, conforme a seção 2.3 e o final do capítulo 7 do livro discutem.&lt;/p&gt;
+&lt;h2&gt;Configuração do SSH&lt;/h2&gt;
+&lt;p&gt;Após acessar a VM via VNC, segui com a configuração de SSH para que eu pudesse ter um terminal mais bem servido de features para trabalhar durante a compilação. Eu diria que esse passo é quase imprescindível ao optar por compilar LFS em ambiente virtualizado. Poder colar comandos copiados da versão HTML do livro em uma sessão de SSH entre a sua máquina física e o host de compilação me parece ser a maneira mais segura de seguir os passos do livro, por evitar problemas relacionados a erros de digitação ao reproduzir comandos em um terminal em que você não consegue copiar e colar, além de possíveis inconsistências ao copiar comandos a partir da versão PDF do livro.&lt;/p&gt;
+&lt;p&gt;No Arch--com o &lt;code&gt;openssh&lt;/code&gt; devidamente instalado--, configurar SSH consiste em editar &lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;. É uma boa ideia fazer um backup desse arquivo antes. É preciso descomentar:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Port&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;
+AddressFamily&lt;span class="w"&gt; &lt;/span&gt;any
+ListenAddress&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.0.0.0
+ListenAddress&lt;span class="w"&gt; &lt;/span&gt;::
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Além de incluir:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;AllowUsers&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;usuário&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Onde &lt;code&gt;&amp;lt;usuário&amp;gt;&lt;/code&gt; é o usuário que você criou durante a instalação do Arch. Depois disso, reiniciei o &lt;code&gt;sshd&lt;/code&gt; e verifiquei se estava tudo certo com:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;start&lt;span class="w"&gt; &lt;/span&gt;sshd.service
+sudo&lt;span class="w"&gt; &lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;status&lt;span class="w"&gt; &lt;/span&gt;sshd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Por fim, configurei o serviço para iniciar automaticamente com: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;enable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;sshd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Feito isso, desliguei e voltei a iniciar o host de compilação, redirecionando a porta 60022 da minha máquina física para a porta 22 da VM:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-system-x86_64&lt;span class="w"&gt; &lt;/span&gt;-boot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;order&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;d&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;arch.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;8G&lt;span class="w"&gt; &lt;/span&gt;-nic&lt;span class="w"&gt; &lt;/span&gt;user,hostfwd&lt;span class="o"&gt;=&lt;/span&gt;tcp::60022-:22
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Com isso, pude conectar à VM usando SSH e trabalhar de maneira muito mais simples. A essa altura, fiz a instalação das dependências previstas na seção 2.2 do livro. Como já mencionei, de uma próxima fez, farei a instalação destas durante a instalação do Arch para poder pular esse passo.&lt;/p&gt;
+&lt;h2&gt;Partição de LFS&lt;/h2&gt;
+&lt;p&gt;Criei um segundo disco virtual de 24 GB com o &lt;code&gt;qemu-img&lt;/code&gt;. Em seguida, desliguei e voltei a iniciar a VM, dessa vez com os dois discos:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-system-x86_64&lt;span class="w"&gt; &lt;/span&gt;-boot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;order&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;d&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;arch.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;lfs.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;8G&lt;span class="w"&gt; &lt;/span&gt;-nic&lt;span class="w"&gt; &lt;/span&gt;user,hostfwd&lt;span class="o"&gt;=&lt;/span&gt;tcp::60022-:22
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Pude confirmar que o segundo disco estava disponível com &lt;code&gt;lsblk&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;NAME&lt;span class="w"&gt;   &lt;/span&gt;MAJ:MIN&lt;span class="w"&gt; &lt;/span&gt;RM&lt;span class="w"&gt;  &lt;/span&gt;SIZE&lt;span class="w"&gt; &lt;/span&gt;RO&lt;span class="w"&gt; &lt;/span&gt;TYPE&lt;span class="w"&gt; &lt;/span&gt;MOUNTPOINTS
+fd0&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;:0&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;4K&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;disk&lt;span class="w"&gt; &lt;/span&gt;
+sda&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;:0&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;24G&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;disk&lt;span class="w"&gt; &lt;/span&gt;
+├─sda1&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;:1&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;200M&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;part&lt;span class="w"&gt; &lt;/span&gt;/boot
+├─sda2&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;:2&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;2G&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;part&lt;span class="w"&gt; &lt;/span&gt;
+└─sda3&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;:3&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;21&lt;/span&gt;.8G&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;part&lt;span class="w"&gt; &lt;/span&gt;/
+sdb&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="m"&gt;8&lt;/span&gt;:16&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;24G&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;disk&lt;span class="w"&gt; &lt;/span&gt;
+sr0&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="m"&gt;11&lt;/span&gt;:0&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;1024M&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;rom&lt;span class="w"&gt;  &lt;/span&gt;
+zram0&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;253&lt;/span&gt;:0&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;    &lt;/span&gt;4G&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;disk&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;SWAP&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;O próximo passo foi formatá-lo:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;mkfs&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;ext4&lt;span class="w"&gt; &lt;/span&gt;/dev/sdb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Em seguida, pude seguir com a definição de &lt;code&gt;$LFS&lt;/code&gt;, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la. É preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;p&gt;.&lt;/p&gt;
+&lt;h2&gt;/etc/fstab&lt;/h2&gt;
+&lt;p&gt;A seção 10.2 discute a criação de &lt;code&gt;/etc/fstab&lt;/code&gt;. Dadas as características do meu setup, o meu arquivo ficou assim:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bash-5.3#&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;/mnt/lfs/etc/fstab&lt;span class="w"&gt; &lt;/span&gt;
+&lt;span class="c1"&gt;# Begin /etc/fstab&lt;/span&gt;
+
+&lt;span class="c1"&gt;# file system  mount-point  type     options             dump  fsck&lt;/span&gt;
+&lt;span class="c1"&gt;#                                                              order&lt;/span&gt;
+
+/dev/sda1&lt;span class="w"&gt;     &lt;/span&gt;/boot&lt;span class="w"&gt;        &lt;/span&gt;ext4&lt;span class="w"&gt;     &lt;/span&gt;defaults&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;
+/dev/sdb&lt;span class="w"&gt;      &lt;/span&gt;/&lt;span class="w"&gt;            &lt;/span&gt;ext4&lt;span class="w"&gt;     &lt;/span&gt;defaults&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+/dev/sda2&lt;span class="w"&gt;     &lt;/span&gt;swap&lt;span class="w"&gt;         &lt;/span&gt;swap&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="nv"&gt;pri&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="w"&gt;               &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;
+
+&lt;span class="c1"&gt;# End /etc/fstab&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Compilação e instalação do kernel&lt;/h2&gt;
+&lt;p&gt;Chequei os parâmetros de compilação do kernel duas vezes. O processo se deu sem intercorrências e durou menos de uma noite--iniciei a compilação por volta das 20h30 e, às 6h00 do outro dia, ela já havia finalizado. Como o meu plano era manter o LFS em dual boot com o host Arch, montei a partição de boot e copiei a imagem compilada para ela--no meu caso, a imagem x86_64 &lt;code&gt;vmlinuz-6.18.10-lfs-13.0-systemd&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bash-5.3#&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;/boot/vmlinuz-6.18.10-lfs-13.0-systemd&lt;span class="w"&gt; &lt;/span&gt;
+/boot/vmlinuz-6.18.10-lfs-13.0-systemd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Configuração do GRUB&lt;/h2&gt;
+&lt;p&gt;Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no &lt;code&gt;grub.cfg&lt;/code&gt; criado pelo próprio Arch, em uma seção destinada especificamente a personalizações:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;### BEGIN /etc/grub.d/40_custom ###&lt;/span&gt;
+&lt;span class="c1"&gt;# This file provides an easy way to add custom menu entries.  Simply type the&lt;/span&gt;
+&lt;span class="c1"&gt;# menu entries you want to add after this comment.  Be careful not to change&lt;/span&gt;
+&lt;span class="c1"&gt;# the &amp;#39;exec tail&amp;#39; line above.&lt;/span&gt;
+
+insmod&lt;span class="w"&gt; &lt;/span&gt;part_msdos
+insmod&lt;span class="w"&gt; &lt;/span&gt;ext2
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;root&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hd0,msdos1&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;gfxpayload&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1024x768x32
+menuentry&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;GNU/Linux, Linux 6.18.10-lfs-13.0-systemd&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;linux&lt;span class="w"&gt;   &lt;/span&gt;/vmlinuz-6.18.10-lfs-13.0-systemd&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;root&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/dev/sdb&lt;span class="w"&gt; &lt;/span&gt;ro
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="c1"&gt;### END /etc/grub.d/40_custom ###&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;É preciso levar em consideração que o processo de atualização do GRUB conforme documentado &lt;a href="https://wiki.archlinux.org/title/GRUB"&gt;na Wiki do Arch&lt;/a&gt;--i.e. usando &lt;code&gt;grub-mkconfig&lt;/code&gt;, &lt;strong&gt;mesmo com &lt;code&gt;GRUB_DISABLE_OS_PROBER=false&lt;/code&gt;&lt;/strong&gt;--, não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.&lt;/p&gt;
+&lt;h2&gt;Boot&lt;/h2&gt;
+&lt;p&gt;E &lt;em&gt;voilà&lt;/em&gt;!&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Sistema LFS de pé." src="../images/lfs.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Registro na base de usuários do LFS&lt;/h2&gt;
+&lt;p&gt;Depois de finalmente colocar o sistema de pé, decidi registrar o meu nome na &lt;a href="https://www.linuxfromscratch.org/cgi-bin/lfscounter.php"&gt;base de usuários do LFS&lt;/a&gt;. Sou o usuário número 32222--de quebra, fiquei com um identificador super fácil de lembrar:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Meu nome na base de LFS users." src="../images/lfscounter.png"&gt;&lt;/p&gt;
+&lt;h2&gt;E agora?&lt;/h2&gt;
+&lt;p&gt;Eu não poderia estar mais satisfeito. Pus em prática um anseio de longa data. Além disso, não apenas obtive um sistema funcional, mas também aprendi várias coisas e descobri outras tantas que eu ainda preciso aprender sobre Linux.&lt;/p&gt;
+&lt;p&gt;Isso me leva a concluir que eu preciso refazer esse exercício de compilar LFS. Tão logo tenha acabado de "curtir" a minha primeira instalação e descansado um pouco--este relato pode não deixar transparecer, mas o projeto aqui descrito é bastante cansativo--, vou reiniciar o processo, do zero.&lt;/p&gt;
+&lt;p&gt;Isso vai me permitir olhar com mais calma e maturidade para alguns aspectos do processo de compilação que ainda não estão completamente claros para mim, em especial a teoria por trás de cross compiling, além de modificar o código de alguns pacotes e experimentar alguns parâmetros de compilação. Antes, porém, planejo fazer algumas rodadas de experimentação com o sistema funcional que eu já tenho, além de portá-lo para uma máquina física--a vítima vai ser um ThinkPad T420si--usado--velho de guerra.&lt;/p&gt;
+&lt;p&gt;É isso. Estando o leitor munido do significado de "hacking", enunciado no começo deste relato, eu me despeço:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Happy hacking, and may Linux be with you.&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Notas de rodapé&lt;/h2&gt;
+&lt;p&gt;¹Eu acredito em um processo de aprendizado baseado em 4 etapas: desconstrução, captura de ideias, experimentação e reconstrução. Vide &lt;a href="https://invidious.nerdvpn.de/watch?v=_RpjyZ3OWp8"&gt;https://invidious.nerdvpn.de/watch?v=_RpjyZ3OWp8&lt;/a&gt;.&lt;/p&gt;</content><category term="Linux"/></entry><entry><title>C orientado a objetos?</title><link href="https://vasconcedu.codeberg.page/c-orientado-a-objetos.html" rel="alternate"/><published>2026-03-22T12:00:00-03:00</published><updated>2026-03-22T12:00:00-03:00</updated><author><name>vasconcedu</name></author><id>tag:vasconcedu.codeberg.page,2026-03-22:/c-orientado-a-objetos.html</id><summary type="html">&lt;p&gt;Recentemente, eu me deparei com &lt;a href="http://harmful.cat-v.org/software/c++/linus"&gt;um e-mail escrito por Linus Torvalds em 2004&lt;/a&gt;, em que ele tratava dos motivos pelos quais se posicionava diametralmente contra a introdução de C++ no kernel. Um trecho do e-mail, em especial, chamou a minha atenção. A certa altura, ele afirma, em estilo inconfundível:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"you …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;Recentemente, eu me deparei com &lt;a href="http://harmful.cat-v.org/software/c++/linus"&gt;um e-mail escrito por Linus Torvalds em 2004&lt;/a&gt;, em que ele tratava dos motivos pelos quais se posicionava diametralmente contra a introdução de C++ no kernel. Um trecho do e-mail, em especial, chamou a minha atenção. A certa altura, ele afirma, em estilo inconfundível:&lt;/p&gt;
 &lt;blockquote&gt;
