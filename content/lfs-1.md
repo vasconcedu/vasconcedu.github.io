@@ -11,7 +11,7 @@ Ao longo das últimas semanas, em detrimento dos devidos sono e asseio, trabalhe
 
 Eu uso--e amo--Linux há cerca de 15 anos. Comecei pelo Ubuntu 8.04 LTS "Hardy Heron", em meados de 2010. Desde então, não parei mais: já tive a minha parcela de distro hopping; converti algumas pessoas e ajudei outras tantas a instalarem ou configurarem Linux; instalei e administrei servidores Linux críticos no meu primeiro emprego formal, como sysadmin; venho usando Linux como ferramenta de trabalho há anos, como engenheiro de segurança; e a minha computação pessoal, como não poderia deixar de ser, é completamente baseada em Linux. Atualmente, o meu amado daily driver é um ThinkPad T480--usado--com Arch, _btw_. No entanto, até hoje, uma das peças faltantes na minha trajetória era compilar o meu próprio sistema Linux. Esse já era um sonho de longa data. Há pouco, ele foi realizado.
 
-Em um primeiro momento, esse exercício pode até parecer algo muito difícil de ser cumprido, mas a verdade é que compilar LFS é muito mais simples do que parece, dada a devida assiduidade no uso de Linux, e o grande "plot twist" é que esse processo serviu para revelar muita, mas muita coisa sobre Linux que eu simplesmente não sei. Vejo que compilar o meu próprio sistema pela primeira vez foi apenas o início da fase de desconstrução em um processo de aprendizado¹ que, estou certo, ainda vai durar muito tempo.
+Em um primeiro momento, esse exercício pode até parecer algo muito difícil de ser cumprido, mas a verdade é que compilar LFS é muito mais simples do que parece, dada a devida assiduidade no uso de Linux, e o grande "plot twist" é que esse processo serviu para revelar muita, mas muita coisa sobre Linux que eu simplesmente não sei. Vejo que compilar o meu próprio sistema pela primeira vez foi apenas o início da fase de desconstrução em um processo de aprendizado que, estou certo, ainda vai durar muito tempo.
 
 Sem mais delongas, a seguir, relato humildemente como foi a minha experiência de compilar Linux From Scratch.
 
@@ -211,9 +211,3 @@ Isso vai me permitir olhar com mais calma e maturidade para alguns aspectos do p
 É isso. Estando o leitor munido do significado de "hacking", enunciado no começo deste relato, eu me despeço:
 
 _Happy hacking, and may Linux be with you._
-
----
-
-## Nota de rodapé
-
-¹Eu acredito em um processo de aprendizado baseado em 4 etapas: desconstrução, captura de ideias, experimentação e reconstrução. Vide [https://invidious.nerdvpn.de/watch?v=_RpjyZ3OWp8](https://invidious.nerdvpn.de/watch?v=_RpjyZ3OWp8).
