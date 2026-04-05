@@ -128,7 +128,7 @@ menuentry&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;GN
 &lt;span class="c1"&gt;### END /etc/grub.d/40_custom ###&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Note-se que o processo de atualização do GRUB conforme documentado &lt;a href="https://wiki.archlinux.org/title/GRUB"&gt;na Wiki do Arch&lt;/a&gt;--i.e. usando &lt;code&gt;grub-mkconfig&lt;/code&gt;, &lt;strong&gt;mesmo com &lt;code&gt;GRUB_DISABLE_OS_PROBER=false&lt;/code&gt;&lt;/strong&gt;--, não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.&lt;/p&gt;
+&lt;p&gt;Note-se que o processo de atualização do GRUB conforme documentado &lt;a href="https://wiki.archlinux.org/title/GRUB"&gt;na Wiki do Arch&lt;/a&gt;--i.e. usando &lt;code&gt;grub-mkconfig&lt;/code&gt;, &lt;strong&gt;mesmo com &lt;code&gt;GRUB_DISABLE_OS_PROBER=false&lt;/code&gt;&lt;/strong&gt;--não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.&lt;/p&gt;
 &lt;h2&gt;Boot&lt;/h2&gt;
 &lt;p&gt;Após algumas iterações de reescrita do &lt;code&gt;grub.cfg&lt;/code&gt;, &lt;em&gt;voilà&lt;/em&gt;!&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Sistema LFS de pé." src="../images/lfs.png"&gt;&lt;/p&gt;
