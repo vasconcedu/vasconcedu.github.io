@@ -80,8 +80,7 @@ zram0&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;253&lt;/span&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo&lt;span class="w"&gt; &lt;/span&gt;mkfs&lt;span class="w"&gt; &lt;/span&gt;-v&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;ext4&lt;span class="w"&gt; &lt;/span&gt;/dev/sdb
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Em seguida, pude seguir com a definição de &lt;code&gt;$LFS&lt;/code&gt;, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la.&lt;/p&gt;
-&lt;p&gt;É preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Independente disso, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.&lt;/p&gt;
+&lt;p&gt;Em seguida, pude seguir com a definição de &lt;code&gt;$LFS&lt;/code&gt;, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la, mas é preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Ademais, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.&lt;/p&gt;
 &lt;p&gt;.&lt;/p&gt;
 &lt;p&gt;.&lt;/p&gt;
 &lt;p&gt;.&lt;/p&gt;
@@ -113,7 +112,7 @@ zram0&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;253&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Configuração do GRUB&lt;/h2&gt;
-&lt;p&gt;Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no &lt;code&gt;grub.cfg&lt;/code&gt; criado pelo próprio Arch, em uma seção destinada especificamente a personalizações:&lt;/p&gt;
+&lt;p&gt;Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no &lt;code&gt;grub.cfg&lt;/code&gt; criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;### BEGIN /etc/grub.d/40_custom ###&lt;/span&gt;
 &lt;span class="c1"&gt;# This file provides an easy way to add custom menu entries.  Simply type the&lt;/span&gt;
 &lt;span class="c1"&gt;# menu entries you want to add after this comment.  Be careful not to change&lt;/span&gt;

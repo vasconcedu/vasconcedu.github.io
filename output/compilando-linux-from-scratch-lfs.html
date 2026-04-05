@@ -112,8 +112,7 @@ zram0<span class="w">  </span><span class="m">253</span>:0<span class="w">    </
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkfs<span class="w"> </span>-v<span class="w"> </span>-t<span class="w"> </span>ext4<span class="w"> </span>/dev/sdb
 </code></pre></div>
 
-<p>Em seguida, pude seguir com a definição de <code>$LFS</code>, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la.</p>
-<p>É preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Independente disso, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.</p>
+<p>Em seguida, pude seguir com a definição de <code>$LFS</code>, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la, mas é preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Ademais, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.</p>
 <p>.</p>
 <p>.</p>
 <p>.</p>
@@ -145,7 +144,7 @@ zram0<span class="w">  </span><span class="m">253</span>:0<span class="w">    </
 </code></pre></div>
 
 <h2>Configuração do GRUB</h2>
-<p>Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no <code>grub.cfg</code> criado pelo próprio Arch, em uma seção destinada especificamente a personalizações:</p>
+<p>Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no <code>grub.cfg</code> criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">### BEGIN /etc/grub.d/40_custom ###</span>
 <span class="c1"># This file provides an easy way to add custom menu entries.  Simply type the</span>
 <span class="c1"># menu entries you want to add after this comment.  Be careful not to change</span>
