@@ -186,7 +186,7 @@ menuentry "GNU/Linux, Linux 6.18.10-lfs-13.0-systemd" {
 ### END /etc/grub.d/40_custom ###
 ```
 
-Note-se que o processo de atualização do GRUB conforme documentado [na Wiki do Arch](https://wiki.archlinux.org/title/GRUB)--i.e. usando `grub-mkconfig`, **mesmo com `GRUB_DISABLE_OS_PROBER=false`**--, não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.
+Note-se que o processo de atualização do GRUB conforme documentado [na Wiki do Arch](https://wiki.archlinux.org/title/GRUB)--i.e. usando `grub-mkconfig`, **mesmo com `GRUB_DISABLE_OS_PROBER=false`**--não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.
 
 ## Boot
 
