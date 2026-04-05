@@ -119,9 +119,7 @@ O próximo passo foi formatá-lo:
 sudo mkfs -v -t ext4 /dev/sdb
 ```
 
-Em seguida, pude seguir com a definição de `$LFS`, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la.
-
-É preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Independente disso, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.
+Em seguida, pude seguir com a definição de `$LFS`, a partir da seção 2.6, e seguir as instruções de compilação e configuração, até o começo do capítulo 10. Essa foi a parte mais difícil do processo, em grande medida por ser muito repetitiva, e levei algo como duas semanas para concluí-la, mas é preciso levar em consideração que eu havia iniciado o host com um processador só. A certa altura, eu o reiniciei com 4 processadores para melhorar em alguns pontos percentuais a minha qualidade de vida. Esse tempo poderia ter sido menor se eu o tivesse iniciado com 4 processadores desde o começo. Além disso, eu não me dediquei em tempo integral, mas apenas no tempo livre, especialmente à noite e nos finais de semana. Ademais, como eu executei todos os testes, a compilação de alguns pacotes, como o GCC, foi particularmente demorada.
 
 .
 
@@ -170,7 +168,7 @@ bash-5.3# ls /boot/vmlinuz-6.18.10-lfs-13.0-systemd
 
 ## Configuração do GRUB
 
-Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no `grub.cfg` criado pelo próprio Arch, em uma seção destinada especificamente a personalizações:
+Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no `grub.cfg` criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:
 
 ```bash
 ### BEGIN /etc/grub.d/40_custom ###
