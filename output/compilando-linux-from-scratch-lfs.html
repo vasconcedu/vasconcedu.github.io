@@ -43,11 +43,11 @@
 <p>Eu uso--e amo--Linux há cerca de 15 anos. Comecei pelo Ubuntu 8.04 LTS "Hardy Heron", em meados de 2010. Desde então, não parei mais: já tive a minha parcela de distro hopping; converti algumas pessoas e ajudei outras tantas a instalarem ou configurarem Linux; instalei e administrei servidores Linux críticos no meu primeiro emprego formal, como sysadmin; venho usando Linux como ferramenta de trabalho há anos, como engenheiro de segurança; e a minha computação pessoal, como não poderia deixar de ser, é completamente baseada em Linux. Atualmente, o meu amado daily driver é um ThinkPad T480--usado--com Arch, <em>btw</em>. No entanto, até hoje, uma das peças faltantes na minha trajetória era compilar o meu próprio sistema Linux. Esse já era um sonho de longa data. Há pouco, ele foi realizado.</p>
 <p>Em um primeiro momento, esse exercício pode até parecer algo muito difícil de ser cumprido, mas a verdade é que compilar LFS é muito mais simples do que parece, dada a devida assiduidade no uso de Linux, e o grande "plot twist" é que esse processo serviu para revelar muita, mas muita coisa sobre Linux que eu simplesmente não sei. Vejo que compilar o meu próprio sistema pela primeira vez foi apenas o início da fase de desconstrução em um processo de aprendizado que, estou certo, ainda vai durar muito tempo.</p>
 <p>Sem mais delongas, a seguir, relato humildemente como foi a minha experiência de compilar Linux From Scratch.</p>
-<h2>Para quem é o desafio de compilar Linux From Scratch?</h2>
-<p>Eu não diria que seria impossível que uma pessoa que tivesse apenas iniciado a sua trajetória com Linux conseguisse compilar o seu próprio sistema com base no Linux From Scratch, mas esse processo seria extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e seria possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.</p>
+<h3>Para quem é o desafio de compilar Linux From Scratch?</h3>
+<p>Eu não diria que seria impossível que uma pessoa que tivesse apenas iniciado a sua trajetória com Linux conseguisse compilar o seu próprio sistema Linux com base no Linux From Scratch, mas esse processo seria extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e seria possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.</p>
 <p>Não se engane: apesar de o livro ser muito detalhado, ele assume certos conhecimentos a priori, de forma que compilar Linux From Scratch demanda bastante afinidade com o terminal e conhecimento prático sobre particionamento, sistemas de arquivos, permissões e builds a partir de código-fonte, dentre outros assuntos.</p>
 <p>O livro deixa muita coisa a cargo do leitor, e eu diria que conhecimento prático de Linux--que me parece que só pode ser adquirido ao longo de um tempo razoável de daily driving--é fundamental para o sucesso de certos procedimentos de compilação e até mesmo de setup. Ter afinidade com virtualização de sistemas Linux, por exemplo, me parece algo particularmente interessante, por simplificar--muito--o setup do host de compilação. Sem falar que colocar o sistema de pé depois da compilação é praticamente por sua conta: o livro fala muito pouco sobre configurações de boot, até porque estas dependem muito do host que você tiver escolhido, do uso ou não de dual boot e/ou das características da máquina em que você for colocar o LFS de pé.</p>
-<h2>Instalação do host</h2>
+<h3>Instalação do host</h3>
 <p>Eu optei por utilizar uma máquina virtual Arch como host de compilação, usando o QEMU em uma máquina Arch física como virtualizador. O primeiro passo foi criar um disco virtual para o host. Usei o <code>qemu-img</code> para isso:</p>
 <div class="highlight"><pre><span></span><code>qemu-img<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>qcow2<span class="w"> </span>arch.qcow2<span class="w"> </span>24G
 </code></pre></div>
@@ -64,7 +64,7 @@
 </code></pre></div>
 
 <p>Seria interessante já ter utilizado <code>-smp 4</code> aqui para iniciar o host com 4 processadores. Eu acabei não fazendo isso e precisando desligar a VM para reiniciá-la com essa configuração mais adiante, no meio do processo, o que resultou em ter de refazer parte do setup de compilação no host, conforme a seção 2.3 e o final do capítulo 7 do livro discutem.</p>
-<h2>Configuração do SSH</h2>
+<h3>Configuração do SSH</h3>
 <p>Após acessar a VM via VNC, segui com a configuração de SSH para que eu pudesse ter um terminal mais bem servido de features para trabalhar durante a compilação. Eu diria que esse passo é quase imprescindível ao optar por compilar LFS em ambiente virtualizado. Poder colar comandos copiados da versão HTML do livro em uma sessão de SSH entre a sua máquina física e o host de compilação me parece ser a maneira mais segura de seguir os passos do livro, por evitar problemas relacionados a erros de digitação ao reproduzir comandos em um terminal em que você não consegue copiar e colar, além de possíveis inconsistências ao copiar comandos a partir da versão PDF do livro.</p>
 <p>No Arch--com o <code>openssh</code> devidamente instalado--, configurar SSH consiste em editar <code>/etc/ssh/sshd_config</code>. É uma boa ideia fazer um backup desse arquivo antes. É preciso descomentar:</p>
 <div class="highlight"><pre><span></span><code>Port<span class="w"> </span><span class="m">22</span>
@@ -91,7 +91,7 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="
 </code></pre></div>
 
 <p>Com isso, pude conectar à VM usando SSH e trabalhar de maneira muito mais simples. A essa altura, fiz a instalação das dependências previstas na seção 2.2 do livro. Como já mencionei, de uma próxima fez, farei a instalação destas durante a instalação do Arch para poder pular esse passo.</p>
-<h2>Partição de LFS</h2>
+<h3>Partição de LFS</h3>
 <p>Criei um segundo disco virtual de 24 GB com o <code>qemu-img</code>. Em seguida, desliguei e voltei a iniciar a VM, dessa vez com os dois discos:</p>
 <div class="highlight"><pre><span></span><code>qemu-system-x86_64<span class="w"> </span>-boot<span class="w"> </span><span class="nv">order</span><span class="o">=</span>d<span class="w"> </span>-drive<span class="w"> </span><span class="nv">file</span><span class="o">=</span>arch.qcow2,format<span class="o">=</span>qcow2<span class="w"> </span>-drive<span class="w"> </span><span class="nv">file</span><span class="o">=</span>lfs.qcow2,format<span class="o">=</span>qcow2<span class="w"> </span>-m<span class="w"> </span>8G<span class="w"> </span>-nic<span class="w"> </span>user,hostfwd<span class="o">=</span>tcp::60022-:22
 </code></pre></div>
@@ -122,7 +122,7 @@ zram0<span class="w">  </span><span class="m">253</span>:0<span class="w">    </
 <p>.</p>
 <p>.</p>
 <p>.</p>
-<h2>/etc/fstab</h2>
+<h3>/etc/fstab</h3>
 <p>Finalizada a compilação dos pacotes, segui aos últimos passos da instalação. A seção 10.2 discute a criação de <code>/etc/fstab</code>. Dadas as características do meu setup, o meu arquivo ficou assim:</p>
 <div class="highlight"><pre><span></span><code>bash-5.3#<span class="w"> </span>cat<span class="w"> </span>/mnt/lfs/etc/fstab<span class="w"> </span>
 <span class="c1"># Begin /etc/fstab</span>
@@ -137,13 +137,13 @@ zram0<span class="w">  </span><span class="m">253</span>:0<span class="w">    </
 <span class="c1"># End /etc/fstab</span>
 </code></pre></div>
 
-<h2>Compilação e instalação do kernel</h2>
+<h3>Compilação e instalação do kernel</h3>
 <p>A compilação do kernel foi mais simples e, sobretudo, mais rápida do que eu imaginava. Chequei os parâmetros de compilação duas vezes. O processo se deu sem intercorrências e durou menos de uma noite--iniciei a compilação por volta das 20h30 e, às 6h00 do outro dia, ela já havia finalizado. Como o meu plano era manter o LFS em dual boot com o host Arch, montei a partição de boot e copiei a imagem compilada do kernel para ela--no meu caso, a imagem x86_64 <code>vmlinuz-6.18.10-lfs-13.0-systemd</code>:</p>
 <div class="highlight"><pre><span></span><code>bash-5.3#<span class="w"> </span>ls<span class="w"> </span>/boot/vmlinuz-6.18.10-lfs-13.0-systemd<span class="w"> </span>
 /boot/vmlinuz-6.18.10-lfs-13.0-systemd
 </code></pre></div>
 
-<h2>Configuração do GRUB</h2>
+<h3>Configuração do GRUB</h3>
 <p>Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no <code>grub.cfg</code> criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">### BEGIN /etc/grub.d/40_custom ###</span>
 <span class="c1"># This file provides an easy way to add custom menu entries.  Simply type the</span>
@@ -161,13 +161,13 @@ menuentry<span class="w"> </span><span class="s2">&quot;GNU/Linux, Linux 6.18.10
 </code></pre></div>
 
 <p>Note-se que o processo de atualização do GRUB conforme documentado <a href="https://wiki.archlinux.org/title/GRUB">na Wiki do Arch</a>--i.e. usando <code>grub-mkconfig</code>, <strong>mesmo com <code>GRUB_DISABLE_OS_PROBER=false</code></strong>--não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.</p>
-<h2>Boot</h2>
+<h3>Boot</h3>
 <p>Após algumas iterações de reescrita do <code>grub.cfg</code>, <em>voilà</em>!</p>
 <p><img alt="Sistema LFS de pé." src="../images/lfs.png"></p>
-<h2>Registro na base de usuários do LFS</h2>
+<h3>Registro na base de usuários do LFS</h3>
 <p>Depois de finalmente colocar o sistema de pé, decidi registrar o meu nome na <a href="https://www.linuxfromscratch.org/cgi-bin/lfscounter.php">base de usuários do LFS</a>. Sou o usuário número 32222--de quebra, fiquei com um identificador super fácil de lembrar:</p>
 <p><img alt="Meu nome na base de LFS users." src="../images/lfscounter.png"></p>
-<h2>E agora?</h2>
+<h3>E agora?</h3>
 <p>Eu não poderia estar mais satisfeito. Pus em prática um anseio de longa data. Além disso, não apenas obtive um sistema funcional, mas também aprendi várias coisas e descobri outras tantas que eu ainda preciso aprender sobre Linux.</p>
 <p>Isso me leva a concluir que eu preciso refazer esse exercício de compilar LFS. Tão logo tenha acabado de "curtir" a minha primeira instalação e descansado um pouco--este relato pode não deixar transparecer, mas o projeto aqui descrito é bastante cansativo--, vou reiniciar o processo, do zero.</p>
 <p>Isso vai me permitir olhar com mais calma e maturidade para alguns aspectos do processo de compilação que ainda não estão completamente claros para mim, em especial a teoria por trás de cross compiling, além de modificar o código de alguns pacotes e experimentar com alguns parâmetros de compilação. Antes, porém, planejo fazer algumas rodadas de experimentação com o sistema funcional que eu já tenho, além de portá-lo para uma máquina física. A vítima vai ser um ThinkPad T420si--usado--velho de guerra.</p>

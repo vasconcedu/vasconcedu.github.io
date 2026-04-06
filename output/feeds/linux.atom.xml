@@ -11,11 +11,11 @@
 &lt;p&gt;Eu uso--e amo--Linux há cerca de 15 anos. Comecei pelo Ubuntu 8.04 LTS "Hardy Heron", em meados de 2010. Desde então, não parei mais: já tive a minha parcela de distro hopping; converti algumas pessoas e ajudei outras tantas a instalarem ou configurarem Linux; instalei e administrei servidores Linux críticos no meu primeiro emprego formal, como sysadmin; venho usando Linux como ferramenta de trabalho há anos, como engenheiro de segurança; e a minha computação pessoal, como não poderia deixar de ser, é completamente baseada em Linux. Atualmente, o meu amado daily driver é um ThinkPad T480--usado--com Arch, &lt;em&gt;btw&lt;/em&gt;. No entanto, até hoje, uma das peças faltantes na minha trajetória era compilar o meu próprio sistema Linux. Esse já era um sonho de longa data. Há pouco, ele foi realizado.&lt;/p&gt;
 &lt;p&gt;Em um primeiro momento, esse exercício pode até parecer algo muito difícil de ser cumprido, mas a verdade é que compilar LFS é muito mais simples do que parece, dada a devida assiduidade no uso de Linux, e o grande "plot twist" é que esse processo serviu para revelar muita, mas muita coisa sobre Linux que eu simplesmente não sei. Vejo que compilar o meu próprio sistema pela primeira vez foi apenas o início da fase de desconstrução em um processo de aprendizado que, estou certo, ainda vai durar muito tempo.&lt;/p&gt;
 &lt;p&gt;Sem mais delongas, a seguir, relato humildemente como foi a minha experiência de compilar Linux From Scratch.&lt;/p&gt;
-&lt;h2&gt;Para quem é o desafio de compilar Linux From Scratch?&lt;/h2&gt;
-&lt;p&gt;Eu não diria que seria impossível que uma pessoa que tivesse apenas iniciado a sua trajetória com Linux conseguisse compilar o seu próprio sistema com base no Linux From Scratch, mas esse processo seria extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e seria possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.&lt;/p&gt;
+&lt;h3&gt;Para quem é o desafio de compilar Linux From Scratch?&lt;/h3&gt;
+&lt;p&gt;Eu não diria que seria impossível que uma pessoa que tivesse apenas iniciado a sua trajetória com Linux conseguisse compilar o seu próprio sistema Linux com base no Linux From Scratch, mas esse processo seria extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e seria possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.&lt;/p&gt;
 &lt;p&gt;Não se engane: apesar de o livro ser muito detalhado, ele assume certos conhecimentos a priori, de forma que compilar Linux From Scratch demanda bastante afinidade com o terminal e conhecimento prático sobre particionamento, sistemas de arquivos, permissões e builds a partir de código-fonte, dentre outros assuntos.&lt;/p&gt;
 &lt;p&gt;O livro deixa muita coisa a cargo do leitor, e eu diria que conhecimento prático de Linux--que me parece que só pode ser adquirido ao longo de um tempo razoável de daily driving--é fundamental para o sucesso de certos procedimentos de compilação e até mesmo de setup. Ter afinidade com virtualização de sistemas Linux, por exemplo, me parece algo particularmente interessante, por simplificar--muito--o setup do host de compilação. Sem falar que colocar o sistema de pé depois da compilação é praticamente por sua conta: o livro fala muito pouco sobre configurações de boot, até porque estas dependem muito do host que você tiver escolhido, do uso ou não de dual boot e/ou das características da máquina em que você for colocar o LFS de pé.&lt;/p&gt;
-&lt;h2&gt;Instalação do host&lt;/h2&gt;
+&lt;h3&gt;Instalação do host&lt;/h3&gt;
 &lt;p&gt;Eu optei por utilizar uma máquina virtual Arch como host de compilação, usando o QEMU em uma máquina Arch física como virtualizador. O primeiro passo foi criar um disco virtual para o host. Usei o &lt;code&gt;qemu-img&lt;/code&gt; para isso:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-img&lt;span class="w"&gt; &lt;/span&gt;create&lt;span class="w"&gt; &lt;/span&gt;-f&lt;span class="w"&gt; &lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;arch.qcow2&lt;span class="w"&gt; &lt;/span&gt;24G
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -32,7 +32,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Seria interessante já ter utilizado &lt;code&gt;-smp 4&lt;/code&gt; aqui para iniciar o host com 4 processadores. Eu acabei não fazendo isso e precisando desligar a VM para reiniciá-la com essa configuração mais adiante, no meio do processo, o que resultou em ter de refazer parte do setup de compilação no host, conforme a seção 2.3 e o final do capítulo 7 do livro discutem.&lt;/p&gt;
-&lt;h2&gt;Configuração do SSH&lt;/h2&gt;
+&lt;h3&gt;Configuração do SSH&lt;/h3&gt;
 &lt;p&gt;Após acessar a VM via VNC, segui com a configuração de SSH para que eu pudesse ter um terminal mais bem servido de features para trabalhar durante a compilação. Eu diria que esse passo é quase imprescindível ao optar por compilar LFS em ambiente virtualizado. Poder colar comandos copiados da versão HTML do livro em uma sessão de SSH entre a sua máquina física e o host de compilação me parece ser a maneira mais segura de seguir os passos do livro, por evitar problemas relacionados a erros de digitação ao reproduzir comandos em um terminal em que você não consegue copiar e colar, além de possíveis inconsistências ao copiar comandos a partir da versão PDF do livro.&lt;/p&gt;
 &lt;p&gt;No Arch--com o &lt;code&gt;openssh&lt;/code&gt; devidamente instalado--, configurar SSH consiste em editar &lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;. É uma boa ideia fazer um backup desse arquivo antes. É preciso descomentar:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Port&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;22&lt;/span&gt;
@@ -59,7 +59,7 @@ sudo&lt;span class="w"&gt; &lt;/span&gt;systemctl&lt;span class="w"&gt; &lt;/spa
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Com isso, pude conectar à VM usando SSH e trabalhar de maneira muito mais simples. A essa altura, fiz a instalação das dependências previstas na seção 2.2 do livro. Como já mencionei, de uma próxima fez, farei a instalação destas durante a instalação do Arch para poder pular esse passo.&lt;/p&gt;
-&lt;h2&gt;Partição de LFS&lt;/h2&gt;
+&lt;h3&gt;Partição de LFS&lt;/h3&gt;
 &lt;p&gt;Criei um segundo disco virtual de 24 GB com o &lt;code&gt;qemu-img&lt;/code&gt;. Em seguida, desliguei e voltei a iniciar a VM, dessa vez com os dois discos:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;qemu-system-x86_64&lt;span class="w"&gt; &lt;/span&gt;-boot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;order&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;d&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;arch.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;lfs.qcow2,format&lt;span class="o"&gt;=&lt;/span&gt;qcow2&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;8G&lt;span class="w"&gt; &lt;/span&gt;-nic&lt;span class="w"&gt; &lt;/span&gt;user,hostfwd&lt;span class="o"&gt;=&lt;/span&gt;tcp::60022-:22
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -90,7 +90,7 @@ zram0&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;253&lt;/span&gt;
 &lt;p&gt;.&lt;/p&gt;
 &lt;p&gt;.&lt;/p&gt;
 &lt;p&gt;.&lt;/p&gt;
-&lt;h2&gt;/etc/fstab&lt;/h2&gt;
+&lt;h3&gt;/etc/fstab&lt;/h3&gt;
 &lt;p&gt;Finalizada a compilação dos pacotes, segui aos últimos passos da instalação. A seção 10.2 discute a criação de &lt;code&gt;/etc/fstab&lt;/code&gt;. Dadas as características do meu setup, o meu arquivo ficou assim:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bash-5.3#&lt;span class="w"&gt; &lt;/span&gt;cat&lt;span class="w"&gt; &lt;/span&gt;/mnt/lfs/etc/fstab&lt;span class="w"&gt; &lt;/span&gt;
 &lt;span class="c1"&gt;# Begin /etc/fstab&lt;/span&gt;
@@ -105,13 +105,13 @@ zram0&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="m"&gt;253&lt;/span&gt;
 &lt;span class="c1"&gt;# End /etc/fstab&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2&gt;Compilação e instalação do kernel&lt;/h2&gt;
+&lt;h3&gt;Compilação e instalação do kernel&lt;/h3&gt;
 &lt;p&gt;A compilação do kernel foi mais simples e, sobretudo, mais rápida do que eu imaginava. Chequei os parâmetros de compilação duas vezes. O processo se deu sem intercorrências e durou menos de uma noite--iniciei a compilação por volta das 20h30 e, às 6h00 do outro dia, ela já havia finalizado. Como o meu plano era manter o LFS em dual boot com o host Arch, montei a partição de boot e copiei a imagem compilada do kernel para ela--no meu caso, a imagem x86_64 &lt;code&gt;vmlinuz-6.18.10-lfs-13.0-systemd&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;bash-5.3#&lt;span class="w"&gt; &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;/boot/vmlinuz-6.18.10-lfs-13.0-systemd&lt;span class="w"&gt; &lt;/span&gt;
 /boot/vmlinuz-6.18.10-lfs-13.0-systemd
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2&gt;Configuração do GRUB&lt;/h2&gt;
+&lt;h3&gt;Configuração do GRUB&lt;/h3&gt;
 &lt;p&gt;Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no &lt;code&gt;grub.cfg&lt;/code&gt; criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;### BEGIN /etc/grub.d/40_custom ###&lt;/span&gt;
 &lt;span class="c1"&gt;# This file provides an easy way to add custom menu entries.  Simply type the&lt;/span&gt;
@@ -129,13 +129,13 @@ menuentry&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;GN
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Note-se que o processo de atualização do GRUB conforme documentado &lt;a href="https://wiki.archlinux.org/title/GRUB"&gt;na Wiki do Arch&lt;/a&gt;--i.e. usando &lt;code&gt;grub-mkconfig&lt;/code&gt;, &lt;strong&gt;mesmo com &lt;code&gt;GRUB_DISABLE_OS_PROBER=false&lt;/code&gt;&lt;/strong&gt;--não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.&lt;/p&gt;
-&lt;h2&gt;Boot&lt;/h2&gt;
+&lt;h3&gt;Boot&lt;/h3&gt;
 &lt;p&gt;Após algumas iterações de reescrita do &lt;code&gt;grub.cfg&lt;/code&gt;, &lt;em&gt;voilà&lt;/em&gt;!&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Sistema LFS de pé." src="../images/lfs.png"&gt;&lt;/p&gt;
-&lt;h2&gt;Registro na base de usuários do LFS&lt;/h2&gt;
+&lt;h3&gt;Registro na base de usuários do LFS&lt;/h3&gt;
 &lt;p&gt;Depois de finalmente colocar o sistema de pé, decidi registrar o meu nome na &lt;a href="https://www.linuxfromscratch.org/cgi-bin/lfscounter.php"&gt;base de usuários do LFS&lt;/a&gt;. Sou o usuário número 32222--de quebra, fiquei com um identificador super fácil de lembrar:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Meu nome na base de LFS users." src="../images/lfscounter.png"&gt;&lt;/p&gt;
-&lt;h2&gt;E agora?&lt;/h2&gt;
+&lt;h3&gt;E agora?&lt;/h3&gt;
 &lt;p&gt;Eu não poderia estar mais satisfeito. Pus em prática um anseio de longa data. Além disso, não apenas obtive um sistema funcional, mas também aprendi várias coisas e descobri outras tantas que eu ainda preciso aprender sobre Linux.&lt;/p&gt;
 &lt;p&gt;Isso me leva a concluir que eu preciso refazer esse exercício de compilar LFS. Tão logo tenha acabado de "curtir" a minha primeira instalação e descansado um pouco--este relato pode não deixar transparecer, mas o projeto aqui descrito é bastante cansativo--, vou reiniciar o processo, do zero.&lt;/p&gt;
 &lt;p&gt;Isso vai me permitir olhar com mais calma e maturidade para alguns aspectos do processo de compilação que ainda não estão completamente claros para mim, em especial a teoria por trás de cross compiling, além de modificar o código de alguns pacotes e experimentar com alguns parâmetros de compilação. Antes, porém, planejo fazer algumas rodadas de experimentação com o sistema funcional que eu já tenho, além de portá-lo para uma máquina física. A vítima vai ser um ThinkPad T420si--usado--velho de guerra.&lt;/p&gt;
