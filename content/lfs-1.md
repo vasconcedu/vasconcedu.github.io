@@ -15,7 +15,7 @@ Em um primeiro momento, esse exercício pode até parecer algo muito difícil de
 
 Sem mais delongas, a seguir, relato humildemente como foi a minha experiência de compilar Linux From Scratch.
 
-## Para quem é o Linux From Scratch?
+### Para quem é o desafio de compilar Linux From Scratch?
 
 Eu não diria que seria impossível que uma pessoa que tivesse apenas iniciado a sua trajetória com Linux conseguisse compilar o seu próprio sistema Linux com base no Linux From Scratch, mas esse processo seria extremamente demorado, trabalhoso e frustrante, demandaria uma força de vontade e uma paciência muito grandes, e seria possível que o tempo investido nisso fosse mais bem aproveitado se essa pessoa se dedicasse a aprender assuntos mais básicos, adquirindo pelo menos alguns anos de experiência com Linux como daily driver antes de atacar esse projeto.
 
@@ -23,7 +23,7 @@ Não se engane: apesar de o livro ser muito detalhado, ele assume certos conheci
 
 O livro deixa muita coisa a cargo do leitor, e eu diria que conhecimento prático de Linux--que me parece que só pode ser adquirido ao longo de um tempo razoável de daily driving--é fundamental para o sucesso de certos procedimentos de compilação e até mesmo de setup. Ter afinidade com virtualização de sistemas Linux, por exemplo, me parece algo particularmente interessante, por simplificar--muito--o setup do host de compilação. Sem falar que colocar o sistema de pé depois da compilação é praticamente por sua conta: o livro fala muito pouco sobre configurações de boot, até porque estas dependem muito do host que você tiver escolhido, do uso ou não de dual boot e/ou das características da máquina em que você for colocar o LFS de pé.
 
-## Instalação do host
+### Instalação do host
 
 Eu optei por utilizar uma máquina virtual Arch como host de compilação, usando o QEMU em uma máquina Arch física como virtualizador. O primeiro passo foi criar um disco virtual para o host. Usei o `qemu-img` para isso:
 
@@ -51,7 +51,7 @@ qemu-system-x86_64 -boot order=d -drive file=arch.qcow2,format=qcow2 -m 8G
 
 Seria interessante já ter utilizado `-smp 4` aqui para iniciar o host com 4 processadores. Eu acabei não fazendo isso e precisando desligar a VM para reiniciá-la com essa configuração mais adiante, no meio do processo, o que resultou em ter de refazer parte do setup de compilação no host, conforme a seção 2.3 e o final do capítulo 7 do livro discutem.
 
-## Configuração do SSH
+### Configuração do SSH
 
 Após acessar a VM via VNC, segui com a configuração de SSH para que eu pudesse ter um terminal mais bem servido de features para trabalhar durante a compilação. Eu diria que esse passo é quase imprescindível ao optar por compilar LFS em ambiente virtualizado. Poder colar comandos copiados da versão HTML do livro em uma sessão de SSH entre a sua máquina física e o host de compilação me parece ser a maneira mais segura de seguir os passos do livro, por evitar problemas relacionados a erros de digitação ao reproduzir comandos em um terminal em que você não consegue copiar e colar, além de possíveis inconsistências ao copiar comandos a partir da versão PDF do livro.
 
@@ -91,7 +91,7 @@ qemu-system-x86_64 -boot order=d -drive file=arch.qcow2,format=qcow2 -m 8G -nic 
 
 Com isso, pude conectar à VM usando SSH e trabalhar de maneira muito mais simples. A essa altura, fiz a instalação das dependências previstas na seção 2.2 do livro. Como já mencionei, de uma próxima fez, farei a instalação destas durante a instalação do Arch para poder pular esse passo.
 
-## Partição de LFS
+### Partição de LFS
 
 Criei um segundo disco virtual de 24 GB com o `qemu-img`. Em seguida, desliguei e voltei a iniciar a VM, dessa vez com os dois discos:
 
@@ -139,7 +139,7 @@ Em seguida, pude seguir com a definição de `$LFS`, a partir da seção 2.6, e 
 
 .
 
-## /etc/fstab
+### /etc/fstab
 
 Finalizada a compilação dos pacotes, segui aos últimos passos da instalação. A seção 10.2 discute a criação de `/etc/fstab`. Dadas as características do meu setup, o meu arquivo ficou assim:
 
@@ -157,7 +157,7 @@ bash-5.3# cat /mnt/lfs/etc/fstab
 # End /etc/fstab
 ```
 
-## Compilação e instalação do kernel
+### Compilação e instalação do kernel
 
 A compilação do kernel foi mais simples e, sobretudo, mais rápida do que eu imaginava. Chequei os parâmetros de compilação duas vezes. O processo se deu sem intercorrências e durou menos de uma noite--iniciei a compilação por volta das 20h30 e, às 6h00 do outro dia, ela já havia finalizado. Como o meu plano era manter o LFS em dual boot com o host Arch, montei a partição de boot e copiei a imagem compilada do kernel para ela--no meu caso, a imagem x86\_64 `vmlinuz-6.18.10-lfs-13.0-systemd`:
 
@@ -166,7 +166,7 @@ bash-5.3# ls /boot/vmlinuz-6.18.10-lfs-13.0-systemd
 /boot/vmlinuz-6.18.10-lfs-13.0-systemd
 ```
 
-## Configuração do GRUB
+### Configuração do GRUB
 
 Finalmente, alterei as configurações do GRUB. Optei por adicionar a entrada de menu do GRUB do LFS no `grub.cfg` criado pelo próprio Arch, em uma seção destinada especificamente a personalizações. Apesar de ser fácil gerar um novo arquivo de configuração do GRUB com o host Arch caso o original seja corrompido, é uma boa ideia fazer um backup desse arquivo antes de editá-lo:
 
@@ -188,19 +188,19 @@ menuentry "GNU/Linux, Linux 6.18.10-lfs-13.0-systemd" {
 
 Note-se que o processo de atualização do GRUB conforme documentado [na Wiki do Arch](https://wiki.archlinux.org/title/GRUB)--i.e. usando `grub-mkconfig`, **mesmo com `GRUB_DISABLE_OS_PROBER=false`**--não funciona aqui. É preciso atualizar o GRUB manualmente, conforme o próprio livro previne, no final da seção 10.4.4.
 
-## Boot
+### Boot
 
 Após algumas iterações de reescrita do `grub.cfg`, _voilà_!
 
 ![Sistema LFS de pé.](../images/lfs.png)
 
-## Registro na base de usuários do LFS
+### Registro na base de usuários do LFS
 
 Depois de finalmente colocar o sistema de pé, decidi registrar o meu nome na [base de usuários do LFS](https://www.linuxfromscratch.org/cgi-bin/lfscounter.php). Sou o usuário número 32222--de quebra, fiquei com um identificador super fácil de lembrar:
 
 ![Meu nome na base de LFS users.](../images/lfscounter.png)
 
-## E agora?
+### E agora?
 
 Eu não poderia estar mais satisfeito. Pus em prática um anseio de longa data. Além disso, não apenas obtive um sistema funcional, mas também aprendi várias coisas e descobri outras tantas que eu ainda preciso aprender sobre Linux.
 
