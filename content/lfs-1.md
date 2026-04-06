@@ -1,5 +1,5 @@
 Title: Compilando Linux From Scratch (LFS)
-Date: 2026-04-05 00:00
+Date: 2026-04-04 18:00
 Category: Linux
 
 

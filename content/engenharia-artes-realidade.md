@@ -1,6 +1,6 @@
 Title: A engenharia, as artes plásticas e a realidade
 Category: Pensamentos
-Date: 2026-04-07 00:00
+Date: 2026-04-06 19:48
 
 
 Certa vez, eu escrevi um texto chamado "A técnica, a arte e a plenitude", publicado em outro local, tratando essencialmente do fato de ser necessário, em alguns contextos, preparo específico para enxergar beleza em produtos da engenhosidade humana, como é o caso de algoritmos criptográficos. Achei por bem de reproduzir essa reflexão aqui, com algumas atualizações, por acreditar que ela ainda é relevante, e por enxergar que eu frasearia algumas coisas de maneira diferente, se fosse escrevê-la hoje. Com a devida licença de originalidade, eis aqui "A engenharia, as artes plásticas e a realidade", uma reiteração de "A técnica, a arte e a plenitude."
