@@ -73,7 +73,7 @@ Standard AUR build and installation procedures should work without any issues.
 
 At this point, the system should be good to go, but it's a good idea to check minimal requirements against the [dependencies in kernel.org](https://www.kernel.org/doc/html/latest/process/changes.html) to make sure installed versions satisfy the requirements.
 
-If everything is okay, one may proceed to compiling the kernel. This matter exceeds the scope of the post herein, but if all steps above were executed accordingly, one should be able to compile and boot the upstream kernel without any issues. Here's a screenshot of a successful boot with an image I've compiled from `linux-stable`--7.0.1 as of the time of writing in April 22, 2026:
+If everything is okay, one may proceed to compiling the kernel. This matter exceeds the scope of the post herein, but if all steps above were executed accordingly, one should be able to compile and boot the upstream kernel without any issues. Here's a screenshot of a successful boot with an image I've compiled from `linux-stable`--7.0.1 as of the time of writing on April 22, 2026:
 
 ![Linux kernel 7.0.1 uname output.](../images/kernel-7.0.1.png)
 
