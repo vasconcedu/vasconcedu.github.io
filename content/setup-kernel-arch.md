@@ -3,9 +3,11 @@ Category: Linux
 Date: 22-04-2026 19:00
 
 
-I've been working on [Linux Foundation's kernel development course (LFD103)](https://training.linuxfoundation.org/training/a-beginners-guide-to-linux-kernel-development-lfd103/), and I have chosen a virtual Arch box running on top of a physical Arch host as my kernel development machine. I have found that Arch Linux is by no means a straightforward distro to setup for kernel development. [kernel.org recommends a few dependencies](https://www.kernel.org/doc/html/latest/process/changes.html) that aren't even packaged for Arch and must be built manually. Furthermore, configuring GRUB to boot a newly compiled kernel in Arch is not hard, but it's not as straightforward as for the recommended distros--LFD103 recommends using either Ubuntu or Debian.
+I've been working on [Linux Foundation's kernel development course (LFD103)](https://training.linuxfoundation.org/training/a-beginners-guide-to-linux-kernel-development-lfd103/), and I have chosen a virtual Arch box running on QEMU on top of a physical Arch host as my kernel development machine.
 
-In the end, I have succeeded in compiling a kernel image from upstream and booting it using my Arch setup, but not without having to overcome several difficulties first. The post herein aims at documenting this process. It assumes prior knowledge in Arch Linux installation and some knowledge in Linux virtualization and general system administration.
+LFD103 recommends using either Ubuntu or Debian for course work, but I wanted to use Arch anyway, and--to no surprise--I have found that Arch Linux is not as straightforward to setup as the recommended distros. [kernel.org recommends a few dependencies](https://www.kernel.org/doc/html/latest/process/changes.html) that aren't even packaged for Arch and must be built manually. Furthermore, configuring GRUB to boot a newly compiled kernel is not as straightforward either.
+
+In the end, I have succeeded in compiling a kernel image from upstream and booting it using my Arch setup, but not without having to overcome some hardship first. The post herein aims at documenting this process. It assumes prior knowledge in Arch Linux installation and some knowledge in Linux virtualization and general system administration.
 
 ### Partitioniong and installation
 
