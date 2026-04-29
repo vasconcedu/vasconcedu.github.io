@@ -1,5 +1,5 @@
 Title: How I became a contributor to the Linux kernel
-Date: 2026-04-29 19:02
+Date: 2026-04-29 20:07
 Category: Linux
 
 
