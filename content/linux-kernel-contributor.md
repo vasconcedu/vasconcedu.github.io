@@ -43,15 +43,13 @@ Mark Pearson acknowledged my submission and applied his revision tag to it a few
 
 ### Patch no. 2 applied
 
-Maintainer Ilpo Järvinen reported that he had applied my patch to the next tree on April 28, 2026:
+Maintainer Ilpo Järvinen reported that he had applied my patch to his next tree on April 28, 2026:
 
 [https://lore.kernel.org/all/177739236303.10973.18101852287173259208.b4-ty@linux.intel.com/](https://lore.kernel.org/all/177739236303.10973.18101852287173259208.b4-ty@linux.intel.com/)
 
-At this very moment, I became a contributor to the Linux kernel.
-
 ### Patch no. 1 accepted
 
-In the meantime, my initial patch to the DRM subsystem had also been reviewed by Thomas Zimmermann, who applied his revision tag to it:
+In the meantime, my initial patch to the DRM subsystem had also been reviewed by maintainer Thomas Zimmermann, who applied his revision tag to it:
 
 [https://lore.kernel.org/all/23bd7123-f22e-4ab2-b3f0-03833e25bf7d@suse.de/](https://lore.kernel.org/all/23bd7123-f22e-4ab2-b3f0-03833e25bf7d@suse.de/)
 
