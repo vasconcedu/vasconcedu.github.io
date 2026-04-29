@@ -21,11 +21,10 @@
 &lt;p&gt;Mark Pearson acknowledged my submission and applied his revision tag to it a few hours later, at 9:49 a.m.:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://lore.kernel.org/all/16d45e47-8234-4983-84d4-91b66c5a67db@app.fastmail.com/"&gt;https://lore.kernel.org/all/16d45e47-8234-4983-84d4-91b66c5a67db@app.fastmail.com/&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;Patch no. 2 applied&lt;/h3&gt;
-&lt;p&gt;Maintainer Ilpo Järvinen reported that he had applied my patch to the next tree on April 28, 2026:&lt;/p&gt;
+&lt;p&gt;Maintainer Ilpo Järvinen reported that he had applied my patch to his next tree on April 28, 2026:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://lore.kernel.org/all/177739236303.10973.18101852287173259208.b4-ty@linux.intel.com/"&gt;https://lore.kernel.org/all/177739236303.10973.18101852287173259208.b4-ty@linux.intel.com/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;At this very moment, I became a contributor to the Linux kernel.&lt;/p&gt;
 &lt;h3&gt;Patch no. 1 accepted&lt;/h3&gt;
-&lt;p&gt;In the meantime, my initial patch to the DRM subsystem had also been reviewed by Thomas Zimmermann, who applied his revision tag to it:&lt;/p&gt;
+&lt;p&gt;In the meantime, my initial patch to the DRM subsystem had also been reviewed by maintainer Thomas Zimmermann, who applied his revision tag to it:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://lore.kernel.org/all/23bd7123-f22e-4ab2-b3f0-03833e25bf7d@suse.de/"&gt;https://lore.kernel.org/all/23bd7123-f22e-4ab2-b3f0-03833e25bf7d@suse.de/&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;Next steps&lt;/h3&gt;
 &lt;p&gt;This exercise of submitting a couple of patches gave me an initial grasp at the contribution process. None of the reviewers pointed out any mistakes or inconsistencies on my initial patches, so I assume that I have understood the submission process and the documentation that I read so far sufficiently well. Under such circumstances, I felt ready to transition towards studying the kernel more deeply as a preparation to tackle more substantial contributions.&lt;/p&gt;
