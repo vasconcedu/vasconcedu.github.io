@@ -27,4 +27,4 @@ DEFAULT_PAGINATION = 10
 # RELATIVE_URLS = True
 
 # Theme
-THEME = "simple"
+THEME = "basic"
