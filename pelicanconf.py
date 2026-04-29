@@ -1,5 +1,6 @@
 AUTHOR = 'vasconcedu'
 SITENAME = 'Eduardo Vasconcelos.com'
+SITESUBTITLE = '--talk; ++theory; terminal += 2;'
 SITEURL = ""
 
 PATH = "content"

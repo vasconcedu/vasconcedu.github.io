@@ -4,7 +4,7 @@ Date: 2026-03-18 00:00
 
 O meu nome é Eduardo Vasconcelos, mas a maioria das pessoas me chama de Edu.
 
-Eu sou engenheiro de computação e autoproclamado hacker ético e maker em série. Tenho um mestrado em Ciências de Computação e pretendo cursar um doutorado no futuro próximo.
+Eu sou engenheiro de computação e autoproclamado hacker ético e maker em série. Tenho um mestrado e atualmente estou cursando um doutorado em Ciências de Computação.
 
 Os assuntos pelos quais eu realmente me interesso quase sempre envolvem construir coisas, desde montar e programar os meus próprios dispositivos de automação residencial com microcontroladores até construir os meus próprios móveis.
 
