@@ -1,10 +1,12 @@
-Title: Chave GPG
+Title: GPG
 Date: 2026-03-18 18:00
 
 
-- E-mail: eduardo@eduardovasconcelos.com
-- Fingerprint: `B804 4A99 2669 46F1 CA6C  0F23 B2A0 7EBE 796E 4E98`
-- Chave pública: 
+E-mail: eduardo@eduardovasconcelos.com
+
+Fingerprint: `B804 4A99 2669 46F1 CA6C  0F23 B2A0 7EBE 796E 4E98`
+
+Key:
 
 ```bash
 ----BEGIN PGP PUBLIC KEY BLOCK-----

@@ -1,6 +1,6 @@
-Title: Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp
+Title: [pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp
 Date: 2026-04-11 18:00
-Category: Programação
+Category: Programming
 
 
 Um dos meus hiperfocos mais recentes é o [ábaco japonês--ou "soroban"--](https://en.wikipedia.org/wiki/Soroban), um instrumento de artimética instrumental que se desenvolveu no Japão com base no ábaco chinês--ou "suanpan"--, a partir da importação deste para o Japão, em meados do século XIV.

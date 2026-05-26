@@ -2,12 +2,14 @@ Title: Bio
 Date: 2026-03-18 00:00
 
 
-O meu nome é Eduardo Vasconcelos, mas a maioria das pessoas me chama de Edu.
+### Hello, I'm Eduardo Vasconcelos.
 
-Eu sou engenheiro de computação e autoproclamado hacker ético e maker em série. Tenho um mestrado e atualmente estou cursando um doutorado em Ciências de Computação.
+But most people call me Edu.
 
-Os assuntos pelos quais eu realmente me interesso quase sempre envolvem construir coisas, desde montar e programar os meus próprios dispositivos de automação residencial com microcontroladores até construir os meus próprios móveis.
+I'm a computer engineer and self-proclaimed ethical hacker and serial maker. I have a master's and I'm currently pursuing a doctorate in Computer Science.
 
-Trabalho como engenheiro de segurança e tenho quase 10 anos de experiência na indústria de software, projetando, programando, fazendo engenharia reversa e testando a segurança de software.
+The subjects I'm really interested in almost always involve building things, from assembling and programming my own home automation devices with microcontrollers to building my own furniture.
 
-Sou apaixonado por Linux e por software livre.
+I work as a security engineer and have almost 10 years of experience in the software industry, designing, programming, reverse engineering, and testing the security of software.
+
+I'm passionate about Linux and free software ("free" as in "free speech", not as in "free beer").

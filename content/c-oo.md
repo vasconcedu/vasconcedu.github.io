@@ -1,6 +1,6 @@
-Title: C orientado a objetos?
+Title: [pt-BR] C orientado a objetos?
 Date: 2026-03-22 12:00
-Category: Programação
+Category: Programming
 
 
 Recentemente, eu me deparei com [um e-mail escrito por Linus Torvalds em 2004](http://harmful.cat-v.org/software/c++/linus), em que ele tratava dos motivos pelos quais se posicionava diametralmente contra a introdução de C++ no kernel. Um trecho do e-mail, em especial, chamou a minha atenção. A certa altura, ele afirma, em estilo inconfundível:

@@ -1,6 +1,6 @@
-Title: Keep it simple, stupid
+Title: [pt-BR] Keep it simple, stupid
 Date: 2026-03-18 00:00
-Category: Pensamentos
+Category: Reflections
 
 
 Há algum tempo, venho tentando me reconectar com o que me fez começar a gostar de computação.

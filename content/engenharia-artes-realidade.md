@@ -1,5 +1,5 @@
-Title: A engenharia, as artes plásticas e a realidade
-Category: Pensamentos
+Title: [pt-BR] A engenharia, as artes plásticas e a realidade
+Category: Reflections
 Date: 2026-04-06 19:48
 
 

@@ -1,6 +1,6 @@
-Title: Método: este. Objetivo: procura-se.
+Title: [pt-BR] Método: este. Objetivo: procura-se.
 Date: 2026-04-15 21:14
-Category: Pensamentos
+Category: Reflections
 
 
 Se você perguntar qual é o significado da palavra "objetivo" e, em seguida, o da palavra "método", eu arrisco dizer que a maioria das pessoas os enunciaria mais ou menos da mesma forma, dizendo, com suas próprias palavras, que "objetivo" é onde você quer chegar e "método" é a maneira como você chega lá. Enunciar o significado dessas palavras é um exercício simples, mas tendo vivido boa parte dos primeiros anos de minha vida profissional entre o emprego na indústria de software e a pesquisa acadêmica em computação, eu posso afirmar que, a despeito do quão simples é enunciá-los, distinguir na prática entre esses dois conceitos representa uma dificuldade surpreendentemente comum.
