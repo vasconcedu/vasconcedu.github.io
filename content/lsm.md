@@ -352,7 +352,7 @@ Wrapping up this first part of my study notes on LSM, I'll say that I'm happy wi
 
 I've only scratched the surface of the LSM framework, but the elegantly simple inner workings I've touched so far have already proven to be a masterpiece in software engineering, from its solid design principles to the intricante relationship between its static calls table and its hook registration routines. Every layer of it has deepened my appreciation for Linux.
 
-But again, I've only scratched the surface of the LSM frameowrk. There's so much more to learn about it, and I still need to go deeper into AppArmor and then SELinux! This rabbit hole goes much deeper than what I initially envisioned, but I'm eager to dive in.
+But again, I've only scratched the surface. There's so much more to learn about LSM, and I still want to go deeper into AppArmor and then SELinux. This rabbit hole goes much deeper than what I initially envisioned, but I'm eager to dive in.
 
 When I post Part 2 of these study notes, I hope to have more kernel patches to share and a much deeper understanding of the LSM to offer.
 
