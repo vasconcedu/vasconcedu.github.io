@@ -1,5 +1,5 @@
 Title: Study notes on the Linux Security Module (LSM) kernel framework--Part 1
-Date: 2026-06-30 00:00
+Date: 2026-06-03 00:00
 Category: Linux
 
 
