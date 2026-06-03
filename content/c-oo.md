@@ -19,7 +19,7 @@ C é uma linguagem do paradigma procedural e, portanto, _não_ implementa OO por
 struct
 {
     float width, height;
-;
+};
 ```
 
 O `struct` contém duas variáveis, `width` e `height`, do tipo `float`, cujo propósito é armazenar valores de largura e altura, respectivamente. Podemos utilizar esse `struct` para definir o tipo `Rectangle`:
@@ -29,8 +29,7 @@ typedef struct Rectangle Rectangle;
 struct Rectangle
 {
     float width, height;
-;
-
+};
 ```
 
 O próximo passo natural é adicionar setters e getters a `Rectangle`. A solução aqui é utilizar ponteiros para funções:
