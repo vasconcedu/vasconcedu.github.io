@@ -1,5 +1,5 @@
 AUTHOR = 'vasconcedu'
-SITENAME = 'Eduardo Vasconcelos.com'
+SITENAME = 'Eduardo Vasconcelos'
 SITESUBTITLE = '--talk; ++theory; terminal += 2;'
 SITEURL = ""
 
@@ -28,4 +28,4 @@ DEFAULT_PAGINATION = 10
 # RELATIVE_URLS = True
 
 # Theme
-THEME = "basic"
+THEME = "basic-plus-plus"
