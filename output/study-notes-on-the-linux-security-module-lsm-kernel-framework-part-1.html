@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <title>Eduardo Vasconcelos.com - Study notes on the Linux Security Module (LSM) kernel framework--Part 1</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos.com Full Atom Feed" />
+        <link href="https://vasconcedu.codeberg.page/feeds/linux.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos.com Categories Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos.com ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.codeberg.page/">Eduardo Vasconcelos.com</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.codeberg.page/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/linux.html"  aria-current="page" >Linux</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/programming.html" >Programming</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+  <article>
+    <header>
+      <h2>
+        <a href="https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html" rel="bookmark"
+           title="Permalink to Study notes on the Linux Security Module (LSM) kernel framework--Part 1">Study notes on the Linux Security Module (LSM) kernel framework--Part 1</a></h2>
+      
+    </header>
+    <p>My journey in Linux systems programming has been advancing quite well, and during the last month or so, I've been really delving into the Linux Security Module (LSM) kernel framework, in an attempt to get a grasp of its inner workings and to prepare the ground for my studies on specific LSMs later on.</p>
+<p>Even though I've been trying to focus on the framework itself, it's inevitable to look at LSM module implementations along the way, and I've been case studying AppArmor. In fact, I found a rather interesting bug in AppArmor's <code>lsm.c</code> along the way and patched it, so my studies resulted in the opportunity to submit <a href="https://lore.kernel.org/all/20260521151314.8683-1-eduardo@eduardovasconcelos.com/">a new patch</a> to upstream, with another one in the oven. Another side effect was submitting <a href="https://gitlab.com/apparmor/apparmor.net/-/merge_requests/59">a pedantic merge request to AppArmor's documentation</a>.</p>
+<p>What I realized is that LSM is a topic whose documentation is rather fragmented, and this blog post is an attempt to consolidate what I've learned so far from consuming a rather diverse range of documentation sources and navigating LSM sources in the kernel's codebase.</p>
+<h3>LSM's debut</h3>
+<p>In their paper <a href="https://www.kernel.org/doc/ols/2002/ols2002-pages-604-617.pdf"><em>Linux Security Module Framework</em></a>, early LSM developers report that back in the 2001 Linux Kernel Summit, NSA presented their work in SELinux. Linus Torvalds accepted the need for an access control framework in the kernel, but he preferred to have security modules implemented as loadable kernel modules that could be easily exchanged, while remaining simple, efficient, and non-intrusive.</p>
+<h3>Major vs. minor LSM modules</h3>
+<p>The LSM framework distinguishes between two categories of LSM modules, namely major and minor. Major LSM modules implement full Mandatory Access Control (MAC) and are mutually exclusive, meaning one cannot run two major LSM modules at once--such as AppArmor and SELinux, for instance. In turn, minor LSM modules implement specific security features and can be stacked on top of each other.</p>
+<p>Ordinary systems usually run one major LSM and a several minor ones. Loaded LSM modules can be listed by issuing:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>/sys/kernel/security/lsm
+</code></pre></div>
+
+<h3>Basic design</h3>
+<p>LSM was designed in such a way as to remain agnostic to the different approaches to access control that security modules implement. In order to achieve this, the LSM mediates access to the kernel's internal objects by interfacing with loaded LSM modules. The diagram below, extracted from the aforementioned <em>Linux Security Module Framework</em> paper, illustrates this concept.</p>
+<p><img alt="LSM call diagram." src="../images/lsm-diagram.png"></p>
+<p>The diagram shows that whenever a process in user space executes a syscall, it passes through the existing kernel logic, including DAC. Just before accessing the object that is the intended target of the syscall, an LSM hook makes a call to the LSM module asking whether it allows the access to proceed. In turn, the module responds either allowing or denying access to the object.</p>
+<h3>LSM hook definitions</h3>
+<p>Based on that description, it is easy to notice that hooks constitute a core element in the design of the LSM framework. In fact, an important component of the LSM is precisely the definition of its hook interface at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hook_defs.h"><code>include/linux/lsm_hook_defs.h</code></a>.</p>
+<p>For each hook, <code>lsm_hook_defs.h</code> invokes the macro <code>LSM_HOOK</code>, specifying the hook's return type, default value, name, and argument list. Take <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hook_defs.h#n215">the following line</a>, for instance:</p>
+<div class="highlight"><pre><span></span><code><span class="n">LSM_HOOK</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">file_open</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">file</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Here, <code>LSM_HOOK</code> defines hook <code>file_open</code>, whose return type is <code>int</code> with default value <code>0</code>, and whose only argument is a pointer to <code>struct file</code>.</p>
+<h3>The static calls table</h3>
+<blockquote>
+<p>WARNING: things might get rather convoluted from this point onwards, but there's no way around it, really.</p>
+</blockquote>
+<p>Each hook in <code>lsm_hook_defs.h</code> is added to a static calls table defined in <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/security.c#n139"><code>security/security.c</code></a>.</p>
+<p><code>security.c</code> includes <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h"><code>include/linux/lsm_hooks.h</code></a> (<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/security.c#n21">here</a>), which in turn includes the aforementioned <code>lsm_hook_defs.h</code>, right at the <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n67">definition of <code>struct lsm_static_calls_table</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_calls_table</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#define LSM_HOOK(RET, DEFAULT, NAME, ...) \</span>
+<span class="cp">        struct lsm_static_call NAME[MAX_LSM_COUNT];</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hook_defs.h&gt;</span>
+<span class="w">    </span><span class="cp">#undef LSM_HOOK</span>
+<span class="p">}</span><span class="w"> </span><span class="n">__packed</span><span class="w"> </span><span class="n">__randomize_layout</span><span class="p">;</span>
+</code></pre></div>
+
+<p>We'll get back to that struct in a minute, but first, let's take a look at its realization in <code>security.c</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_calls_table</span>
+<span class="w">    </span><span class="n">static_calls_table</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="n">__aligned</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">u64</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define INIT_LSM_STATIC_CALL(NUM, NAME)                 \</span>
+<span class="cp">    (struct lsm_static_call) {                  \</span>
+<span class="cp">        .key = &amp;STATIC_CALL_KEY(LSM_STATIC_CALL(NAME, NUM)),    \</span>
+<span class="cp">        .trampoline = LSM_HOOK_TRAMP(NAME, NUM),        \</span>
+<span class="cp">        .active = &amp;SECURITY_HOOK_ACTIVE_KEY(NAME, NUM),     \</span>
+<span class="cp">    },</span>
+<span class="cp">#define LSM_HOOK(RET, DEFAULT, NAME, ...)               \</span>
+<span class="cp">    .NAME = {                           \</span>
+<span class="cp">        LSM_DEFINE_UNROLL(INIT_LSM_STATIC_CALL, NAME)       \</span>
+<span class="cp">    },</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hook_defs.h&gt;</span>
+<span class="cp">#undef LSM_HOOK</span>
+<span class="cp">#undef INIT_LSM_STATIC_CALL</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+
+<p>Now, the code above is certainly hard to grasp at first glance. In order to understand what on Earth is going on here, one needs to break it down and look at it one piece at a time.</p>
+<p>As we've already seen, <code>static_calls_table</code> is of type <code>struct lsm_static_calls_table</code>, and the very first <code>#define</code> directive in that type expands each aforementioned <code>LSM_HOOK</code> from <code>lsm_hook_defs.h</code> into an array of <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n51"><code>struct lsm_static_call</code></a> of size <code>MAX_LSM_COUNT</code>. Let's take a look at type <code>struct lsm_static_call</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">static_call_key</span><span class="w"> </span><span class="o">*</span><span class="n">key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">trampoline</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="o">*</span><span class="n">hl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">static_key_false</span><span class="w"> </span><span class="o">*</span><span class="n">active</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">__randomize_layout</span><span class="p">;</span>
+</code></pre></div>
+
+<p>At this point in our introspection, we see that <code>struct lsm_static_call</code> is composed of:</p>
+<ul>
+<li>A pointer to a static call key, which in turn essentially points to a target function (see <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/static_call_types.h#n63"><code>include/linux/static_call_types.h</code></a> for detail);</li>
+<li>A pointer to what's called the <a href="https://en.wikipedia.org/wiki/Trampoline_(computing)">trampoline function</a>--i.e. an assembly function that provides a way of calling the function pointed to by the static call key, respecting architecture-specific calling conventions;</li>
+<li>A pointer to the hook list to which this static call belongs, which in turn maps directly to a specific LSM (see <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n95"><code>include/linux/lsm_hooks.h</code></a> for detail); and</li>
+<li>A pointer to a struct that tracks whether the static call is active or not--i.e. whether it's been activated by the LSM to which it belongs (see <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/jump_label.h#n355"><code>include/linux/jump_label.h</code></a> for detail).</li>
+</ul>
+<p>Finally <a href="https://lwn.net/Articles/722293/">annotation <code>__randomize_layout</code></a> serves the purpose of randomizing the struct's layout for security.</p>
+<p>After establishing this intuition about <code>struct lsm_static_call</code>, we can go back to <code>lsm_static_calls_table</code>. I've repeated the corresponding code below for convenience: </p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_calls_table</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#define LSM_HOOK(RET, DEFAULT, NAME, ...) \</span>
+<span class="cp">        struct lsm_static_call NAME[MAX_LSM_COUNT];</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hook_defs.h&gt;</span>
+<span class="w">    </span><span class="cp">#undef LSM_HOOK</span>
+<span class="p">}</span><span class="w"> </span><span class="n">__packed</span><span class="w"> </span><span class="n">__randomize_layout</span><span class="p">;</span>
+</code></pre></div>
+
+<p>So essentially, if the hooks in <code>lsm_hook_defs.h</code> were named "eeny", "meeny", "miny", and "moe", <code>struct lsm_static_calls_table</code> would expand into something like:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_calls_table</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="n">eeny</span><span class="p">[</span><span class="n">MAX_LSM_COUNT</span><span class="p">],</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="n">meeny</span><span class="p">[</span><span class="n">MAX_LSM_COUNT</span><span class="p">],</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="n">miny</span><span class="p">[</span><span class="n">MAX_LSM_COUNT</span><span class="p">],</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="n">moe</span><span class="p">[</span><span class="n">MAX_LSM_COUNT</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Hence, each hook names a static calls array. With that in mind, let's get back to the realization of <code>struct lsm_static_calls_table</code> in <code>security.c</code>--also repeated below for convenience--, and analyze what code the preprocessor actually generates:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_calls_table</span>
+<span class="w">    </span><span class="n">static_calls_table</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="n">__aligned</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">u64</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define INIT_LSM_STATIC_CALL(NUM, NAME)                 \</span>
+<span class="cp">    (struct lsm_static_call) {                  \</span>
+<span class="cp">        .key = &amp;STATIC_CALL_KEY(LSM_STATIC_CALL(NAME, NUM)),    \</span>
+<span class="cp">        .trampoline = LSM_HOOK_TRAMP(NAME, NUM),        \</span>
+<span class="cp">        .active = &amp;SECURITY_HOOK_ACTIVE_KEY(NAME, NUM),     \</span>
+<span class="cp">    },</span>
+<span class="cp">#define LSM_HOOK(RET, DEFAULT, NAME, ...)               \</span>
+<span class="cp">    .NAME = {                           \</span>
+<span class="cp">        LSM_DEFINE_UNROLL(INIT_LSM_STATIC_CALL, NAME)       \</span>
+<span class="cp">    },</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hook_defs.h&gt;</span>
+<span class="cp">#undef LSM_HOOK</span>
+<span class="cp">#undef INIT_LSM_STATIC_CALL</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+
+<p>Here, <a href="https://www.kernel.org/doc/html/latest/security/self-protection.html"><code>__ro_after_init</code> is a kernel self-protection annotation</a> that serves the purpose of marking <code>static_calls_table</code> as read only after initialization, meaning that it will live in the kernel's read only data section at <code>.ro-data</code> instead of <code>.data</code>, benefiting from the kernel's strict memory permissions and preventing the struct from being written, resulting in potential tampering with LSM execution flow. In turn, <code>__aligned(sizeof(u64))</code> serves the purpose of preventing unaligned access to the table, which may result in faults in some architectures.</p>
+<p>The second <code>#define</code> directive expands the hooks defined in <code>lsm_hook_defs.h</code> to initialize the static calls array for each hook. It leverages another code generation mechanism to do that, namely <code>LSM_DEFINE_UNROLL</code>. Here's <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/security.c#n105">its definition</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define LSM_DEFINE_UNROLL(M, ...) UNROLL(MAX_LSM_COUNT, M, __VA_ARGS__)</span>
+</code></pre></div>
+
+<p>Now, what that macro does is it takes macro <code>M</code> and expands it <code>MAX_LSM_COUNT</code> times. Combining that with the first <code>#define</code> directive that defines <code>INIT_LSM_STATIC_CALL</code> means that each hook "eeny" in <code>lsm_hook_defs.h</code>, will expand into an array like:</p>
+<div class="highlight"><pre><span></span><code><span class="na">.eeny</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">struct</span><span class="w"> </span><span class="no">lsm_static_call</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="cm">/* 0 */</span>
+<span class="w">    </span><span class="nf">struct</span><span class="w"> </span><span class="no">lsm_static_call</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="cm">/* 1 */</span>
+<span class="w">    </span><span class="na">...</span>
+<span class="w">    </span><span class="nf">struct</span><span class="w"> </span><span class="no">lsm_static_call</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="cm">/* MAX_LSM_COUNT - 1 */</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>Of course, each <code>struct lsm_static_call</code> is populated accordingly, and it shall have its fields updated at kernel initialization later on, when each LSM module has the opportunity to register its hooks. The following section documents this process.</p>
+<h3>Hook registration</h3>
+<p>If we look at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/main.c#n1199">LSM initialization</a> at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n485"><code>security_init()</code></a>, we'll find the following code:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">security_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="w">    </span><span class="cm">/* ... */</span>
+
+<span class="w">    </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lsm_order_for_each</span><span class="p">(</span><span class="n">lsm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* skip the &quot;early&quot; LSMs as they have already been setup */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cnt</span><span class="o">++</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">lsm_count_early</span><span class="p">)</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">lsm_init_single</span><span class="p">(</span><span class="o">*</span><span class="n">lsm</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>And if we step into <code>lsm_init_single()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">lsm_init_single</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_info</span><span class="w"> </span><span class="o">*</span><span class="n">lsm</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsm</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>So, what's happening here is that the kernel is calling each LSM's <code>init()</code> function in order to initialize it.</p>
+<p>Next, we'll try to understand what exactly the <code>init()</code> function of an LSM module does in order to register hooks, by looking at AppArmor's initialization.</p>
+<h3>LSM initialization: a case study of AppArmor</h3>
+<p>AppArmor's initialization is at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n2499"><code>security/apparmor/lsm.c</code></a>. Here's what we'll find more or less half way through the module's init function: </p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">apparmor_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+
+<span class="w">    </span><span class="n">security_add_hooks</span><span class="p">(</span><span class="n">apparmor_hooks</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">apparmor_hooks</span><span class="p">),</span>
+<span class="w">                </span><span class="o">&amp;</span><span class="n">apparmor_lsmid</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The function calls <a href="(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n369)"><code>security_add_hooks()</code></a>, providing <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656"><code>apparmor_hooks</code>--AppArmor's hook list--</a>, along with the size of said hook list and AppArmor's LSM ID.</p>
+<p><code>apparmor_hooks</code> is <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656">defined as</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="n">apparmor_hooks</span><span class="p">[]</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">ptrace_access_check</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_ptrace_access_check</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">ptrace_traceme</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_ptrace_traceme</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">capget</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_capget</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">capable</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_capable</span><span class="p">),</span>
+
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">move_mount</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_move_mount</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">sb_mount</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_sb_mount</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">sb_umount</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_sb_umount</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">sb_pivotroot</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_sb_pivotroot</span><span class="p">),</span>
+
+<span class="w">    </span><span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>Which translates to an array of mappings of type <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n95"><code>struct security_hook_list</code></a>, each mapping an LSM hook to an AppArmor implementation of that hook. The definition of <code>struct security_hook_list</code> is as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="o">*</span><span class="n">scalls</span><span class="p">;</span>
+<span class="w">    </span><span class="k">union</span><span class="w"> </span><span class="nc">security_list_options</span><span class="w"> </span><span class="n">hook</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_id</span><span class="w"> </span><span class="o">*</span><span class="n">lsmid</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">__randomize_layout</span><span class="p">;</span>
+</code></pre></div>
+
+<p>The struct contains a list of static calls as <code>scalls</code>--you might want to revisit the definition of <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n51"><code>struct lsm_static_call</code></a>--, a union of type <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n38"><code>union security_list_options</code></a>, and a pointer to the LSM's ID.</p>
+<p>If we introspect into <code>security_list_options</code>, here's what we'll find:</p>
+<div class="highlight"><pre><span></span><code><span class="k">union</span><span class="w"> </span><span class="nc">security_list_options</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#define LSM_HOOK(RET, DEFAULT, NAME, ...) RET (*NAME)(__VA_ARGS__);</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lsm_hook_defs.h&quot;</span>
+<span class="w">    </span><span class="cp">#undef LSM_HOOK</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">lsm_func_addr</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Thus, the union expands the definitions of <code>LSM_HOOK</code> from <code>lsm_hook_defs.h</code> into a list of function pointers to each LSM hook. In turn, macro <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hooks.h#n137"><code>LSM_HOOK_INIT</code></a> translates to:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define LSM_HOOK_INIT(NAME, HOOK)           \</span>
+<span class="cp">    {                       \</span>
+<span class="cp">        .scalls = static_calls_table.NAME,  \</span>
+<span class="cp">        .hook = { .NAME = HOOK }        \</span>
+<span class="cp">    }</span>
+</code></pre></div>
+
+<p>Namely, it initializes <code>struct security_hook_list.scalls</code> with a pointer to the array in <code>static_calls_table</code> that corresponds to the LSM hook, and <code>struct security_hook_list.security_list_options.hook</code>'s field corresponding to the name of the given LSM hook with a pointer to AppArmor's implementation of the hook.</p>
+<p>Putting it all together, this results in <code>apparmor_hooks</code> expanding into something like:</p>
+<div class="highlight"><pre><span></span><code><span class="n">apparmor_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">scalls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">static_calls_table</span><span class="p">.</span><span class="n">lsm_hook_0</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">hook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">.</span><span class="n">lsm_hook_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">apparmor_hook_0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">.</span><span class="n">lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* ... */</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">scalls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">static_calls_table</span><span class="p">.</span><span class="n">lsm_hook_1</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">hook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">.</span><span class="n">lsm_hook_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">apparmor_hook_1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">.</span><span class="n">lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* ... */</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Hence, each slot in <code>apparmor_hooks</code> keeps a reference to a specific LSM hook's array in <code>static_calls_table</code>, along with the mapping of said LSM hook to AppArmor's implementation.</p>
+<h3>The final steps of hook registration</h3>
+<p>After looking at AppArmor's initialization to understand what the data structure provided as an argument to <code>security_add_hooks()</code> looks like, we can resume our analysis of LSM hook registration by finally stepping into that function:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">security_add_hooks</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="o">*</span><span class="n">hooks</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_id</span><span class="w"> </span><span class="o">*</span><span class="n">lsmid</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">hooks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsmid</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">lsm_static_call_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hooks</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+<span class="w">            </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;exhausted LSM callback slots with LSM %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">lsmid</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>We see that <code>security_add_hooks</code> iterates through the security hook list initializing the static calls of the given LSM, which if you'll remember were supposed to be updated at kernel initialization--i.e. precisely where we are at this point.</p>
+<p>Let's get deeper into our introspection and step into <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n341"><code>lsm_static_call_init()</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">lsm_static_call_init</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="o">*</span><span class="n">hl</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_static_call</span><span class="w"> </span><span class="o">*</span><span class="n">scall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hl</span><span class="o">-&gt;</span><span class="n">scalls</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">MAX_LSM_COUNT</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Update the first static call that is not used yet */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">scall</span><span class="o">-&gt;</span><span class="n">hl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">__static_call_update</span><span class="p">(</span><span class="n">scall</span><span class="o">-&gt;</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">scall</span><span class="o">-&gt;</span><span class="n">trampoline</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">hl</span><span class="o">-&gt;</span><span class="n">hook</span><span class="p">.</span><span class="n">lsm_func_addr</span><span class="p">);</span>
+<span class="w">            </span><span class="n">scall</span><span class="o">-&gt;</span><span class="n">hl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hl</span><span class="p">;</span>
+<span class="w">            </span><span class="n">static_branch_enable</span><span class="p">(</span><span class="n">scall</span><span class="o">-&gt;</span><span class="n">active</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">scall</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENOSPC</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>At this stage, the function locates the first empty slot in the <code>static_calls_table</code> array corresponding to the LSM hook being registered, and then updates that slot by associating it with the LSM module's implementation of the hook.</p>
+<p>This way, the LSM should be able to query the LSM module that registered that hook for access approval.</p>
+<h3>Conclusion</h3>
+<p>Wrapping up this first part of my study notes on LSM, I'll say that I'm happy with what I've learned so far.</p>
+<p>I've only scratched the surface of the LSM framework, but the elegantly simple inner workings I've touched so far have already proven to be a masterpiece in software engineering, from its solid design principles to the intricante relationship between its static calls table and its hook registration routines. Every layer of it has deepened my appreciation for Linux.</p>
+<p>But again, I've only scratched the surface of the LSM frameowrk. There's so much more to learn about it, and I still need to go deeper into AppArmor and then SELinux! This rabbit hole goes much deeper than what I initially envisioned, but I'm eager to dive in.</p>
+<p>When I post Part 2 of these study notes, I hope to have more kernel patches to share and a much deeper understanding of the LSM to offer.</p>
+<p><em>Happy hacking.</em></p>
+    <footer>
+      <p>Published: <time datetime="2026-06-30T00:00:00-03:00">
+        Tue 30 June 2026
+      </time></p>
+        <address>
+          By             <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+        </address>
+        <p>
+          Category: <a href="https://vasconcedu.codeberg.page/category/linux.html">Linux</a>
+        </p>
+    </footer>
+  </article>
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>
