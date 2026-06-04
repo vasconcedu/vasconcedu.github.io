@@ -1,5 +1,5 @@
 AUTHOR = 'vasconcedu'
-SITENAME = 'Eduardo Vasconcelos'
+SITENAME = 'Eduardo Vasconcelos.com'
 SITESUBTITLE = '--talk; ++theory; terminal += 2;'
 SITEURL = ""
 
