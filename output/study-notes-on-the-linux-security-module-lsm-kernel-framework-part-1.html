@@ -225,7 +225,7 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>The function calls <a href="(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n369)"><code>security_add_hooks()</code></a>, providing <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656"><code>apparmor_hooks</code>--AppArmor's hook list--</a>, along with the size of said hook list and AppArmor's LSM ID.</p>
+<p>The function calls <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n369"><code>security_add_hooks()</code></a>, providing <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656"><code>apparmor_hooks</code>--AppArmor's hook list--</a>, along with the size of said hook list and AppArmor's LSM ID.</p>
 <p><code>apparmor_hooks</code> is <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656">defined as</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="n">apparmor_hooks</span><span class="p">[]</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">ptrace_access_check</span><span class="p">,</span><span class="w"> </span><span class="n">apparmor_ptrace_access_check</span><span class="p">),</span>
