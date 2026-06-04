@@ -222,7 +222,7 @@ static int __init apparmor_init(void)
 }
 ```
 
-The function calls [`security_add_hooks()`]((https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n369)), providing [`apparmor_hooks`--AppArmor's hook list--](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656), along with the size of said hook list and AppArmor's LSM ID.
+The function calls [`security_add_hooks()`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/lsm_init.c#n369), providing [`apparmor_hooks`--AppArmor's hook list--](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656), along with the size of said hook list and AppArmor's LSM ID.
 
 `apparmor_hooks` is [defined as](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/apparmor/lsm.c#n1656):
 
