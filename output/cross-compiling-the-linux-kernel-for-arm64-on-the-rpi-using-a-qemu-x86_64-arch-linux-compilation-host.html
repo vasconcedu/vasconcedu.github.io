@@ -57,7 +57,7 @@
       
     </header>
     <p>I've been tinkering with the RPi to build a toy example in the context of my PhD research in the last couple of days, trying to get a custom kernel to work on a <a href="https://pip-assets.raspberrypi.com/categories/584-raspberry-pi-zero-2-w/documents/RP-008359-DS-1-raspberry-pi-zero-2-w-product-brief.pdf">Zero 2 W board</a>--for those unfamiliar with it, here's a picture:</p>
-<p><img alt="RPi Zero 2 W." src="../images/rpi-zero-2-w.png"></p>
+<p><img alt="RPi Zero 2 W." src="../images/rpi-zero-2-w.png"> </p>
 <p>As much as <a href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html">Raspberry Pi's official documentation</a> is very well organized and thorough about the theme of building a custom kernel for RPi boards, as I discussed in <a href="https://vasconcedu.codeberg.page/linux-kernel-development-setup-in-arch-linux.html">my blog post on setting up a kernel development environment</a>, I've chosen Arch Linux as the base distro for my virtualized compilation host, and as the instructions in the official documentation target Debian-based distros--and seem to aim at physical compilation hosts--, I had to MacGyver my way to a functioning cross-compilation setup for the RPi using the virtualized Arch Linux-based setup that I already had. This blog post documents that procedure.</p>
 <h3>The cross-compilation scenario herein</h3>
 <p>Before we begin, it's important to understand that explanations involving cross-compilation scenarios might get rather convoluted to follow, so first of all, let's define our cross-compilation scenario clearly. The figure below shows the three systems involved in our scenario, and where we're positioned:</p>
