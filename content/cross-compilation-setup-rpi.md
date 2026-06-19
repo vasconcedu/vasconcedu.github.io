@@ -5,7 +5,7 @@ Date: 2026-06-19 15:00
 
 I've been tinkering with the RPi to build a toy example in the context of my PhD research in the last couple of days, trying to get a custom kernel to work on a [Zero 2 W board](https://pip-assets.raspberrypi.com/categories/584-raspberry-pi-zero-2-w/documents/RP-008359-DS-1-raspberry-pi-zero-2-w-product-brief.pdf)--for those unfamiliar with it, here's a picture:
 
-![RPi Zero 2 W.](../images/rpi-zero-2-w.png)
+![RPi Zero 2 W.](../images/rpi-zero-2-w.png) 
 
 As much as [Raspberry Pi's official documentation](https://www.raspberrypi.com/documentation/computers/linux_kernel.html) is very well organized and thorough about the theme of building a custom kernel for RPi boards, as I discussed in [my blog post on setting up a kernel development environment](https://vasconcedu.codeberg.page/linux-kernel-development-setup-in-arch-linux.html), I've chosen Arch Linux as the base distro for my virtualized compilation host, and as the instructions in the official documentation target Debian-based distros--and seem to aim at physical compilation hosts--, I had to MacGyver my way to a functioning cross-compilation setup for the RPi using the virtualized Arch Linux-based setup that I already had. This blog post documents that procedure.
 
