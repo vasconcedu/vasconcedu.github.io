@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+      <title>Eduardo Vasconcelos</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos Full Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.codeberg.page/">Eduardo Vasconcelos</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.codeberg.page/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/linux.html" >Linux</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/programming.html" >Programming</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+        <h2>All articles</h2>
+
+
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-2.html" rel="bookmark" title="Permalink to Study notes on the Linux Security Module (LSM) kernel framework--Part 2">Study notes on the Linux Security Module (LSM) kernel framework--Part 2</a></h2> </header>
+            <section><p>This blog post is a continuation to <a href="https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html">my previous study notes</a> about the inner workings of the LSM kernel framework. Previously, I've established an understanding of where LSMs are positioned in the kernel's call sequence that leads to accessing system resources, how LSMs initialize, define and register call hooks based …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-06-25T00:00:00-03:00"> Thu 25 June 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/cross-compiling-the-linux-kernel-for-arm64-on-the-rpi-using-a-qemu-x86_64-arch-linux-compilation-host.html" rel="bookmark" title="Permalink to Cross-compiling the Linux kernel for ARM64 on the RPi using a QEMU x86_64 Arch Linux compilation host">Cross-compiling the Linux kernel for ARM64 on the RPi using a QEMU x86_64 Arch Linux compilation host</a></h2> </header>
+            <section><p>I've been tinkering with the RPi to build a toy example in the context of my PhD research in the last couple of days, trying to get a custom kernel to work on a <a href="https://pip-assets.raspberrypi.com/categories/584-raspberry-pi-zero-2-w/documents/RP-008359-DS-1-raspberry-pi-zero-2-w-product-brief.pdf">Zero 2 W board</a>--for those unfamiliar with it, here's a picture:</p>
+<p><img alt="RPi Zero 2 W." src="../images/rpi-zero-2-w.png"> </p>
+<p>As much as <a href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html">Raspberry …</a></p></section>
+            <footer>
+                <p>Published: <time datetime="2026-06-19T15:00:00-03:00"> Fri 19 June 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/on-linux-kernel-synchronization.html" rel="bookmark" title="Permalink to On Linux kernel synchronization">On Linux kernel synchronization</a></h2> </header>
+            <section><p>From my practical work in kernel development so far, I realized that synchronization concerns are present in pretty much every single corner of kernel code. Hence, kernel synchronization is a topic that deserves special attention from kernel newbies like myself who want to build a working understanding of the Linux …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-06-16T04:00:00-03:00"> Tue 16 June 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html" rel="bookmark" title="Permalink to Study notes on the Linux Security Module (LSM) kernel framework--Part 1">Study notes on the Linux Security Module (LSM) kernel framework--Part 1</a></h2> </header>
+            <section><p>My journey in Linux systems programming has been advancing quite well, and during the last month or so, I've been really delving into the Linux Security Module (LSM) kernel framework, in an attempt to get a grasp of its inner workings and to prepare the ground for my studies on …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-06-03T00:00:00-03:00"> Wed 03 June 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/how-i-became-a-contributor-to-the-linux-kernel.html" rel="bookmark" title="Permalink to How I became a contributor to the Linux kernel">How I became a contributor to the Linux kernel</a></h2> </header>
+            <section><p>After finishing <a href="https://training.linuxfoundation.org/training/a-beginners-guide-to-linux-kernel-development-lfd103/">Linux Foundation's course on kernel development (LFD103)</a>, I was feeling ready and eager to make my first contribution to the Linux kernel. The entire process from starting LFD103 and having my first patch accepted into upstream took me two weeks. This post provides insight on what my first …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-29T20:07:00-03:00"> Wed 29 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/linux-kernel-development-setup-in-arch-linux.html" rel="bookmark" title="Permalink to Linux kernel development setup in Arch Linux">Linux kernel development setup in Arch Linux</a></h2> </header>
+            <section><p>I've been working on <a href="https://training.linuxfoundation.org/training/a-beginners-guide-to-linux-kernel-development-lfd103/">Linux Foundation's kernel development course (LFD103)</a>, and I have chosen a virtual Arch box running on QEMU on top of a physical Arch host as my kernel development machine.</p>
+<p>LFD103 recommends using either Ubuntu or Debian for course work, but I wanted to use Arch anyway …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-22T19:00:00-03:00"> Wed 22 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/pt-br-metodo-este-objetivo-procura-se.html" rel="bookmark" title="Permalink to [pt-BR] Método: este. Objetivo: procura-se.">[pt-BR] Método: este. Objetivo: procura-se.</a></h2> </header>
+            <section><p>Se você perguntar qual é o significado da palavra "objetivo" e, em seguida, o da palavra "método", eu arrisco dizer que a maioria das pessoas os enunciaria mais ou menos da mesma forma, dizendo, com suas próprias palavras, que "objetivo" é onde você quer chegar e "método" é a maneira …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-15T21:14:00-03:00"> Wed 15 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/pt-br-um-solver-ad-hoc-de-problemas-aritmeticos-usando-abaco-japones-em-lisp.html" rel="bookmark" title="Permalink to [pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp">[pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp</a></h2> </header>
+            <section><p>Um dos meus hiperfocos mais recentes é o <a href="https://en.wikipedia.org/wiki/Soroban">ábaco japonês--ou "soroban"--</a>, um instrumento de artimética instrumental que se desenvolveu no Japão com base no ábaco chinês--ou "suanpan"--, a partir da importação deste para o Japão, em meados do século XIV.</p>
+<p>Comecei a aprender as operações aritméticas básicas no soroban ao …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-11T18:00:00-03:00"> Sat 11 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/pt-br-a-engenharia-as-artes-plasticas-e-a-realidade.html" rel="bookmark" title="Permalink to [pt-BR] A engenharia, as artes plásticas e a realidade">[pt-BR] A engenharia, as artes plásticas e a realidade</a></h2> </header>
+            <section><p>Certa vez, eu escrevi um texto chamado "A técnica, a arte e a plenitude", publicado em outro local, tratando essencialmente do fato de ser necessário, em alguns contextos, preparo específico para enxergar beleza em produtos da engenhosidade humana, como é o caso de algoritmos criptográficos. Achei por bem de reproduzir …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-06T19:48:00-03:00"> Mon 06 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+        <article>
+            <header> <h2><a href="https://vasconcedu.codeberg.page/pt-br-compilando-linux-from-scratch-lfs.html" rel="bookmark" title="Permalink to [pt-BR] Compilando Linux From Scratch (LFS)">[pt-BR] Compilando Linux From Scratch (LFS)</a></h2> </header>
+            <section><blockquote>
+<p>"Playfully doing something difficult, whether useful or not, that is hacking."</p>
+<p>-- Richard Stallman, <em>On Hacking</em></p>
+</blockquote>
+<p>Ao longo das últimas semanas, em detrimento dos devidos sono e asseio, trabalhei, pela primeira vez, na compilação do meu próprio sistema Linux. Usei como guia o livro <em>Linux From Scratch: Version 13.0-systemd</em>, publicado …</p></section>
+            <footer>
+                <p>Published: <time datetime="2026-04-04T18:00:00-03:00"> Sat 04 April 2026 </time></p>                    <address>By
+                            <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+                    </address>            </footer>
+        </article>
+
+  <nav>
+    <ul>
+      <li>Page 1 / 2</li>
+        <li><a href="https://vasconcedu.codeberg.page/index2.html">&rang;</a></li>
+        <li><a href="https://vasconcedu.codeberg.page/index2.html">&Rang;</a></li>
+    </ul>
+  </nav>
+
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <title>Eduardo Vasconcelos - Cross-compiling the Linux kernel for ARM64 on the RPi using a QEMU x86_64 Arch Linux compilation host</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos Full Atom Feed" />
+        <link href="https://vasconcedu.codeberg.page/feeds/linux.atom.xml" type="application/atom+xml" rel="alternate" title="Linux Category Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.codeberg.page/">Eduardo Vasconcelos</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.codeberg.page/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/linux.html"  aria-current="page" >Linux</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/programming.html" >Programming</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+  <article>
+    <header>
+      <h2>
+        <a href="https://vasconcedu.codeberg.page/cross-compiling-the-linux-kernel-for-arm64-on-the-rpi-using-a-qemu-x86_64-arch-linux-compilation-host.html" rel="bookmark"
+           title="Permalink to Cross-compiling the Linux kernel for ARM64 on the RPi using a QEMU x86_64 Arch Linux compilation host">Cross-compiling the Linux kernel for ARM64 on the RPi using a QEMU x86_64 Arch Linux compilation host</a></h2>
+      
+    </header>
+    <p>I've been tinkering with the RPi to build a toy example in the context of my PhD research in the last couple of days, trying to get a custom kernel to work on a <a href="https://pip-assets.raspberrypi.com/categories/584-raspberry-pi-zero-2-w/documents/RP-008359-DS-1-raspberry-pi-zero-2-w-product-brief.pdf">Zero 2 W board</a>--for those unfamiliar with it, here's a picture:</p>
+<p><img alt="RPi Zero 2 W." src="../images/rpi-zero-2-w.png"> </p>
+<p>As much as <a href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html">Raspberry Pi's official documentation</a> is very well organized and thorough about the theme of building a custom kernel for RPi boards, as I discussed in <a href="https://vasconcedu.codeberg.page/linux-kernel-development-setup-in-arch-linux.html">my blog post on setting up a kernel development environment</a>, I've chosen Arch Linux as the base distro for my virtualized compilation host, and as the instructions in the official documentation target Debian-based distros--and seem to aim at physical compilation hosts--, I had to MacGyver my way to a functioning cross-compilation setup for the RPi using the virtualized Arch Linux-based setup that I already had. This blog post documents that procedure.</p>
+<h3>The cross-compilation scenario herein</h3>
+<p>Before we begin, it's important to understand that explanations involving cross-compilation scenarios might get rather convoluted to follow, so first of all, let's define our cross-compilation scenario clearly. The figure below shows the three systems involved in our scenario, and where we're positioned:</p>
+<p><img alt="RPi cross-compilation scenario." src="../images/rpi-cross-compilation-scenario.png"></p>
+<p>From the figure, it's easy to realize that three systems are involved in our cross-compilation scenario, namely: a physical host, which happens to be an x86_64 laptop running Arch Linux; a compilation host, which happens to be an x86_64 QEMU Arch Linux VM running on said physical host; and our target system, namely the physical ARM64 RPi Zero 2 W board. It so happens that the RPi board is connected to out lab network, so working from the physical host, we're able to SSH both into the compilation host VM and the RPi board.</p>
+<p>Now, of course the RPi boots from a micro SD card containing its boot and root filesystems. In order for us to write to that micro SD card during kernel installation, we'll connect the card to our physical host, and we'll leverage QEMU's virtual filesystem functionality to mount the RPi's filesystem on the micro SD card to a mount point within the compilation host's filesystem. That will allow us to install kernel modules to the RPi's root filesytem. </p>
+<p>Not only that, we'll leverage the fact that our physical host also has access to the micro SD card's mount point to <code>scp</code> the kernel image and device tree blobs from the compilation host to the RPi's boot filesystem through the physical host.</p>
+<p>Those things we'll become clearer as we advance. For now, the important part is that we understand the different entities that constitute our cross-compilation scenario and their roles.</p>
+<h3>Installing the stock Raspberry Pi OS image</h3>
+<p>First off, we need a functioning RPi system as a starting point. I used the Raspberry Pi OS 64-bit stock image for the Zero 2 W board. In order to install the imager to the Arch Linux physical host, we need to issue:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>rpi-imager
+</code></pre></div>
+
+<p>The process of flashing the stock OS is rather straightforward, but in my experience, it's best to configure the system during the flashing procedure. That will save us time later on when we'll setup the development environment, so it should payoff to setup Wi-Fi connectivity, SSH, and other configurations at this stage.</p>
+<p>At least that's what I did, but of course, depending on one's lab infrastructure, one might want to do things differently. In my case, setting up Wi-Fi and SSH a priori was handy because I was able to SSH into the board from my laptop right away after installing the OS, without the need to hook it to peripherals. Alternatively, if one chooses to customize later on, one will be able to change system configurations via the <a href="https://raspberrytips.com/raspi-config-guide/"><code>raspi-config</code> utilitary</a> after logging into the RPi system some other way.</p>
+<p>After the flashing procedure is done, we should be able to boot the RPi and SSH into it--of course, we'll need to check in our router what IP address has been assigned to it. Speaking of that, it might also be interesting to assign the RPi a static IP. That said, the system will boot into the stock kernel, as expected:</p>
+<p><img alt="First SSH login into the RPi system." src="../images/rpi-ssh.png"></p>
+<p>After booting the RPi to confirm that everything is okay, we can shut it down. We won't use it for now.</p>
+<h3>Compiling the kernel for the RPi Zero 2 W</h3>
+<p>After flashing the stock system, it's time to start the compilation VM on QEMU and prepare to compile the kernel for the Zero 2 W. Again, <a href="https://vasconcedu.codeberg.page/linux-kernel-development-setup-in-arch-linux.html">my previous blog post about setting up a kernel development environment</a> shows how to setup a virtualized Arch Linux compilation host using QEMU.</p>
+<p>As usual, we'll clone RPi's kernel by issuing:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--depth<span class="o">=</span><span class="m">1</span><span class="w"> </span>https://github.com/raspberrypi/linux<span class="w"> </span>linux-rpi
+</code></pre></div>
+
+<p>At this point, an important sidenote is that <a href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#kernel">RPi's kernel lags behind the Linux kernel</a>. RPi's kernel development team integrates Linux kernel changes into the RPi kernel only after LTS releases of the Linux kernel are made.</p>
+<p>Having cloned the repository, it's time to install our cross-compilation toolchain. Luckily for us, since we're using our preexisting kernel compilation host as a base for our ARM64 cross-compilation host, we'll only need to install package <a href="https://archlinux.org/packages/extra/x86_64/aarch64-linux-gnu-gcc/"><code>aarch64-linux-gnu-gcc</code></a>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>aarch64-linux-gnu-gcc
+</code></pre></div>
+
+<p>And that's it. We're ready to compile our own kernel for the Zero 2 W. What follows is a pretty standard kernel compilation procedure where we'll <code>cd</code> into the repository's directory, clean it to make sure we're not working with any reminiscent garbage, build our cross-compilation kernel config, and then proceed to compilation. An important caveat is that RPi's documentation <a href="https://www.raspberrypi.com/documentation/computers/linux_kernel.html#cross-compiled-build-configuration">specifically instructs the creation of env var <code>KERNEL=kernel8</code></a>, so we'll make sure to do that. Translating to commands, up until config file creation:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>linux-rpi
+make<span class="w"> </span>mrproper
+<span class="nv">KERNEL</span><span class="o">=</span>kernel8
+make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm64<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span>bcm2711_defconfig
+</code></pre></div>
+
+<p>Something important to notice here is that despite the fact that <a href="https://pip-assets.raspberrypi.com/categories/584-raspberry-pi-zero-2-w/documents/RP-008359-DS-1-raspberry-pi-zero-2-w-product-brief.pdf">the RPi Zero 2 W board ships with Broadcom's BCM2710A1 SoC</a>, the base kernel config we're using is that of <a href="https://www.raspberrypi.com/documentation/computers/processors.html#bcm2711">Broadcom's BCM2711 SoC, namely the chip that ships with the RPi 4 family of boards</a>.</p>
+<p>We can finally proceed to compiling. This subject is out of the scope of this blog post, but notice I'm using <a href="https://ccache.dev/"><code>ccache</code></a> to optimize future compilation performance here, and one might also want to adjust the number of cores used in compilation according to the configuration of one's own compilation host VM. I used <code>-j 7</code> here due to my own previous kernel compilation experience in the last few months. Using 7 cores--which translates to <code>nproc</code> + 1 in how my QEMU VM is configured--seems to hit the sweet spot between compilation host performance and physical host usability in my own lab setup, but <a href="https://stackoverflow.com/questions/23279178/how-to-speed-up-linux-kernel-compilation">there's a lot to be said about kernel compilation performance optimization</a>, and I guess it's really on each of us to do the hard work and find our preferred configuration after some rounds of frustration:</p>
+<div class="highlight"><pre><span></span><code>ccache<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm64<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span>Image<span class="w"> </span>modules<span class="w"> </span>dtbs
+</code></pre></div>
+
+<p>Compilation should complete without any issues, and after it's done, we can proceed to installing the newly compiled kernel in our stock system's filesystem.</p>
+<h3>Installing the newly compiled kernel in the stock system's filesystem</h3>
+<p>After compilation finishes, we'll go ahead and shutdown the compilation host, connect the RPi's micro SD card to the physical host, and mount both the RPi's root and boot filesystems as the root user--more on that shortly--in the physical host. Here, I used mount points <code>/mnt/rootfs</code> and <code>/mnt/bootfs</code>, respectively. Next, we'll restart the compilation host specifying our mount points as virtual filesystems that the compilation host will be able to access, by adding <code>-virtfs</code> flags to the startup command as follows:</p>
+<div class="highlight"><pre><span></span><code>qemu-system-x86_64<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="c1"># ...</span>
+<span class="w">  </span>-virtfs<span class="w"> </span>local,path<span class="o">=</span>/mnt/rootfs/,mount_tag<span class="o">=</span>rootshare,security_model<span class="o">=</span>mapped,id<span class="o">=</span>rootfs_share<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-virtfs<span class="w"> </span>local,path<span class="o">=</span>/mnt/bootfs/,mount_tag<span class="o">=</span>bootshare,security_model<span class="o">=</span>mapped,id<span class="o">=</span>bootfs_share
+</code></pre></div>
+
+<p>One possible matter of confusion here is which filesystem is root and which is boot after connecting the RPi's micro SD card to the physical host and looking at the output of <code>lsblk</code>. But of course, the boot filesystem is the smaller one, and the root filesystem is the bigger one. For instance, in the figure below, <code>/boot</code> is in <code>sdb1</code>, and <code>/</code> is in <code>sdb2</code>:</p>
+<p><img alt="RPi filesystem's lsblk output." src="../images/rpi-lsblk.png"></p>
+<p>Another important observation is that since non-root UIDs between the systems in the cross-compilation scenario will almost certainly diverge, specifying <code>security_model=mapped</code> prevents us from falling into filesystem permission issues while writing to the root filesystem, which truly is owned by the RPi's root. That is why mounting the filesystems as root in the physical host matters.</p>
+<p>In fact, our next step is to mount the filesystems--also as root--in the compilation host. Here, I also used mount points <code>/mnt/rootfs</code> and <code>/mnt/bootfs</code>:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>/mnt/rootfs
+mkdir<span class="w"> </span>/mnt/bootfs
+mount<span class="w"> </span>-t<span class="w"> </span>9p<span class="w"> </span>rootshare<span class="w"> </span>/mnt/rootfs
+mount<span class="w"> </span>-t<span class="w"> </span>9p<span class="w"> </span>bootshare<span class="w"> </span>/mnt/bootfs
+</code></pre></div>
+
+<p>Now, we can go ahead and install the compiled kernel modules to RPi's root filesystem. First, we'll <code>cd</code> into the repository: </p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/linux-rpi
+</code></pre></div>
+
+<p>Then, as root, we'll recreate that same env var that we had created before when we were compiling the kernel:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">KERNEL</span><span class="o">=</span>kernel8
+</code></pre></div>
+
+<p>Finally--still as root--, we can go ahead and install the modules to the RPi's root filesystem:</p>
+<div class="highlight"><pre><span></span><code>env<span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span><span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm64<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span><span class="nv">INSTALL_MOD_PATH</span><span class="o">=</span>/mnt/rootfs<span class="w"> </span>modules_install
+</code></pre></div>
+
+<p>Next, we'll proceed to the physical host and <code>scp</code> device tree blobs from the compilation host to the RPi's boot filesystem. "And why is that? Why don't we <code>cp</code> device tree blobs from the repository directly into the boot filesystem? Didn't we just mount the RPi's entire filesystem in the compilation host, including <code>/boot</code>?"--one might ask.</p>
+<p>And the answer to that has to do with the different filesystems used in the RPi's <code>/boot</code> and <code>/</code> partitions. The boot filesystem is FAT32, while the root filesystem is ext4. Because we're mapping UIDs between the physical host and the compilation host with QEMU virtual filesystem's <code>security_model=mapped</code> flag, and because UIDs are simply not present in FAT32, my hypothesis is that there's no way for our VM to infer that we're allowed to write to <code>/mnt/bootfs</code>, leading to "permission denied" errors whenever we try to write anything to <code>/mnt/bootfs</code>. While I suppose there might be a better solution to this in QEMU's <code>-virtfs</code> itself, I wasn't able to find one so far, hence why I resorted to the <code>scp</code> workaround narrated here.</p>
+<p>That said, let's get back to our physical host and, as root, run the following commands. One should adapt them to suit one's own setup:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/mnt/bootfs/
+cp<span class="w"> </span>kernel8.img<span class="w"> </span>kernel8.img.bak
+scp<span class="w"> </span>-P<span class="w"> </span>port<span class="w"> </span>user@localhost:/path/to/linux-rpi/arch/arm64/boot/Image<span class="w"> </span>./kernel8.img
+scp<span class="w"> </span>-P<span class="w"> </span>port<span class="w"> </span>user@localhost:/path/to/linux-rpi/arch/arm64/boot/dts/broadcom/*.dtb<span class="w"> </span>./
+scp<span class="w"> </span>-P<span class="w"> </span>port<span class="w"> </span>user@localhost:/path/to/linux-rpi/arch/arm64/boot/dts/overlays/*.dtb*<span class="w"> </span>./overlays/
+scp<span class="w"> </span>-P<span class="w"> </span>port<span class="w"> </span>user@localhost:/path/to/linux-rpi/arch/arm64/boot/dts/overlays/README<span class="w"> </span>./overlays/
+</code></pre></div>
+
+<p>Then, back to our compilation host, we <code>umount</code> RPi's filesystem by issuing (as root):</p>
+<div class="highlight"><pre><span></span><code>umount<span class="w"> </span>/mnt/rootfs
+umount<span class="w"> </span>/mnt/bootfs
+</code></pre></div>
+
+<p>At this point, we can shutdown our compilation host. That will allow us to also <code>umount</code> RPi's filesystem from the physical host.</p>
+<h3>Booting into the newly compiled kernel</h3>
+<p>Now, we can go ahead and disconnect the RPi's micro SD card from the physical host, connect it back to the board's micro SD card slot, and hopefully boot into our newly compiled kernel.</p>
+<p><em>Ta-da!</em> The compilation timestamp <code>Fri Jun 19 13:27:01 -03 2026</code> shows that we booted into our newly compiled kernel:</p>
+<p><img alt="SSH login into the RPi system with the new kernel." src="../images/rpi-ssh-2.png"></p>
+<p>After enabling VNC via <code>raspi-config</code> and performing some basic regression testing, we can verify that we haven't destroyed anything: the system seems fully functional:</p>
+<p><img alt="VNC session into the RPi with the newly compiled kernel." src="../images/rpi-vnc.png"></p>
+<h3>Conclusion</h3>
+<p>This blog post documented my approach to finding a viable workflow for cross-compiling the Linux kernel for the RPi Zero 2 W using my preexisting virtualized Arch Linux kernel compilation host running on QEMU. While the official RPi docs target Debian-based physical hosts, the steps herein show how to use a virtualized setup to achieve functional RPi kernel cross-compilation.</p>
+<p>Nevertheless, if I had to do this at scale--which I might have to do for my research--, I reckon using a physical host will make automation a lot easier to achieve, not to mention less time intensive since I'll be cross-compiling the kernel directly on bare metal. A truly scalable approach would also likely include updating the board's kernel over the air, and I might have to think about that in the future.</p>
+<p>Anyway, I'm happy with what this little toy example has taught me, and having cross-compiled for ARM64 for the first time was certainly an important step in my adventures in kernel development. That's all.</p>
+<p><em>Happy hacking.</em></p>
+    <footer>
+      <p>Published: <time datetime="2026-06-19T15:00:00-03:00">
+        Fri 19 June 2026
+      </time></p>
+        <address>
+          By             <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+        </address>
+        <p>
+          Category: <a href="https://vasconcedu.codeberg.page/category/linux.html">Linux</a>
+        </p>
+    </footer>
+  </article>
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>
