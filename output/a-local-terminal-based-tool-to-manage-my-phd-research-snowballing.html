@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <title>Eduardo Vasconcelos - A local, terminal-based tool to manage my PhD research snowballing</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos Full Atom Feed" />
+        <link href="https://vasconcedu.codeberg.page/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Programming Category Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.codeberg.page/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.codeberg.page/theme/css/main.css" />
+        <link href="https://vasconcedu.codeberg.page/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.codeberg.page/">Eduardo Vasconcelos</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.codeberg.page/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/linux.html" >Linux</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/programming.html"  aria-current="page" >Programming</a></li>
+                <li><a href="https://vasconcedu.codeberg.page/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+  <article>
+    <header>
+      <h2>
+        <a href="https://vasconcedu.codeberg.page/a-local-terminal-based-tool-to-manage-my-phd-research-snowballing.html" rel="bookmark"
+           title="Permalink to A local, terminal-based tool to manage my PhD research snowballing">A local, terminal-based tool to manage my PhD research snowballing</a></h2>
+      
+    </header>
+    <p>I started my PhD four months ago, which means I'm already drowning in coffee and papers and in desperate need of a tool capable of managing chaos amid snowballing misery. I needed something to track my reading and summarization so I could start bracing for the inevitable calamity of writing my thesis later on.</p>
+<p>I found a few tools that met my requirements, but they all demanded subscriptions, and because I didn't want to have to pay rent to do something as simple as organizing a bunch of PDFs and notes, I decided to build my own Python tool using AI-driven programming--I find the term "vibe coding" so stupid--in OpenCode, which I've hooked up to Ollama.</p>
+<p>The best part of being a cheap bastard is that I was able to add my own little requirements such as theming the thing after MacGyver--since I'll probably rely on this tool daily in the next couple of years I figured I could at least make it a bit more fun to use--, making it KISS-to-my-taste-compliant, making it entirely local and terminal-based, and adding my own obnoxious functionality such as automatically generating an ASCII snowballing directed graph based on paper entries and having it calculate snowballing statistics to further augment my despair.</p>
+<p>Without further ado, ladies and gentlemen, meet...</p>
+<p><a href="https://codeberg.org/vasconcedu/angus">Angus</a>--a terminal-based, MacGyver-themed research references navigator for the discerning PhD student who engineers his own way. <em>Ta-da!</em></p>
+<p><img alt="Angus' TUI" src="../images/angus.png"></p>
+<p>Angus implements a simple TUI based on Python Textual that includes everything that I need to index, prioritize, review, and summarize papers. Its database is just SQLite, which allows me to back it up easily, or query it using a SQLite tool if I ever need to. Angus allows me to specify a local base path where I keep paper PDFs, and to open them in the system's default PDF reader directly from its TUI. Add to that a handful of navigation keybindings, all in all it makes for a very fluid workflow.</p>
+<p>Apart from ordinary fields such as titles, authors and publication years, the indexing system automatically creates unique aliases for each paper. Aliases are based on the main author's last name, publication year, and a disambiguation suffix if multiple papers share the same base alias. For instance, the first paper by Eduardo Vasconcelos in 2026 is assigned alias <code>Vasconcelos2026</code>. A second paper by any Vasconcelos that same year results in changing that alias to <code>Vasconcelos2026a</code> and assigning alias <code>Vasconcelos2026b</code> to the new one. I also added tag support for easier paper retrieval. Combined with search and simple filtering functionality, this makes for an effective database navigation system.</p>
+<p>As a tool whose primary purpose is to assist in snowballing, Angus also keeps track of references. I'm able to link papers by adding "cites" and "cited by" annotations that point to other papers in the database. The complementary annotation is assigned automatically. That linking system enables the automatic generation of an ASCII snowballing directed graph, something I like to have when I'm snowballing to help me keep track of the process. Before deciding to build Angus, I used to do this with a manually updated draw.io diagram. As I mentioned, I used AI-driven programming in OpenCode to develop Angus, and while this allowed me to obtain a really good result very quickly, I have to point out that this graph generation functionality I wanted required lots of manual intervention. The model I used--<code>kimi-k2.6</code> on Ollama's cloud--did a very good job and required very little manual intervention with all the rest, but it got completely lost on this one feature.</p>
+<p>Finally, Angus provides statistics about the snowballing process, such as an ASCII plot of the number of papers per publication year.</p>
+<p>This was my first time relying on AI so heavily for programming anything useful, and I have to admit that I was surprised that I obtained such good results. I'm a competent Python programmer, but using AI has surely accelerated the development process. I was able to obtain a functional--and rather pretty--tool in a single day's work, and I wouldn't be able to do that if I were programming manually.</p>
+<p>As Mac once said: </p>
+<blockquote>
+<p>"If you don't have the right equipment for the job, you just have to make it yourself."</p>
+</blockquote>
+<p><em>Happy hacking.</em></p>
+    <footer>
+      <p>Published: <time datetime="2026-08-15T00:00:00-03:00">
+        Sat 15 August 2026
+      </time></p>
+        <address>
+          By             <a href="https://vasconcedu.codeberg.page/author/vasconcedu.html">vasconcedu</a>
+        </address>
+        <p>
+          Category: <a href="https://vasconcedu.codeberg.page/category/programming.html">Programming</a>
+        </p>
+    </footer>
+  </article>
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>
