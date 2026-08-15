@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <title>Eduardo Vasconcelos - [pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link rel="stylesheet" href="https://vasconcedu.github.io/theme/css/main.css" />
+        <link href="https://vasconcedu.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos Full Atom Feed" />
+        <link href="https://vasconcedu.github.io/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Programming Category Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.github.io/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.github.io/theme/css/main.css" />
+        <link href="https://vasconcedu.github.io/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.github.io/">Eduardo Vasconcelos</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.github.io/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.github.io/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.github.io/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.github.io/category/linux.html" >Linux</a></li>
+                <li><a href="https://vasconcedu.github.io/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.github.io/category/programming.html"  aria-current="page" >Programming</a></li>
+                <li><a href="https://vasconcedu.github.io/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+  <article>
+    <header>
+      <h2>
+        <a href="https://vasconcedu.github.io/pt-br-um-solver-ad-hoc-de-problemas-aritmeticos-usando-abaco-japones-em-lisp.html" rel="bookmark"
+           title="Permalink to [pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp">[pt-BR] Um solver ad hoc de problemas aritméticos usando ábaco japonês em Lisp</a></h2>
+      
+    </header>
+    <p>Um dos meus hiperfocos mais recentes é o <a href="https://en.wikipedia.org/wiki/Soroban">ábaco japonês--ou "soroban"--</a>, um instrumento de artimética instrumental que se desenvolveu no Japão com base no ábaco chinês--ou "suanpan"--, a partir da importação deste para o Japão, em meados do século XIV.</p>
+<p>Comecei a aprender as operações aritméticas básicas no soroban ao longo da última semana e, nesse processo, verifiquei que seria útil ter um solver: um programa para me ajudar a verificar resultados de sequências de adição e subtração, incluindo resultados parciais. Resolvi unir o agradável ao agradável. Como eu já vinha realizando uma vontade antiga e começando a estudar <a href="https://en.wikipedia.org/wiki/Functional_programming">programação funcional</a> em <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)">Lisp</a>, quis me desafiar com o projeto de fim de semana de escrever um programa em Lisp para cumprir esse propósito.</p>
+<p>Este texto relata essa experiência, a iniciar por uma descrição do funcionamento básico do soroban, passando pelos detalhes de implementação do solver referido, e exemplificando sua utilização para resolver um problema similar aos encontrados em exames de graduação em soroban de associações de ábaco japonesas.</p>
+<h3>Funcionamento básico do soroban</h3>
+<p>O soroban é um instrumento caracterizado por uma moldura dividida longitudinalmente por um travessão em duas seções: uma mais estreita--acima--e uma mais larga--abaixo. Pequenas varas atravessam essa estrutura da base ao topo, sendo que em cada vara são colocadas cinco contas. Na seção de cima da moldura--mais estreita--, coloca-se uma única conta, ao passo que na seção de baixo da moldura--mais larga--, coloca-se quatro contas. A figura abaixo, extraída de <a href="https://archive.org/details/japaneseabacusit00koji/page/n7/mode/2up">um livro de 1954 chamado <em>The Japanese Abacus: Its Use and Theory</em>, de Takashi Kojima</a>, ajuda a visualizar esse instrumento:</p>
+<p><img alt="Figura de um soroban." src="../images/soroban.png"></p>
+<p>Cada vara é usada para representar um algarismo, de acordo com a maneira como as contas dela são posicionadas. As contas da seção de cima--chamadas de "go-dama"--representam 5 unidades. As contas da seção de baixo--chamadas de "ichi-dama"--representam 1 unidade cada. Juntas, as quatro ichi-damas de uma vara totalizam 4 unidades. Para que o valor de uma conta seja levado em consideração na composição do algarismo representado pela vara em que ela está, é preciso que ela seja trazida em direção do centro do ábaco, de forma a encostá-la no travessão que secciona longitudinalmente a moldura do ábaco.</p>
+<p>O algarismo representado por uma vara é dado pela soma dos valores das contas dessa vara que se encontram encostadas no travessão. A figura abaixo, também extraída de <em>The Japanese Abacus: Its Use and Theory</em>, ajuda a entender essa ideia:</p>
+<p><img alt="Representação de algarismos no soroban." src="../images/soroban-algarismos.png"></p>
+<p>Primeiro, à esquerda, a vara representa o algarismo 2, uma vez que duas ichi-damas estão encostadas no travessão e cada ichi-dama vale 1 unidade. À direita, ao encostar a go-dama no travessão, como ela vale 5 unidades, a vara passa a representar o algarismo 7--i.e. 2 + 5.</p>
+<p>Cada vara do soroban serve à representação de uma ordem: as unidades são representadas pela vara mais à direita, as dezenas pela vara imediatamente à esquerda desta, as centenas pela vara imediatamente à esquerda desta, e assim por diante, de forma que a quantidade de ordens representáveis no ábaco é igual ao número de varas que ele possui. Caso haja a necessidade de algarismos fracionários, é possível deslocar a ordem das unidades algumas varas à esquerda, de maneira que as varas mais à direita possam representá-los.</p>
+<p>Para validar o entendimento do raciocínio construído até aqui, é possível utilizar a primeira figura deste texto: se nenhuma vara estivesse sendo utilizada para representar algarismos fracionários, o ábaco na figura registraria o valor 13.450.000.000.</p>
+<p>Como qualquer outra ferramenta, a única maneira de adquirir maestria na utilização do soroban é praticando. Um exercício muito comum, similar ao encontrado em exames de graduação de associações japonesas, é realizar uma série de operações aritméticas de soma e subtração com base em uma sequência de números dada. Uma sequência poderia ser, por exemplo:</p>
+<blockquote>
+<p>56, 41, 94, 60, -15, 32, -63, 44</p>
+</blockquote>
+<p>E o resultado esperado poderia ser calculado fazendo: 56 + 41 + 94 + 60 - 15 + 32 - 63 + 44 = 249. Foge ao escopo deste texto discutir os detalhes de operação do soroban que permitiriam a solução dessa sequência, mas as operações aritméticas necessárias podem ser realizadas através da aplicação de uma série de regras de manipulação baseadas na decomposição de cada número da sequência em seus componentes de ordem, o que resulta em uma sequência de operações expandida. Para a sequência acima:</p>
+<blockquote>
+<p>50 + 6 + 40 + 1 + 90 + 4 + 60 - 10 -5 + 30 + 2 - 60 - 3 + 40 + 4</p>
+</blockquote>
+<p>Após a operação de cada componente da sequência, o soroban apresenta uma configuração diferente, representando o resultado parcial da solução da sequência até aquele ponto. Caso algum resultado parcial seja diferente do esperado, isso compromete todo o restante da solução, e o resultado final não corresponderá ao esperado--salvo pela possibilidade da introdução de um novo erro que leve ao resultado esperado por coincidência.</p>
+<p>Parte do processo de aprendizado do soroban é adquirir familiaridade com os padrões de manipulação do ábaco ao operar componentes de sequências como essa. Constatei que a possibilidade de visualizar como a configuração do ábaco deveria estar entre as operações de uma sequência é de grande ajuda, por permitir a detecção de erros que, para um iniciante--como eu--, podem não ser tão óbvios. É aqui que o solver em Lisp entra na história.</p>
+<h3>Implementação do solver em Lisp</h3>
+<p>Um dos maiores remorsos de minha formação em engenharia de computação é nunca ter tido a oportunidade de ter sido exposto à programação funcional de maneira formal. A curiosidade era tanta que eu sempre soube que, um dia, acabaria recorrendo à autoinstrução para preencher essa lacuna. Há relativamente pouco tempo, venho estudando esse paradigma de programação em Lisp. É preciso notar que o foco deste texto não é a exploração dos detalhes da linguagem Lisp, tampouco do paradigma funcional, mas tão somente discutir os detalhes relacionados à implementação de um programa solver ad hoc para sequências de soma e subtração no soroban, muito como exercício de fixação de meu próprio aprendizado e, portanto, não deve ser utilizado como referência para absolutamente nada.</p>
+<p>Outra ressalva importante, caso o leitor não esteja familiarizado com Lisp, é que essa é uma linguagem de programação bastante antiga--da década de 50--e, assim como C, deu origem a diversos dialetos. A quantidade de implementações de linguagens Lisp-like é muito grande. Caso o leitor queira executar o código aqui apresentado, tenha em mente que eu o escrevi em <a href="https://en.wikipedia.org/wiki/Common_Lisp">Common Lisp</a>--padronização de Lisp da década de 90. Mais especificamente, utilizei a implementação <a href="https://www.sbcl.org/">Steele Bank Common Lisp (SBCL)</a>.</p>
+<p>O primeiro passo de implementação foi definir uma estrutura de dados para representar o soroban. Fiz isso criando uma função chamada <code>abacus</code>, cujo único argumento, <code>n</code>, representa o valor registrado no ábaco:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">abacus</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Além do valor de <code>n</code>, é fundamental registrar os valores individuais de cada vara--i.e. os dígitos que compõem o valor registrado no ábaco. Optei por fazer isso usando uma property list (plist) com dois fields, <code>:value</code> e <code>:rods</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">abacus</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span>
+<span class="w">   </span><span class="ss">:value</span><span class="w"> </span><span class="nv">n</span>
+<span class="w">   </span><span class="ss">:rods</span><span class="w"> </span><span class="p">(</span><span class="nv">digits</span><span class="w"> </span><span class="nv">n</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Assim, <code>:value</code> contém o valor registrado no ábaco. <code>:rods</code>, por sua vez, é uma subestrutura de dados que contém os dígitos que compõem <code>:value</code>. <code>:rods</code> é formada pela decomposição de <code>n</code>. Essa decomposição é feita em uma função que chamei de <code>digits</code>, a saber:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">digits</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="ss">&#39;list</span><span class="w"> </span><span class="nf">#&#39;</span><span class="nb">digit-char-p</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">write-to-string</span><span class="w"> </span><span class="nv">n</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Primeiro, <code>digits</code> converte <code>n</code> para string. Em seguida, cada caractere é mapeado para um dígito numérico com <code>digit-char-p</code>. A notação <code>#'</code> significa que a própria função <code>digit-char-p</code> é argumento de <code>map</code>. Os resultados do mapeamento são coletados em uma lista, que por sua vez é retornada--o uso de <code>'</code> antes de <code>list</code> previne que o Lisp tente avaliar a palavra <code>list</code> como código, tratando-a apenas como uma referência ao tipo de dado.</p>
+<p>A essa altura, o próximo passo natural era implementar uma rotina capaz de realizar somas e subtrações. Para isso, implementei a função <code>add-sub</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">add-sub</span><span class="w"> </span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">abacus</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="nb">getf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="ss">:value</span><span class="p">))))</span>
+</code></pre></div>
+
+<p><code>add-sub</code> espera dois argumentos, a saber: <code>a</code>, um <code>abacus</code>, e <code>n</code>, um número a ser somado ao valor registrado em <code>a</code>. A função simplesmente invoca <code>abacus</code>, fornecendo como argumento a soma de <code>n</code> com o valor registrado em <code>a</code> e retornando, em seguida, o <code>abacus</code> resultante da invocação. As funções disponíveis até aqui já permitiriam a realização de operações de soma e subtração. Antes, no entanto, seria interessante criar uma função capaz de operar uma sequência de valores, em consonância com a natureza do exercício de soroban já discutido. Implementei a função <code>add-sub-seq</code> para essa finalidade. Embora Lisp seja plenamente capaz de implementar lógica iterativa, como o meu foco aqui era exercitar a implementação de estruturas funcionais, optei por uma versão recursiva da rotina:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">add-sub-seq</span><span class="w"> </span><span class="p">(</span><span class="nv">a</span><span class="w"> </span><span class="nv">s</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="nv">s</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nv">new-a</span><span class="w"> </span><span class="p">(</span><span class="nv">add-sub</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nv">s</span><span class="p">))))</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">add-sub-seq</span><span class="w"> </span><span class="nv">new-a</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nv">s</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p><code>add-sub-seq</code> espera dois argumentos: <code>a</code>, um <code>abacus</code>, e <code>s</code>, uma lista representando uma sequência de valores. A ideia da função é muito simples: primeiro, ela testa se a lista <code>s</code> não está vazia--essa é a condição de continuidade de recursão. Caso a lista contenha elementos, a função define <code>new-a</code>, um novo <code>abacus</code> que registra a soma do valor registrado em <code>a</code> com o primeiro elemento de <code>s</code>. Depois disso, a função invoca a si mesma, recursivamente, fornecendo <code>new-a</code> e <code>(cdr s)</code>--i.e. uma sublista constituída por todos os elementos de <code>s</code> menos o primeiro. Como <code>add-sub-seq</code> retorna um <code>abacus</code>, o que resulta da recursão é um <code>abacus</code> que registra a soma de todos os valores da lista <code>s</code> original.</p>
+<p>O código já poderia ser utilizado para resolver sequências de operações, mas ele forneceria apenas o resultado final da sequência, sem cumprir a finalidade de auxiliar na visualização de resultados parciais da solução. Para resolver isso, criei as funções <code>print-abacus</code>, <code>print-rods</code> e <code>print-rod</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">print-abacus</span><span class="w"> </span><span class="p">(</span><span class="nv">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Value: ~A~%&quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">getf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="ss">:value</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Rods:&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">print-rods</span><span class="w"> </span><span class="p">(</span><span class="nb">getf</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="ss">:rods</span><span class="p">)</span><span class="w"> </span><span class="no">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~%&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">print-rods</span><span class="w"> </span><span class="p">(</span><span class="nv">r</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="p">(</span><span class="nv">print-rod</span><span class="w"> </span><span class="nv">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~%&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="nv">r</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nv">new-r</span><span class="w"> </span><span class="p">(</span><span class="nb">butlast</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">print-rods</span><span class="w"> </span><span class="nv">new-r</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="nv">r</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">print-rod</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;O-&quot;</span><span class="w"> </span><span class="s">&quot;-O&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~A&quot;</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">concatenate</span><span class="w"> </span><span class="ss">&#39;string</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">subseq</span><span class="w"> </span><span class="s">&quot;OOOO&quot;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nb">mod</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<span class="w">               </span><span class="s">&quot;-&quot;</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">subseq</span><span class="w"> </span><span class="s">&quot;OOOO&quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">mod</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;~%&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><code>print-rod</code> implementa lógica capaz de representar graficamente uma vara do soroban na tela usando apenas caracteres ASCII. <code>print-abacus</code> mostra na tela o valor registrado em um <code>abacus</code> <code>a</code> recebido como argumento e, em seguida, invoca <code>print-rods</code>, fornecendo a lista de dígitos que compõem o valor registrado em <code>a</code>--i.e. <code>:rods</code>--e <code>nil</code>. <code>print-rods</code> recebe esses argumentos como <code>r</code> e <code>n</code> e implementa lógica recursiva para mostrar na tela uma representação gráfica do ábaco, através de invocações à função <code>print-rod</code>. Isso ocorre da seguinte forma: primeiro, <code>print-rods</code> testa <code>n</code>. Caso esse valor seja diferente de <code>nil</code>, a função invoca <code>print-rod</code> fornecendo o argumento <code>n</code>. Caso <code>n</code> seja <code>nil</code>, a função simplesmente quebra a linha de saída. É relevante observar que, na primeira invocação de <code>print-rods</code>, <code>n</code> é <code>nil</code>, resultando apenas em uma quebra de linha.</p>
+<p>Em seguida, <code>print-rods</code> testa se a lista <code>r</code> não está vazia--essa é a condição de continuidade de recursão. Caso <code>r</code> não esteja vazia, a função define <code>new-r</code>, contendo todos os dígitos de <code>r</code>, menos o último--que é o dígito menos significativo do número registrado no ábaco. Esse mesmo dígito menos significativo de <code>r</code> é passado como argumento, junto com <code>new-r</code>, em uma chamada recursiva a <code>print-rods</code>. Como <code>n</code> nessa chamada não é <code>nil</code>, o resultado é que uma representação gráfica do dígito menos significativo do valor registrado no ábaco é mostrada na tela. As invocações recursivas subsequentes dessa função resultam na representação gráfica do ábaco, do dígito menos significativo para o dígito mais significativo.</p>
+<p>Podemos usar o código produzido até esse ponto para resolver a sequência apresentada anteriormente--i.e.:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defvar</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">56</span><span class="w"> </span><span class="mi">41</span><span class="w"> </span><span class="mi">94</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="mi">-15</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="mi">-63</span><span class="w"> </span><span class="mi">44</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defvar</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">abacus</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">add-sub-seq</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">s</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Essa invocação produziria a seguinte saída:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">Value:</span><span class="w"> </span><span class="mi">0</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|-OOOO</span>
+
+<span class="nv">Value: 56</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">-O|-OOOO</span>
+
+<span class="nv">Value: 97</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OO-OO</span>
+<span class="nv">-O|OOOO-</span>
+
+<span class="nv">Value: 191</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|O-OOO</span>
+<span class="nv">-O|OOOO-</span>
+<span class="nv">O-|O-OOO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">251</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|O-OOO</span>
+<span class="nv">-O|-OOOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 236</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">O-|OOO-O</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">268</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OOO-O</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 205</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|-OOOO</span>
+<span class="nv">O-|-OOOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">249</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OOOO-</span>
+<span class="nv">O-|OOOO-</span>
+<span class="nv">O-</span><span class="err">|</span><span class="nv">OO-OO</span>
+</code></pre></div>
+
+<p>Com isso, já há recursos suficientes para acompanhar os resultados parciais da solução de uma sequência de operações. Entretanto, o código ainda não é capaz de lidar com os passos intermediários da solução de cada operação da sequência, mas tão somente de apresentar os resultados finais de cada operação. A operação do soroban é baseada na decomposição de cada valor da sequência em componentes de ordem, conforme já exposto. Assim, o próximo passo natural é implementar rotinas de decomposição e integrá-las ao código já existente. Comecei pela função <code>components</code>, que decompõe um número em componentes de ordem de maneira recursiva:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">components</span><span class="w"> </span><span class="p">(</span><span class="nv">n</span><span class="w"> </span><span class="nv">c</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">/=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let*</span><span class="w"> </span><span class="p">((</span><span class="nv">sig</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w">  </span>
+<span class="w">         </span><span class="p">(</span><span class="nv">abs-n</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="nv">n</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nv">s</span><span class="w"> </span><span class="p">(</span><span class="nb">write-to-string</span><span class="w"> </span><span class="nv">abs-n</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nv">l</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="nv">s</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nv">next-c</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="nv">sig</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">parse-integer</span><span class="w"> </span><span class="p">(</span><span class="nb">subseq</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">expt</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">l</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">components</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="nv">next-c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="nv">next-c</span><span class="p">))))</span>
+<span class="w">  </span><span class="nv">c</span><span class="p">))</span>
+</code></pre></div>
+
+<p><code>components</code> espera dois argumentos: <code>n</code>, um número, e <code>c</code>, uma lista de componentes, que é <code>nil</code> na primeira chamada à função. A função é baseada em um branch que testa se o valor de <code>n</code> é diferente de 0. Se esse teste resultar em <code>nil</code>--falso--, a função simplesmente produz a lista <code>c</code> recebida como argumento. Isso denota o final da decomposição do número e a condição de parada da recursão. Por outro lado, se <code>n</code> for igual a 0 e o teste resultar em <code>t</code>--true--, uma série de variáveis locais é declarada, a saber:</p>
+<ul>
+<li><code>sig</code>: o sinal de <code>n</code>;</li>
+<li><code>abs-n</code>: o valor absoluto de <code>n</code>;</li>
+<li><code>s</code>: <code>abs-n</code> convertido para string; e</li>
+<li><code>l</code>: o comprimento de <code>s</code>.</li>
+</ul>
+<p>Por fim, a função declara uma última variável local, <code>next-c</code>, que representa o próximo componente de ordem de <code>n</code>, que é dado pelo produto entre:</p>
+<ul>
+<li><code>sig</code>;</li>
+<li>O valor numérico do primeiro caractere de <code>s</code>; e</li>
+<li>A potência de 10 referente à posição do componente de ordem, calculada elevando 10 à <code>(- l 1)</code>-ésima potência.</li>
+</ul>
+<p>Por fim, a função invoca a si mesma, recursivamente, passando como argumentos a diferença entre <code>n</code> e <code>next-c</code>--i.e. <code>n</code> menos o componente de ordem calculado no nível de recursão atual--e a concatenação de <code>c</code> com <code>next-c</code>--o componente de ordem calculado no nível de recursão atual. Disso, resulta que chamadas recursivas subsequentes construirão gradativamente a lista completa de componentes de ordem do argumento <code>n</code> original, até o nível de recursão em que <code>(/= n 0)</code> é <code>nil</code> e a recursão retorna.</p>
+<p>Assim, <code>components</code> é capaz de decompor um número em seus componentes de ordem. A última peça faltante era uma função capaz de utilizar <code>components</code> para expandir uma sequência dada de números nos componentes de ordem de todos os seus elementos. Implementei a função <code>expand-seq</code> para isso:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defun</span><span class="w"> </span><span class="nv">expand-seq</span><span class="w"> </span><span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">when</span><span class="w"> </span><span class="nv">s</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">append</span>
+<span class="w">     </span><span class="p">(</span><span class="nv">components</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="nv">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
+<span class="w">     </span><span class="p">(</span><span class="nv">expand-seq</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nv">s</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>O comportamento de <code>expand-seq</code> é muito simples: a função espera como argumento <code>s</code>--uma lista de números. Em seguida, ela testa <code>s</code> para ver se a sequência está vazia. Caso a sequência não esteja vazia, a função realiza a concatenação dos componentes do primeiro elemento de <code>s</code>--obtidos através de uma chamada a <code>components</code>--com o resultado de uma chamada recursiva a si própria, passando como argumento uma sublista constituída por todos os elementos de <code>s</code> menos o primeiro, resultante de <code>(cdr s)</code>.</p>
+<p>De maneira a integrar <code>components</code> e <code>expand-seq</code> ao código que eu já tinha, simplesmente invoquei <code>expand-seq</code> passando a sequência original do problema a resolver, e passando a sequência resultante disso a <code>add-sub-seq</code>. Além disso, adicionei algumas linhas de formatação de saída para consolidar o código do meu programa principal:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">defvar</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">56</span><span class="w"> </span><span class="mi">41</span><span class="w"> </span><span class="mi">94</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="mi">-15</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="mi">-63</span><span class="w"> </span><span class="mi">44</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">defvar</span><span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="p">(</span><span class="nv">expand-seq</span><span class="w"> </span><span class="nv">s</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defvar</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nv">abacus</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;;;;;;;;;;; SOROBAN SOLVER ;;;;;;;;;;~%~%&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Problem list: ~A~%&quot;</span><span class="w"> </span><span class="nv">s</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Expanded component list: ~A~%~%&quot;</span><span class="w"> </span><span class="nv">e</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">format</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Solution steps:~%~%&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">add-sub-seq</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">e</span><span class="p">)</span>
+</code></pre></div>
+
+<p>O resultado da execução desse código é uma listagem de todos os passos intermediários de solução do problema de adição e subtração no soroban definido pela sequência de números na lista <code>s</code>. A versão final comentada do código está disponível <a href="https://github.com/vasconcedu/soroban-solver/src/branch/master/soroban.lisp">no meu GitHub</a>. Executá-la produz a saída abaixo:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">;;;;;;;;;; SOROBAN SOLVER ;;;;;;;;;;</span>
+
+<span class="nv">Problem</span><span class="w"> </span><span class="nv">list:</span><span class="w"> </span><span class="p">(</span><span class="mi">56</span><span class="w"> </span><span class="mi">41</span><span class="w"> </span><span class="mi">94</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="mi">-15</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="mi">-63</span><span class="w"> </span><span class="mi">44</span><span class="p">)</span>
+<span class="nv">Expanded</span><span class="w"> </span><span class="nv">component</span><span class="w"> </span><span class="nv">list:</span><span class="w"> </span><span class="p">(</span><span class="mi">50</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="mi">-5</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">-60</span><span class="w"> </span><span class="mi">-3</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+
+<span class="nv">Solution</span><span class="w"> </span><span class="nv">steps:</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">0</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|-OOOO</span>
+
+<span class="nv">Value: 50</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|-OOOO</span>
+<span class="nv">-O|-OOOO</span>
+
+<span class="nv">Value: 56</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">-O|-OOOO</span>
+
+<span class="nv">Value: 96</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">-O|OOOO-</span>
+
+<span class="nv">Value: 97</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OO-OO</span>
+<span class="nv">-O|OOOO-</span>
+
+<span class="nv">Value: 187</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OO-OO</span>
+<span class="nv">-O|OOO-O</span>
+<span class="nv">O-|O-OOO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">191</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|O-OOO</span>
+<span class="nv">-O|OOOO-</span>
+<span class="nv">O-|O-OOO</span>
+
+<span class="nv">Value: 251</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|O-OOO</span>
+<span class="nv">-O|-OOOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">241</span>
+<span class="nv">Rods:</span>
+<span class="nv">O-|O-OOO</span>
+<span class="nv">O-|OOOO-</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 236</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">O-|OOO-O</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">266</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 268</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OOO-O</span>
+<span class="nv">-O|O-OOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">208</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OOO-O</span>
+<span class="nv">O-|-OOOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 205</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|-OOOO</span>
+<span class="nv">O-|-OOOO</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value:</span><span class="w"> </span><span class="mi">245</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|-OOOO</span>
+<span class="nv">O-|OOOO-</span>
+<span class="nv">O-|OO-OO</span>
+
+<span class="nv">Value: 249</span>
+<span class="nv">Rods:</span>
+<span class="nv">-O|OOOO-</span>
+<span class="nv">O-|OOOO-</span>
+<span class="nv">O-|OO-OO</span>
+</code></pre></div>
+
+<h3>Conclusão</h3>
+<p>Fiquei feliz com os resultados obtidos, mas é evidente que eu ainda tenho um caminho muito longo a percorrer em programação funcional. A melhor parte desse exercício é que agora eu tenho uma ferramenta bastante interessante para me ajudar a melhorar no soroban, além de ter produzido um recurso que pode ser útil a todos os outros inúmeros hobbystas de ábaco japonês e programação funcional em Lisp--com a devida licença sarcástica.</p>
+<p>É isso.</p>
+<p><em>Happy hacking.</em></p>
+    <footer>
+      <p>Published: <time datetime="2026-04-11T18:00:00-03:00">
+        Sat 11 April 2026
+      </time></p>
+        <address>
+          By             <a href="https://vasconcedu.github.io/author/vasconcedu.html">vasconcedu</a>
+        </address>
+        <p>
+          Category: <a href="https://vasconcedu.github.io/category/programming.html">Programming</a>
+        </p>
+    </footer>
+  </article>
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>
