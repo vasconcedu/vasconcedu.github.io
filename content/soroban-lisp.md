@@ -241,7 +241,7 @@ De maneira a integrar `components` e `expand-seq` ao código que eu já tinha, s
 (add-sub-seq a e)
 ```
 
-O resultado da execução desse código é uma listagem de todos os passos intermediários de solução do problema de adição e subtração no soroban definido pela sequência de números na lista `s`. A versão final comentada do código está disponível [no meu Codeberg](https://codeberg.org/vasconcedu/soroban-solver/src/branch/master/soroban.lisp). Executá-la produz a saída abaixo:
+O resultado da execução desse código é uma listagem de todos os passos intermediários de solução do problema de adição e subtração no soroban definido pela sequência de números na lista `s`. A versão final comentada do código está disponível [no meu GitHub](https://github.com/vasconcedu/soroban-solver/src/branch/master/soroban.lisp). Executá-la produz a saída abaixo:
 
 ```lisp
 ;;;;;;;;;; SOROBAN SOLVER ;;;;;;;;;;

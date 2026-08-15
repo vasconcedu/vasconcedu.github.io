@@ -3,7 +3,7 @@ Date: 2026-06-25 00:00
 Category: Linux
 
 
-This blog post is a continuation to [my previous study notes](https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html) about the inner workings of the LSM kernel framework. Previously, I've established an understanding of where LSMs are positioned in the kernel's call sequence that leads to accessing system resources, how LSMs initialize, define and register call hooks based on a static calls table data structure.
+This blog post is a continuation to [my previous study notes](https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html) about the inner workings of the LSM kernel framework. Previously, I've established an understanding of where LSMs are positioned in the kernel's call sequence that leads to accessing system resources, how LSMs initialize, define and register call hooks based on a static calls table data structure.
 
 In this blog post, I aim at understanding how an LSM's codebase integrates into the kernel from a development standpoint, and how one should go about programming an LSM from the ground up. In order to achieve that, I'll look at the functioning of a specific LSM--namely Yama--, by establishing intuition about its threat model, then collecting practical evidence on how it changes the behavior of a live system, and finally moving to looking at its source code to understand its implementation. To conclude, I'll leverage the insights resulting from that exercise to program my own proof of concept LSM and boot into a kernel that loads it to hopefully bring it to life.
 
@@ -46,9 +46,9 @@ Where `<scope level>` is the desired Yama scope level.
 
 ### How Yama changes the behavior of a live system
 
-Before we delve into Yama's implementation internals, let's see how a live system behaves with respect to Yama's scope levels. To achieve that, we'll perform an anecdotal experiment. I've programmed [a pair of proof of concept user space programs to help in this exercise](https://codeberg.org/vasconcedu/yama-lsm-pocs):
+Before we delve into Yama's implementation internals, let's see how a live system behaves with respect to Yama's scope levels. To achieve that, we'll perform an anecdotal experiment. I've programmed [a pair of proof of concept user space programs to help in this exercise](https://github.com/vasconcedu/yama-lsm-pocs):
 
-- In the Codeberg repository linked above, program `target.c` implements the tracee; and
+- In the GitHub repository linked above, program `target.c` implements the tracee; and
 - Program `dump_mem.c` implements the tracer. It attaches to `target.c`'s process to actively dump part of its memory space--namely 64 words of its stack.
 
 While the idea here is not to exercise the entirety of Yama's functionality and configuration, such programs should help us establish enough intuition about how Yama changes the behavior of a live system before we look at its source code. Program `target.c` is shown below:
@@ -216,7 +216,7 @@ static int ptrace_scope = YAMA_SCOPE_RELATIONAL;
 /* ... */
 ```
 
-Furthermore, in accordance with what we observed in our anecdotal experiment, we see that Yama defines its default scope level at scope level 1, namely `YAMA_SCOPE_RELATIONAL`. If we scroll further down into the file, we'll find [a couple of familiar data structures](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n419), namely the definition of the LSM's ID and hook list, similar to the ones discussed in [my previous blog post where I case studied AppArmor's hook registration routine](https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html):
+Furthermore, in accordance with what we observed in our anecdotal experiment, we see that Yama defines its default scope level at scope level 1, namely `YAMA_SCOPE_RELATIONAL`. If we scroll further down into the file, we'll find [a couple of familiar data structures](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n419), namely the definition of the LSM's ID and hook list, similar to the ones discussed in [my previous blog post where I case studied AppArmor's hook registration routine](https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html):
 
 ```c
 /* ... */
@@ -282,7 +282,7 @@ static int __init yama_init(void)
 /* ... */
 ```
 
-From the code snippet above, we see that all the init function does is it registers Yama's hook list by calling `security_add_hooks()`--again, I already examined this process while case studying AppArmor in [my previous blog post about the kernel's LSM framework](https://vasconcedu.codeberg.page/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html), so I won't get into the details here--, and initializes the LSM's `sysctl` interface with a call to `yama_init_sysctl()`. Thus, part of Yama's codebase deals with the LSM's `sysctl` administration interface, and part deals with the security hooks themselves.
+From the code snippet above, we see that all the init function does is it registers Yama's hook list by calling `security_add_hooks()`--again, I already examined this process while case studying AppArmor in [my previous blog post about the kernel's LSM framework](https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html), so I won't get into the details here--, and initializes the LSM's `sysctl` interface with a call to `yama_init_sysctl()`. Thus, part of Yama's codebase deals with the LSM's `sysctl` administration interface, and part deals with the security hooks themselves.
 
 We'll now focus on the latter and delve into one of Yama's hook definitions, namely [`yama_ptrace_access_check()`](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n349), whose code I've reproduced below for convenience. What follows is an analysis of its inner workings:
 

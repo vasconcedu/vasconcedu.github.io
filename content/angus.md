@@ -11,7 +11,7 @@ The best part of being a cheap bastard is that I was able to add my own little r
 
 Without further ado, ladies and gentlemen, meet...
 
-[Angus](https://codeberg.org/vasconcedu/angus)--a terminal-based, MacGyver-themed research references navigator for the discerning PhD student who engineers his own way. _Ta-da!_
+[Angus](https://github.com/vasconcedu/angus)--a terminal-based, MacGyver-themed research references navigator for the discerning PhD student who engineers his own way. _Ta-da!_
 
 ![Angus' TUI](../images/angus.png)
 

@@ -10,9 +10,9 @@ OUTPUTDIR=$(BASEDIR)/$(OUTPUT)
 CONFFILE=$(BASEDIR)/pelicanconf.py
 PUBLISHCONF=$(BASEDIR)/publishconf.py
 
-CODEBERG_PAGES_BRANCH=pages
-CODEBERG_PAGES_SUBTREE_RELATIVE_OUTPUTDIR=$(OUTPUT)
-CODEBERG_PAGES_COMMIT_MESSAGE="publish to codeberg pages"
+GITHUB_PAGES_BRANCH=pages
+GITHUB_PAGES_SUBTREE_RELATIVE_OUTPUTDIR=$(OUTPUT)
+GITHUB_PAGES_COMMIT_MESSAGE="publish to github pages"
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
@@ -44,7 +44,7 @@ help:
 	@echo '   make serve-global [SERVER=0.0.0.0]  serve (as root) to $(SERVER):80          '
 	@echo '   make devserver [PORT=8000]          serve and regenerate together            '
 	@echo '   make devserver-global               regenerate and serve on 0.0.0.0    	   '
-	@echo '   make codeberg                       upload the web site via codeberg pages   '
+	@echo '   make github                         upload the web site via github pages   '
 	@echo '                                                                                '
 	@echo 'Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html         '
 	@echo 'Set the RELATIVE variable to 1 to enable relative urls                          '
@@ -74,12 +74,12 @@ devserver-global:
 publish:
 	"$(PELICAN)" "$(INPUTDIR)" -o "$(OUTPUTDIR)" -s "$(PUBLISHCONF)" $(PELICANOPTS)
 
-codeberg: publish
-	git add $(CODEBERG_PAGES_SUBTREE_RELATIVE_OUTPUTDIR)
-	git commit -m $(CODEBERG_PAGES_COMMIT_MESSAGE)
+github: publish
+	git add $(GITHUB_PAGES_SUBTREE_RELATIVE_OUTPUTDIR)
+	git commit -m $(GITHUB_PAGES_COMMIT_MESSAGE)
 	git push 
-	git push origin --delete $(CODEBERG_PAGES_BRANCH)
-	git subtree push --prefix=$(CODEBERG_PAGES_SUBTREE_RELATIVE_OUTPUTDIR) origin $(CODEBERG_PAGES_BRANCH)
+	git push origin --delete $(GITHUB_PAGES_BRANCH)
+	git subtree push --prefix=$(GITHUB_PAGES_SUBTREE_RELATIVE_OUTPUTDIR) origin $(GITHUB_PAGES_BRANCH)
 
 
-.PHONY: html help clean regenerate serve serve-global devserver devserver-global publish codeberg
+.PHONY: html help clean regenerate serve serve-global devserver devserver-global publish github
