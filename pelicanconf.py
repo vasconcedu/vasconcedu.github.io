@@ -29,3 +29,5 @@ DEFAULT_PAGINATION = 10
 
 # Theme
 THEME = "basic-plus-plus"
+
+STATIC_PATHS = ["images", "files"]
