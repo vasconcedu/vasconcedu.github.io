@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+        <title>Eduardo Vasconcelos - Study notes on the Linux Security Module (LSM) kernel framework--Part 2</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="--talk; ++theory; terminal += 2;" />
+        <link rel="stylesheet" href="https://vasconcedu.github.io/theme/css/main.css" />
+        <link href="https://vasconcedu.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos Full Atom Feed" />
+        <link href="https://vasconcedu.github.io/feeds/linux.atom.xml" type="application/atom+xml" rel="alternate" title="Linux Category Atom Feed" />
+
+        <link rel="stylesheet" href="https://vasconcedu.github.io/theme/css/rdark.css" />
+	<link rel="stylesheet" type="text/css" href="https://vasconcedu.github.io/theme/css/main.css" />
+        <link href="https://vasconcedu.github.io/" type="application/atom+xml" rel="alternate" title="Eduardo Vasconcelos ATOM Feed" /><!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	
+<!-- Using MathJax, with the delimiters $ -->
+<!-- Conflict with pygments for the .mo and .mi -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  "HTML-CSS": {
+  styles: {
+  ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+  },
+  tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+  });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+
+
+
+
+
+  </head>
+
+  <body>
+      <header>
+          <hgroup><h1><a href="https://vasconcedu.github.io/">Eduardo Vasconcelos</a></h1><p>--talk; ++theory; terminal += 2;</p></hgroup>
+          <nav><ul>
+                <li><a href="https://vasconcedu.github.io/pages/bio.html" >Bio</a></li>
+                <li><a href="https://vasconcedu.github.io/pages/gpg.html" >GPG</a></li>
+                <li><a href="https://vasconcedu.github.io/pages/links.html" >Links</a></li>
+                <li><a href="https://vasconcedu.github.io/category/linux.html"  aria-current="page" >Linux</a></li>
+                <li><a href="https://vasconcedu.github.io/category/papers.html" >Papers</a></li>
+                <li><a href="https://vasconcedu.github.io/category/programming.html" >Programming</a></li>
+                <li><a href="https://vasconcedu.github.io/category/reflections.html" >Reflections</a></li>
+          </ul></nav>
+      </header>
+      <main>
+  <article>
+    <header>
+      <h2>
+        <a href="https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-2.html" rel="bookmark"
+           title="Permalink to Study notes on the Linux Security Module (LSM) kernel framework--Part 2">Study notes on the Linux Security Module (LSM) kernel framework--Part 2</a></h2>
+      
+    </header>
+    <p>This blog post is a continuation to <a href="https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html">my previous study notes</a> about the inner workings of the LSM kernel framework. Previously, I've established an understanding of where LSMs are positioned in the kernel's call sequence that leads to accessing system resources, how LSMs initialize, define and register call hooks based on a static calls table data structure.</p>
+<p>In this blog post, I aim at understanding how an LSM's codebase integrates into the kernel from a development standpoint, and how one should go about programming an LSM from the ground up. In order to achieve that, I'll look at the functioning of a specific LSM--namely Yama--, by establishing intuition about its threat model, then collecting practical evidence on how it changes the behavior of a live system, and finally moving to looking at its source code to understand its implementation. To conclude, I'll leverage the insights resulting from that exercise to program my own proof of concept LSM and boot into a kernel that loads it to hopefully bring it to life.</p>
+<h3>Why Yama?</h3>
+<p>Before we begin, I should like to clarify why I picked Yama as a case study over the other LSMs in the kernel's codebase. The answer to that is because Yama hits a sweet spot between complexity and simplicity. With less than 500 LOC, only four security hooks, and a very well defined threat model, Yama delivers plenty of material for analysis, but still without being overwhelming to analyze. That said, before we delve into Yama's codebase, let's get a glimpse at the problem that led to its development in first place.</p>
+<h3>The threat model that Yama addresses</h3>
+<p>As stated in <a href="https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html">the kernel's documentation for the Yama LSM</a>:</p>
+<blockquote>
+<p>"Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself."</p>
+</blockquote>
+<p>More specifically, Yama addresses a threat model where processes running under the same user UID may act maliciously toward each other. As obvious as that might read, such threat model has only emerged in the last few decades. In the early days of computing, <a href="https://www.systemshardening.com/articles/linux/linux-ptrace-yama-hardening/">processes belonging to the same user were considered equally trusted</a>. Of course, that premise simply doesn't hold anymore, but what that entails is that historically--as naive as it may appear from a modern security engineering perspective--, certain aspects of operating systems were originally designed with that threat model in mind. Such is the case of <a href="https://man7.org/linux/man-pages/man2/ptrace.2.html">the <code>ptrace()</code> syscall</a>. From <code>man</code>:</p>
+<blockquote>
+<p>"The ptrace() system call provides a means by which one process (the "tracer") may observe and control the execution of another process (the "tracee"), and examine and change the tracee's memory and registers. It is primarily used to implement breakpoint debugging and system call tracing."</p>
+</blockquote>
+<p>From the description above, it's not hard to understand why uncontrolled access to <code>ptrace()</code> might be troublesome. If a malicious process were able to attach to another process through <code>ptrace()</code>, it would have full control not only over the tracee's data, but also over its execution flow, leading to full process compromise.</p>
+<p>The way Yama addresses the threat model above is by establishing <a href="https://www.systemshardening.com/articles/linux/linux-ptrace-yama-hardening/#the-four-scope-levels">four so called "scope levels"</a>:</p>
+<ul>
+<li>Scope level 0 is the default kernel policy where any process is able to <code>ptrace()</code> processes belonging to the same UID;</li>
+<li>Scope level 1 allows parent processes to trace their children. Processes to whom tracees <a href="https://man7.org/linux/man-pages/man2/pr_set_ptracer.2const.html">explicitly grant permission via <code>prctl()</code></a> and root are also allowed to <code>ptrace()</code> processes;</li>
+<li>Scope level 2 restricts tracing to processes with <a href="https://man7.org/linux/man-pages/man7/capabilities.7.html">capability <code>CAP_SYS_PTRACE</code></a>, such as root user processes; and</li>
+<li>Scope level 3 disables tracing entirely, even to the root user.</li>
+</ul>
+<p>When Yama is enabled, the scope level in which it is operating can be examined by issuing: </p>
+<div class="highlight"><pre><span></span><code>sysctl<span class="w"> </span>kernel.yama.ptrace_scope
+</code></pre></div>
+
+<p>Furthermore, it is possible to change Yama's scope level by issuing:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>kernel.yama.ptrace_scope<span class="o">=</span>&lt;scope<span class="w"> </span>level&gt;
+</code></pre></div>
+
+<p>Where <code>&lt;scope level&gt;</code> is the desired Yama scope level.</p>
+<h3>How Yama changes the behavior of a live system</h3>
+<p>Before we delve into Yama's implementation internals, let's see how a live system behaves with respect to Yama's scope levels. To achieve that, we'll perform an anecdotal experiment. I've programmed <a href="https://github.com/vasconcedu/yama-lsm-pocs">a pair of proof of concept user space programs to help in this exercise</a>:</p>
+<ul>
+<li>In the GitHub repository linked above, program <code>target.c</code> implements the tracee; and</li>
+<li>Program <code>dump_mem.c</code> implements the tracer. It attaches to <code>target.c</code>'s process to actively dump part of its memory space--namely 64 words of its stack.</li>
+</ul>
+<p>While the idea here is not to exercise the entirety of Yama's functionality and configuration, such programs should help us establish enough intuition about how Yama changes the behavior of a live system before we look at its source code. Program <code>target.c</code> is shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;unistd.h&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="kt">pid_t</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;My PID is: %d (0x%x)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;a: %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;b: %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;c: %c</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Press any key to continue...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">getchar</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">pid_t</span><span class="w"> </span><span class="n">pid</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getpid</span><span class="p">();</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// 61</span>
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;b&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// 62</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;c&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// 63</span>
+
+<span class="w">    </span><span class="n">f</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>By inspecting the code above, we see that <code>target.c</code> reads its own PID, then passes it as an argument, along with the characters <code>'a'</code>, <code>'b'</code> and <code>'c'</code>, to function <code>f()</code>. In turn, <code>f()</code> prints all such values to stdout, then waits for the user to press a key before returning, leading to the program exiting.</p>
+<p>In turn, <code>dump_mem.c</code> expects the tracee's PID as a command line argument, attaches to it while it is waiting for user input at <code>getchar()</code>, then does the following:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_GETREGS</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">regs</span><span class="p">);</span>
+<span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regs</span><span class="p">.</span><span class="n">rsp</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">off</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_PEEKDATA</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p">,</span>
+<span class="w">                  </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">off</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%016lx: %016lx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">off</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>While usage details of <code>ptrace()</code> syscalls in user space are out of the scope of this blog post--please look at <a href="https://www.man7.org/linux/man-pages/man2/ptrace.2.html">the corresponding man page</a> for detail--, the code snippet above shows that <code>dump_mem.c</code> first retrieves the tracee's stack pointer, then dumps 64 words starting at the address in SP, namely the 64 topmost words of the tracee's stack. Since the tracee is blocked at <code>getchar()</code> while the tracer dumps memory words, function <code>f()</code>'s segment is dumped to stdout. The fact that the segment contains the sequence of characters from <code>'a'</code> to <code>'c'</code>--which translates to the sequence of integers from <code>61</code> to <code>63</code>--is intentional to aid in spotting it amid dumped data, serving as evidence that we're indeed dumping the tracee's stack.</p>
+<p>Let's first take a look at the scope level that is currently configured for Yama in our Arch Linux lab host. If we issue <code>sysctl kernel.yama.ptrace_scope</code>, here's what we'll see:</p>
+<p><img alt="Yama scope level 1 output." src="../images/yama-scope-1.png"></p>
+<p>Indicating that the system is at scope level 1, meaning that only a tracee's parent, root processes, or processes to whom the tracee has explicitly granted <code>PR_SET_PTRACER</code> via <code>prctl()</code> should be able to attach to any given process for tracing. While we won't exhaust these possibilities here, let's see what happens when an unprivileged <code>dump_mem.c</code> process tries to attach to <code>target.c</code>'s process. First, we run the target process:</p>
+<p><img alt="Scope level 1: tracee execution." src="../images/yama-scope-poc-1.png"></p>
+<p>The tracee prints its PID to stdout--i.e. 576, or 240 in hexadecimal notation--, along with the arguments to <code>f()</code>, and blocks at <code>getchar()</code>. That gives us a chance to run the tracer. First, let's run it unprivileged:</p>
+<p><img alt="Scope level 1: tracer error." src="../images/yama-scope-poc-1-error.png"></p>
+<p>As expected, the tracer is unable to attach to the tracee. Let's run it again, this time with root's UID:</p>
+<p><img alt="Scope level 1: tracer execution." src="../images/yama-scope-poc-1-dumped.png"></p>
+<p>And the execution seems to succeed. Indeed, if we look at the output at <code>/tmp/dump.txt</code> by issuing <code>cat /tmp/dump.txt | grep 616263</code>, here's what we'll see:</p>
+<p><img alt="Scope level 1: dumped output." src="../images/yama-scope-poc-1-dumped-output.png"></p>
+<p>Confirming that, indeed, we have dumped the tracee's stack. Not only that, we collected anecdotal evidence that Yama seems to behave--at least partially--as defined in its documentation at scope level 1. Let's move on to another scope level. If we change Yama's scope level to 0 and run the tracer process again, without root privilege:</p>
+<p><img alt="Scope level 0: proof of concept." src="../images/yama-scope-poc-0.png"></p>
+<p>We confirm that we've been able to dump the tracee's stack, now from an unprivileged tracer--just as expected. Yama's scope level 2 restricts tracing to processes with capability <code>CAP_SYS_PTRACE</code>. While <code>CAP_SYS_PTRACE</code> is inherent to root processes, scope level 2 differs from scope level 1 in that it only allows <code>CAP_SYS_PTRACE</code> processes to perform tracing. For simplicity's sake, we'll skip scope level 2 here, as the limitations inherent to our proof of concept programs would lead to observing system behavior identical to that of scope level 1 in scope level 2--succeeding under root's UID, failing otherwise. Distinguishing between scope levels 1 and 2 would require capability manipulation, which is out of the scope of the exercise herein. That said, let's move on to scope level 3, where tracing is disabled entirely:</p>
+<blockquote>
+<p>NOTE: Please bear in mind that after changing Yama's scope level to 3, only a reboot will change it back to its original value at scope level 1 as scope level 3 is Yama's maximum security level, and <code>sysctl</code> calls are not allowed to change it.</p>
+</blockquote>
+<p><img alt="Scope level 3: proof of concept." src="../images/yama-scope-poc-3.png"></p>
+<p>As expected, now, not even root processes are able to attach to the tracee.</p>
+<p>That concludes our anecdotal experiment. We've now established enough intuition about Yama's functioning and how it impacts the behavior of a live system, and we can now move on to studying the LSM's implementation at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/">security/yama/</a>.</p>
+<h3>A look at Yama's source code</h3>
+<p>In this section, we'll inspect part of the source code of the Yama LSM with the goal of understanding its implementation well enough to build our own proof of concept LSM later on.</p>
+<p>First, let's take a look at Yama's Kconfig file at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/Kconfig">security/yama/Kconfig</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># SPDX-License-Identifier: GPL-2.0-only</span>
+<span class="n">config</span><span class="w"> </span><span class="n">SECURITY_YAMA</span>
+<span class="w">    </span><span class="nb nb-Type">bool</span><span class="w"> </span><span class="s2">&quot;Yama support&quot;</span>
+<span class="w">    </span><span class="n">depends</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">SECURITY</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="n">n</span>
+<span class="w">    </span><span class="n">help</span>
+<span class="w">      </span><span class="n">This</span><span class="w"> </span><span class="n">selects</span><span class="w"> </span><span class="n">Yama</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="n">DAC</span><span class="w"> </span><span class="n">support</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">additional</span>
+<span class="w">      </span><span class="n">system</span><span class="o">-</span><span class="n">wide</span><span class="w"> </span><span class="n">security</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="n">beyond</span><span class="w"> </span><span class="n">regular</span><span class="w"> </span><span class="n">Linux</span><span class="w"> </span><span class="n">discretionary</span>
+<span class="w">      </span><span class="n">access</span><span class="w"> </span><span class="n">controls</span><span class="o">.</span><span class="w"> </span><span class="n">Currently</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">ptrace</span><span class="w"> </span><span class="n">scope</span><span class="w"> </span><span class="n">restriction</span><span class="o">.</span>
+<span class="w">      </span><span class="n">Like</span><span class="w"> </span><span class="n">capabilities</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">security</span><span class="w"> </span><span class="n">module</span><span class="w"> </span><span class="n">stacks</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="n">LSMs</span><span class="o">.</span>
+<span class="w">      </span><span class="n">Further</span><span class="w"> </span><span class="n">information</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="ow">in</span>
+<span class="w">      </span><span class="n">Documentation</span><span class="o">/</span><span class="n">admin</span><span class="o">-</span><span class="n">guide</span><span class="o">/</span><span class="n">LSM</span><span class="o">/</span><span class="n">Yama</span><span class="o">.</span><span class="n">rst</span><span class="o">.</span>
+
+<span class="w">      </span><span class="n">If</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">unsure</span><span class="w"> </span><span class="n">how</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">question</span><span class="p">,</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="n">N</span><span class="o">.</span>
+</code></pre></div>
+
+<p>Kconfig files follow the conventions established in the kernel's <a href="https://docs.kernel.org/kbuild/kconfig-language.html">Kconfig language</a>, and <a href="https://en.wikipedia.org/wiki/Menuconfig">serve the purpose of defining the configuration interface for kernel features and modules prior to compilation</a>.</p>
+<p>What Yama's Kconfig file does is <a href="https://docs.kernel.org/kbuild/kconfig-language.html#menu-entries">it defines a new configuration option</a>, namely <code>SECURITY_YAMA</code>, <a href="https://docs.kernel.org/kbuild/kconfig-language.html#menu-attributes">of type <code>bool</code>, and input prompt "Yama support"</a>. The input prompt is the string that is displayed to the developer at compilation time. Such configuration option defaults to "n"--i.e. "no", meaning that it is disabled by default--, and depends on the <code>SECURITY</code> configuration. In turn, the <code>SECURITY</code> configuration is defined in the security subsystem's Kconfig file at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/Kconfig#n73"><code>security/Kconfig</code></a>. Here's what it looks like:</p>
+<div class="highlight"><pre><span></span><code>#<span class="w"> </span>...
+
+<span class="nv">config</span><span class="w"> </span><span class="nv">SECURITY</span>
+<span class="w">    </span><span class="nv">bool</span><span class="w"> </span><span class="s2">&quot;Enable different security models&quot;</span>
+<span class="w">    </span><span class="nv">depends</span><span class="w"> </span><span class="nv">on</span><span class="w"> </span><span class="nv">SYSFS</span>
+<span class="w">    </span><span class="nv">depends</span><span class="w"> </span><span class="nv">on</span><span class="w"> </span><span class="nv">MULTIUSER</span>
+<span class="w">    </span><span class="nv">help</span>
+<span class="w">      </span><span class="nv">This</span><span class="w"> </span><span class="nv">allows</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">choose</span><span class="w"> </span><span class="nv">different</span><span class="w"> </span><span class="nv">security</span><span class="w"> </span><span class="nv">modules</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">be</span>
+<span class="w">      </span><span class="nv">configured</span><span class="w"> </span><span class="nv">into</span><span class="w"> </span><span class="nv">your</span><span class="w"> </span><span class="nv">kernel</span>.
+
+<span class="w">      </span><span class="k">If</span><span class="w"> </span><span class="nv">this</span><span class="w"> </span><span class="nv">option</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">not</span><span class="w"> </span><span class="nv">selected</span>,<span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">default</span><span class="w"> </span><span class="nv">Linux</span><span class="w"> </span><span class="nv">security</span>
+<span class="w">      </span><span class="nv">model</span><span class="w"> </span><span class="nv">will</span><span class="w"> </span><span class="nv">be</span><span class="w"> </span><span class="nv">used</span>.
+
+<span class="w">      </span><span class="k">If</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">are</span><span class="w"> </span><span class="nv">unsure</span><span class="w"> </span><span class="nv">how</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">answer</span><span class="w"> </span><span class="nv">this</span><span class="w"> </span><span class="nv">question</span>,<span class="w"> </span><span class="nv">answer</span><span class="w"> </span><span class="nv">N</span>.
+
+#<span class="w"> </span>...
+</code></pre></div>
+
+<p>The help text in the snippet above makes things a lot clearer: in order for us to be able to use any given LSM, the security subsystem's <code>SECURITY</code> configuration must be enabled, which explains the dependency specified in Yama's Kconfig.</p>
+<p>To conclude, Yama's Kconfig confirms what we've been discussing about Yama with respect to its scope, and adds that it stacks with other LSMs. In practice, this means that <a href="https://www.apparmor.net/about/lsm_introduction/">Yama can be used in conjunction with other minor LSMs deployed in a system</a>.</p>
+<p>Having understood Yama's configuration, let's now briefly visit its <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/Makefile">Makefile at <code>/security/yama/Makefile</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># SPDX-License-Identifier: GPL-2.0-only</span>
+<span class="nv">obj-$(CONFIG_SECURITY_YAMA)</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>yama.o
+
+<span class="nv">yama-y</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>yama_lsm.o
+</code></pre></div>
+
+<p>What this file does is it checks whether <code>CONFIG_SECURITY_YAMA</code> is enabled in the kernel's <code>.config</code> file at compilation time. If so, this results in the build system creating object file <code>yama.o</code> by linking <code>yama_lsm.o</code>--compiled from <code>yama_lsm.c</code>--into the resulting Yama LSM kernel module.</p>
+<p>The last file in Yama's codebase is the module's source code itself at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c"><code>security/yama/yama_lsm.c</code></a>. We'll now delve into it by breaking it into pieces to make it easier to analyze. The first thing that draws our attention when we open <code>yama_lsm.c</code> for inspection is <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n23">a list of preprocessor directives specifying Yama's scope levels</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span><span class="w"> </span>
+
+<span class="cp">#define YAMA_SCOPE_DISABLED 0</span>
+<span class="cp">#define YAMA_SCOPE_RELATIONAL   1</span>
+<span class="cp">#define YAMA_SCOPE_CAPABILITY   2</span>
+<span class="cp">#define YAMA_SCOPE_NO_ATTACH    3</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ptrace_scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">YAMA_SCOPE_RELATIONAL</span><span class="p">;</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>Furthermore, in accordance with what we observed in our anecdotal experiment, we see that Yama defines its default scope level at scope level 1, namely <code>YAMA_SCOPE_RELATIONAL</code>. If we scroll further down into the file, we'll find <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n419">a couple of familiar data structures</a>, namely the definition of the LSM's ID and hook list, similar to the ones discussed in <a href="https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html">my previous blog post where I case studied AppArmor's hook registration routine</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_id</span><span class="w"> </span><span class="n">yama_lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;yama&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LSM_ID_YAMA</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="n">yama_hooks</span><span class="p">[]</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">ptrace_access_check</span><span class="p">,</span><span class="w"> </span><span class="n">yama_ptrace_access_check</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">ptrace_traceme</span><span class="p">,</span><span class="w"> </span><span class="n">yama_ptrace_traceme</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">task_prctl</span><span class="p">,</span><span class="w"> </span><span class="n">yama_task_prctl</span><span class="p">),</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">task_free</span><span class="p">,</span><span class="w"> </span><span class="n">yama_task_free</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>From the code snippet above, it's interesting to note that Yama initializes a total of four hooks specified in <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hook_defs.h">the LSM interface</a>, namely:</p>
+<ul>
+<li><a href="https://docs.kernel.org/core-api/kernel-api.html#c.security_ptrace_access_check"><code>ptrace_access_check()</code></a>: this hook is used to check whether a process should be allowed to trace a child process;</li>
+<li><a href="https://docs.kernel.org/core-api/kernel-api.html#c.security_ptrace_traceme"><code>ptrace_traceme()</code></a>: this hook is used to check whether the parent of the current process is allowed to trace it prior to having the child process grant the parent tracing permission;</li>
+<li><a href="https://docs.kernel.org/core-api/kernel-api.html#c.security_task_prctl"><code>task_prctl()</code></a>: this hook is used to check if a <code>prctl()</code> operation should be allowed on the current process; and</li>
+<li><a href="https://docs.kernel.org/core-api/kernel-api.html#c.security_task_free"><code>task_free()</code></a>: this hook is used to free a process' LSM blob.</li>
+</ul>
+<p>Furthermore, if we <code>git grep LSM_ID_YAMA</code>, we'll find that the LSM's ID is defined at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/lsm.h#n59"><code>include/uapi/linux/lsm.h</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="cp">#define LSM_ID_YAMA     105</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>If we scroll further down, we'll find another mandatory code structure, namely <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n478">a call to macro <code>DEFINE_LSM</code></a>, making the LSM framework recognize the Yama LSM by pointing to its ID and init function:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="n">DEFINE_LSM</span><span class="p">(</span><span class="n">yama</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">yama_lsmid</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yama_init</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>Speaking of <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n470">Yama's init function</a>, here's what it looks like:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">yama_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Yama: becoming mindful.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">security_add_hooks</span><span class="p">(</span><span class="n">yama_hooks</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">yama_hooks</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">yama_lsmid</span><span class="p">);</span>
+<span class="w">    </span><span class="n">yama_init_sysctl</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>From the code snippet above, we see that all the init function does is it registers Yama's hook list by calling <code>security_add_hooks()</code>--again, I already examined this process while case studying AppArmor in <a href="https://vasconcedu.github.io/study-notes-on-the-linux-security-module-lsm-kernel-framework-part-1.html">my previous blog post about the kernel's LSM framework</a>, so I won't get into the details here--, and initializes the LSM's <code>sysctl</code> interface with a call to <code>yama_init_sysctl()</code>. Thus, part of Yama's codebase deals with the LSM's <code>sysctl</code> administration interface, and part deals with the security hooks themselves.</p>
+<p>We'll now focus on the latter and delve into one of Yama's hook definitions, namely <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n349"><code>yama_ptrace_access_check()</code></a>, whose code I've reproduced below for convenience. What follows is an analysis of its inner workings:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">yama_ptrace_access_check</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">task_struct</span><span class="w"> </span><span class="o">*</span><span class="n">child</span><span class="p">,</span>
+<span class="w">                    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mode</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* require ptrace target be a child of ptracer on attach */</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mode</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTRACE_MODE_ATTACH</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">ptrace_scope</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">YAMA_SCOPE_DISABLED</span><span class="p">:</span>
+<span class="w">            </span><span class="cm">/* No additional restrictions. */</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">YAMA_SCOPE_RELATIONAL</span><span class="p">:</span>
+<span class="w">            </span><span class="n">rcu_read_lock</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">pid_alive</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+<span class="w">                </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">EPERM</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">task_is_descendant</span><span class="p">(</span><span class="n">current</span><span class="p">,</span><span class="w"> </span><span class="n">child</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">                </span><span class="o">!</span><span class="n">ptracer_exception_found</span><span class="p">(</span><span class="n">current</span><span class="p">,</span><span class="w"> </span><span class="n">child</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">                </span><span class="o">!</span><span class="n">ns_capable</span><span class="p">(</span><span class="n">__task_cred</span><span class="p">(</span><span class="n">child</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">user_ns</span><span class="p">,</span><span class="w"> </span><span class="n">CAP_SYS_PTRACE</span><span class="p">))</span>
+<span class="w">                </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">EPERM</span><span class="p">;</span>
+<span class="w">            </span><span class="n">rcu_read_unlock</span><span class="p">();</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">YAMA_SCOPE_CAPABILITY</span><span class="p">:</span>
+<span class="w">            </span><span class="n">rcu_read_lock</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ns_capable</span><span class="p">(</span><span class="n">__task_cred</span><span class="p">(</span><span class="n">child</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">user_ns</span><span class="p">,</span><span class="w"> </span><span class="n">CAP_SYS_PTRACE</span><span class="p">))</span>
+<span class="w">                </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">EPERM</span><span class="p">;</span>
+<span class="w">            </span><span class="n">rcu_read_unlock</span><span class="p">();</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">YAMA_SCOPE_NO_ATTACH</span><span class="p">:</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span>
+<span class="w">            </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">EPERM</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">mode</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PTRACE_MODE_NOAUDIT</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">report_access</span><span class="p">(</span><span class="s">&quot;attach&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">child</span><span class="p">,</span><span class="w"> </span><span class="n">current</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>By inspecting the code snippet above, we see that <code>yama_ptrace_access_check()</code> expects two arguments, namely <code>child</code>, a <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/sched.h#n826">struct of type <code>struct task_struct</code> defined at <code>include/linux/sched.h</code>, representing the process that the current process is trying to <code>ptrace()</code></a>, and an integer containing ORed <a href="https://www.man7.org/linux/man-pages/man2/ptrace.2.html"><code>PTRACE_MODE_*</code> flags</a>, defining the <code>ptrace()</code> access mode of the operation in question.</p>
+<p>First, the function defines its return value, namely <code>rc</code>, whose value is initialized to <code>0</code>, <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/sched.h#n826">which translates to a permission grant</a>. What follows is a check of whether the <code>PTRACE_MODE_*</code> flag contains <a href="https://www.man7.org/linux/man-pages/man2/ptrace.2.html">a write operation</a>, in which case the function switches <code>ptrace_scope</code>--i.e. Yama's current scope level--, branching to specific routines according to the scope level found.</p>
+<p>At scope level 0--i.e. <code>YAMA_SCOPE_DISABLED</code>--, the case breaks and returns immediately. At scope level 3--i.e. <code>YAMA_SCOPE_NO_ATTACH</code>--, the function assigns <code>rc</code> to <code>-EPERM</code>, indicating that the hook reached a state of insufficient permission, then the case breaks and the function falls into a check of whether <code>PTRACE_MODE_*</code> does not contain <code>PTRACE_MODE_NOAUDIT</code>. <a href="https://www.man7.org/linux/man-pages/man2/ptrace.2.html">Such flag is used in certain use cases to indicate that the access should not be added to audit logs</a>. If it is not present, the function goes on to call <code>report_access()</code> to log the fact that the <code>ptrace()</code> syscall resulted in a failure to attach.</p>
+<p>Now, let's look at the other cases. Scope level 1--i.e. <code>YAMA_SCOPE_RELATIONAL</code>--results in the following routine:</p>
+<ul>
+<li>First, the function acquires <a href="https://docs.kernel.org/RCU/whatisRCU.html#rcu-read-lock">the thread's RCU read lock</a>, ensuring that the task data structures that it manipulates in the routine aren't deallocated prior to it exiting the critical region where it reads them;</li>
+<li>Next, it checks to see whether the child process is not dead, and if it is, the function assigns <code>rc</code> to <code>-EPERM</code>, and the routine concludes with the release of the RCU read lock, with the case breaking and the aforementioned check regarding logging being performed;</li>
+<li>In turn, if <code>rc</code> is still <code>0</code> at this point, the actual permission checks are performed, and if all of them fail, <code>rc</code> is assigned to <code>-EPERM</code>, the lock is released, the case breaks, and the very same check as before regarding logging is performed. Let's now step into the permission checks that this step actually entails.</li>
+</ul>
+<p>The first permission check is <code>!task_is_descendant(current, child)</code>. <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n267"><code>task_is_descendant()</code></a> checks whether <code>child</code> is a descendant of <code>current</code>, returning <code>1</code> in case it is, and <code>0</code> otherwise. Thus, <code>!task_is_descendant(current, child)</code> resolves to <code>1</code> when <code>child</code> is not a descendant of <code>current</code>.</p>
+<p>The second permission check is <code>!ptracer_exception_found(current, child)</code>. <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/yama/yama_lsm.c#n300"><code>ptracer_exception_found()</code></a> checks whether <code>current</code> is an authorized tracer of <code>child</code>, either due to <code>current</code> belonging to the same thread group as <code>child</code>'s parent or due to <code>child</code> having actively <code>prctl()</code>ed to grant <code>current</code> tracer permission, returning <code>1</code> in case <code>current</code> is an authorized tracer of <code>child</code>, and <code>0</code> otherwise. Thus, <code>!ptracer_exception_found(current, child)</code> resolves to <code>1</code> when <code>current</code> is not allowed to trace <code>child</code>.</p>
+<p>Lastly, the third permission check is <code>!ns_capable(__task_cred(child)-&gt;user_ns, CAP_SYS_PTRACE)</code>. <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/capability.c#n361"><code>ns_capable()</code></a> is a function defined at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/capability.c">kernel/capability.c</a> that takes <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/user_namespace.h#n76">a struct of type <code>struct user_namespace</code></a>--containing data such as the respective task owner's UID and GID, among other security-related fields--, and checks whether the current process has a given capability in that namespace, returning <code>1</code> if so, and <code>0</code> otherwise. More specifically, the call herein takes the user namespace field of the <code>child</code>'s <a href="https://docs.kernel.org/security/credentials.html">task credentials</a>--i.e. the <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/cred.h#n115">security context of <code>child</code></a>--, and checks to see if the current process has <code>CAP_SYS_PTRACE</code> in said user namespace, in which case it should be allowed to trace <code>child</code>. Thus, <code>!ns_capable(__task_cred(child)-&gt;user_ns, CAP_SYS_PTRACE)</code> resolves to <code>1</code> when the current process does not have <code>CAP_SYS_PTRACE</code> in <code>child</code>'s namespace.</p>
+<p>To conclude, scope level 2--i.e. <code>YAMA_SCOPE_CAPABILITY</code>--leads to executing the same permission check discussed in the paragraph above.</p>
+<p>All in all, we see that <code>yama_ptrace_access_check()</code> performs LSM context-specific checks regarding internal kernel data structures to take decisions on whether access to certain resources that the LSM aims at protecting should be allowed or not, resulting in the hook returning <code>0</code> when access should be granted, and <code>-EPERM</code> otherwise. The other hooks adopt the same behavior, and apart from the configuration and compilation infrastructures, and the <code>sysctl</code> interface that Yama exports, the core infrastructure of the LSM is entirely built around the hooks and their auxiliary functions, constituting the code that allows the LSM to make said access decisions on behalf of the kernel.</p>
+<p>That understanding seems enough for us to dare building our own proof of concept LSM now. From this point onward, that's precisely what we'll do.</p>
+<h3>Building a proof of concept LSM</h3>
+<p>We'll now work towards building a proof of concept LSM that simply implements a given hook and prints kernel log messages whenever said hook is called. The intent here is to exercise the integration of an LSM into the kernel's codebase.</p>
+<p>First off, we'll create a new diretory at <code>security/poc/</code> and populate it with files <code>Kconfig</code>, <code>Makefile</code>, and <code>poc.c</code>. Next, we'll fill in <code>Kconfig</code> and <code>Makefile</code> based on what we learned from looking at Yama's codebase. Here's what our <code>Kconfig</code> looks like:</p>
+<div class="highlight"><pre><span></span><code><span class="gh">#</span> SPDX-License-Identifier: GPL-2.0-only
+config SECURITY_POC
+    bool &quot;PoC support&quot;
+    depends on SECURITY
+    default n
+    help
+      This selects the PoC LSM.
+</code></pre></div>
+
+<p>And the module's <code>Makefile</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># SPDX-License-Identifier: GPL-2.0-only</span>
+<span class="nv">obj-$(CONFIG_SECURITY_POC)</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>poc.o
+
+<span class="nv">poc-y</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>poc.o
+</code></pre></div>
+
+<p>Next, we'll program the module itself by writing <code>poc.c</code>. We'll start by including basic LSM headers and code structures, namely the LSM's ID, init function, and macro definition:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: GPL-2.0-only</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hooks.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;uapi/linux/lsm.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_id</span><span class="w"> </span><span class="n">poc_lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;poc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LSM_ID_POC</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">poc_lsm_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;PoC LSM active</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">DEFINE_LSM</span><span class="p">(</span><span class="n">poc</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">poc_lsmid</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">poc_lsm_init</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Of course, as we've seen, we must also define <code>LSM_ID_POC</code> in <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/lsm.h"><code>include/uapi/linux/lsm.h</code></a>. Let's go ahead and add a new LSM ID at the end of the ID list and assign our PoC LSM the next available ID in the sequence:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* ... */</span>
+
+<span class="cp">#define LSM_ID_EVM      112</span>
+<span class="cp">#define LSM_ID_IPE      113</span>
+<span class="cp">#define LSM_ID_POC      114</span>
+
+<span class="cm">/* ... */</span>
+</code></pre></div>
+
+<p>In turn, let's define a hook. We'll have our PoC LSM define a single hook, namely <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/lsm_hook_defs.h#n215"><code>file_open()</code></a>, to have the kernel call our LSM everytime a file is opened. Let's now create our hook list containing that single hook and a hook implementation for it. We'll also add a call to <code>security_add_hooks()</code> to the LSM's init function in order for us to register our hook:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: GPL-2.0-only</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/lsm_hooks.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;uapi/linux/lsm.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lsm_id</span><span class="w"> </span><span class="n">poc_lsmid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;poc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LSM_ID_POC</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">poc_file_open</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">file</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Entered PoC LSM file_info</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Do something */</span>
+
+<span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Exiting PoC LSM file_info</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">security_hook_list</span><span class="w"> </span><span class="n">poc_lsm_hooks</span><span class="p">[]</span><span class="w"> </span><span class="n">__ro_after_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">LSM_HOOK_INIT</span><span class="p">(</span><span class="n">file_open</span><span class="p">,</span><span class="w"> </span><span class="n">poc_file_open</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">poc_lsm_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">security_add_hooks</span><span class="p">(</span><span class="n">poc_lsm_hooks</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">poc_lsm_hooks</span><span class="p">),</span>
+<span class="w">               </span><span class="o">&amp;</span><span class="n">poc_lsmid</span><span class="p">);</span>
+<span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;PoC LSM active</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">DEFINE_LSM</span><span class="p">(</span><span class="n">poc</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">poc_lsmid</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">poc_lsm_init</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<blockquote>
+<p>NOTE: in the paragraphs that follow, we'll address some further changes that we'll need to make to the kernel's codebase before we're able to compile and boot into a kernel with our PoC LSM enabled. I had missed them in my initial exploration of Yama's codebase documented above, and I only understood my mistake after some additional rounds of trial and error.</p>
+</blockquote>
+<p>As obvious as it may seem now, I had missed the need to change both the security subsystem's Kconfig file at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/Kconfig"><code>security/Kconfig</code></a> to source our own PoC LSM's Kconfig file, and its Makefile at <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/security/Makefile"><code>security/Makefile</code></a> to add the object file from our newly created <code>security/poc/</code> security subsystem subdirectory.</p>
+<p>That said, we must instruct the security subsystem's Kconfig file to source that of our own PoC module, and while we're at it, we'll also add our LSM to the lists of enabled LSMs in the default configurations section of <code>security/Kconfig</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ...</span>
+
+<span class="n">source</span><span class="w"> </span><span class="s2">&quot;security/landlock/Kconfig&quot;</span>
+<span class="n">source</span><span class="w"> </span><span class="s2">&quot;security/ipe/Kconfig&quot;</span>
+<span class="n">source</span><span class="w"> </span><span class="s2">&quot;security/poc/Kconfig&quot;</span>
+
+<span class="c1"># ... </span>
+
+<span class="n">config</span><span class="w"> </span><span class="n">LSM</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="s2">&quot;Ordered list of enabled LSMs&quot;</span>
+<span class="w">    </span><span class="n">depends</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">SECURITY</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="s2">&quot;landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,ipe,bpf,poc&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DEFAULT_SECURITY_SMACK</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="s2">&quot;landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,ipe,bpf,poc&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DEFAULT_SECURITY_APPARMOR</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="s2">&quot;landlock,lockdown,yama,loadpin,safesetid,tomoyo,ipe,bpf,poc&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DEFAULT_SECURITY_TOMOYO</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="s2">&quot;landlock,lockdown,yama,loadpin,safesetid,ipe,bpf,poc&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">DEFAULT_SECURITY_DAC</span>
+<span class="w">    </span><span class="n">default</span><span class="w"> </span><span class="s2">&quot;landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,ipe,bpf,poc&quot;</span>
+<span class="w">    </span><span class="n">help</span>
+
+<span class="c1"># ...</span>
+</code></pre></div>
+
+<p>Next, we must implement the change to <code>security/Makefile</code>, adding the object files from <code>security/poc/</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># ...</span>
+
+<span class="nv">obj-$(CONFIG_SECURITY_LANDLOCK)</span><span class="w">     </span><span class="o">+=</span><span class="w"> </span>landlock/
+<span class="nv">obj-$(CONFIG_SECURITY_IPE)</span><span class="w">      </span><span class="o">+=</span><span class="w"> </span>ipe/
+<span class="nv">obj-$(CONFIG_SECURITY_POC)</span><span class="w">      </span><span class="o">+=</span><span class="w"> </span>poc/
+
+<span class="c"># ...</span>
+</code></pre></div>
+
+<p>After doing the above, we can finally <code>cd</code> into the repository's root and <code>source Kconfig</code>. Now, if we <code>make menuconfig</code> and look at the security subsystem's configuration submenu, here's what it looks like:</p>
+<p><img alt="Security subsystem's compilation submenu showing our LSM." src="../images/lsm-menuconfig-1.png"></p>
+<p>We can now activate our PoC module by toggling its option and adding it to the enabled LSM's list, whose value seems to have been obtained from our previous configuration:</p>
+<p><img alt="Security subsystem's compilation submenu after configuring our LSM." src="../images/lsm-menuconfig-2.png"></p>
+<p>Finally, we can save the configuration and proceed to compiling and installing the kernel as usual. After booting into the new kernel, if we look at the list of enabled LSMs, we'll see our PoC LSM listed. Furthermore, the kernel log displays the messages our LSM has been printing every time a file is opened, proving that the kernel is indeed calling the <code>file_open()</code> hook that our LSM registered:</p>
+<p><img alt="Kernel log showing our PoC LSM's log messages." src="../images/lsm-dmesg-poc.png"></p>
+<h3>Conclusion</h3>
+<p>This second part of my LSM study notes addressed the integration of a new LSM built from the ground up to the kernel's codebase. We looked at the threat model and the implementation of an already existing LSM, namely Yama, and by leveraging the knowledge that we acquired from inspecting its codebase, we've successfully built a proof of concept LSM and integrated it to the kernel's build system, allowing us to boot into a kernel that loads it and to inspect its functioning.</p>
+<p>By changing the security subsystem to add our own proof of concept LSM, we've learned that extending ther kernel's security subsystem is within arm's reach of anyone willing to venture into navigating its codebase and persisting in making things work out. Not only that, it made me a lot more confident about my basic understanding of an LSM built into the Linux kernel, and it helped me consolidate some of my learnings from part 1 of this series.</p>
+<p>I'm not sure where I'll go with respect to part 3 of this blog post series. I might further extend the proof of concept LSM defined herein to implement some actual policy enforcement by establishing an actual threat model for it to address. Additionally, one takeaway of exploring Yama's codebase was noticing the need to deeply understand the different kernel data structures that form the basis of the security checks that LSMs implement, and I might look into that next. Another possibility is further delving into the kernel's generic LSM infrastructure--there's a lot more to look at--while further case studying a major LSM such as AppArmor to see what actual LSM implementations look like. All in all, I'm not sure what my next step will be, but at least I've got some options mapped.</p>
+<p><em>Happy hacking.</em></p>
+    <footer>
+      <p>Published: <time datetime="2026-06-25T00:00:00-03:00">
+        Thu 25 June 2026
+      </time></p>
+        <address>
+          By             <a href="https://vasconcedu.github.io/author/vasconcedu.html">vasconcedu</a>
+        </address>
+        <p>
+          Category: <a href="https://vasconcedu.github.io/category/linux.html">Linux</a>
+        </p>
+    </footer>
+  </article>
+      </main>
+      <footer>
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+      </footer>
+  </body>
+</html>
