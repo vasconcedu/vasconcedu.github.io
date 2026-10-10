@@ -405,4 +405,5 @@ Não se engane: a jornada é longa e dura toda uma vida, mas cada pequeno aprend
 _Happy hacking._
 
 _Edit: adicionar estudo dirigido._
+
 _Edit: adicionar errata dos slides._
